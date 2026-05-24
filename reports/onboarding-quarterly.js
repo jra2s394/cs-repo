@@ -4,6 +4,7 @@
 // Output: out/Onboarding_Quarterly_YYYY-QN.docx
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -196,5 +197,16 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `${d.period} Onboarding Report` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Onboarding", "Quarterly"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Onboarding", "Quarterly");
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Last Q", "Change", "YoY"], rows: d.summaryTable || [] },
+      { title: "Monthly Breakdown", headers: ["Month", "Started", "Completed", "CARR Completed", "CARR In-Flight"], rows: d.monthlyTable || [] },
+      { title: "Accounts", headers: ["Customer", "Project", "CARR", "Started", "Completed", "Status"], rows: d.accountsTable || [] },
+      { title: "At-Risk & Blocked", headers: ["Customer", "Project", "CARR", "Issue", "Urgent"],
+        rows: (d.atRisk || []).map(r => [r.customer, r.project, r.carr, r.issue, r.urgent ? "Yes" : "No"]) },
+      { title: "Backlog Pipeline", headers: ["Customer", "Project", "CARR"], rows: d.backlogTable || [] },
+    ]);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });

@@ -192,5 +192,14 @@ T.render(doc, outFile)
   .then(() => {
     console.log(`✓ ${outFile}`);
     copyToDesktop(outFile, "QBR", `${d.customerSlug}_${quarterSlug}`);
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Wins", headers: ["Win", "Impact", "Source"],
+        rows: (d.wins || []).map(w => [w.win, w.impact, w.source]) },
+      { title: "Open Issues", headers: ["Issue", "Status", "Owner", "ETA", "Critical"],
+        rows: (d.openIssues || []).map(i => [i.issue, i.status, i.owner, i.eta, i.critical ? "Yes" : "No"]) },
+      { title: "Agenda", headers: ["Section", "Time", "Owner"], rows: d.agenda || [] },
+      { title: "Next Steps", headers: ["Action", "Owner", "Due"],
+        rows: (d.nextSteps || []).map(s => [s.action, s.owner, s.due]) },
+    ]);
   })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
