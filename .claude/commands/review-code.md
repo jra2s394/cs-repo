@@ -70,6 +70,16 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] No dead code (commented-out blocks that are not documentation of an alternative).
 - [ ] No print statements left in production paths of report scripts.
 
+## Section 9b — System Action Policy (permissions.deny)
+
+- [ ] Does `permissions.deny` in `.claude/settings.json` include `mcp__claude_ai_Asana__delete_task`?
+- [ ] Does `permissions.deny` include `mcp__claude_ai_Google_Calendar__delete_event`?
+- [ ] Does `permissions.deny` include `mcp__shortcut__stories-delete`, `epics-delete`, and `iterations-delete`?
+- [ ] Does `permissions.deny` include `mcp__claude_ai_Asana__create_project_status_update`?
+- [ ] Does `tasks.md` explicitly say NOT to call `update_tasks` for completion — only tell the user what to do in Asana?
+- [ ] Does `prs.md` explicitly say NOT to call `stories-update` to change workflow state?
+- [ ] Does `CLAUDE.md` contain a "System Action Policy" table showing what Claude does and does not do per system?
+
 ## Section 10 — lib/csv-export.js
 
 - [ ] Does `escapeCsv(null)` return `""` (not the string `"null"`)?
