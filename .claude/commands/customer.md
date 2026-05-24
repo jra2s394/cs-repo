@@ -26,6 +26,7 @@ Search simultaneously across:
 **Gmail:**
 - Recent threads with this customer (last 30 days)
 - Any threads with "go-live", "launch", "live", "onboarding" in the subject
+- Search `from:e.read.ai` for any Read.ai meeting reports mentioning this customer in the last 30 days — if found, use them as the authoritative meeting summary (they override calendar inference)
 
 **Google Calendar:**
 - Upcoming meetings with this customer
@@ -33,6 +34,10 @@ Search simultaneously across:
 
 **Asana:**
 - Open tasks related to this customer
+
+**Shortcut:**
+- Search for open stories where the customer name appears in the title or description
+- Note the state, owner, and story ID for each
 
 ---
 
@@ -57,6 +62,9 @@ Present the summary in this format:
 
 ### Open Asana tasks
 - [Task name, due date]
+
+### Open Shortcut stories
+- [SC-id — Title — State — Owner]
 
 ### Watch items 🔴
 - [Anything that looks like a blocker, unresolved issue, or overdue item]
