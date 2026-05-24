@@ -113,14 +113,14 @@ This creates a **CS Reports** folder on your Desktop with `Intercom/`, `Onboardi
 bash cs-repo/scripts/setup-desktop.sh
 ```
 
-**PC** — in Command Prompt:
+**PC** — in PowerShell:
 
 ```
 cd cs-repo
-scripts\setup-desktop.bat
+PowerShell -ExecutionPolicy Bypass -File scripts\setup-desktop.ps1
 ```
 
-Or double-click `setup-desktop.bat` in File Explorer from inside the `cs-repo\scripts\` folder.
+> **Why `-ExecutionPolicy Bypass`?** Windows blocks unsigned scripts by default. This flag allows the script to run just this once — it doesn't change any permanent settings.
 
 You only do this once.
 
