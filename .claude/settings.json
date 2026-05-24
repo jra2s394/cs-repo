@@ -77,15 +77,6 @@
         ]
       },
       {
-        "matcher": "mcp__claude_ai_Asana__delete_task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
-          }
-        ]
-      },
-      {
         "matcher": "mcp__claude_ai_Slack__slack_send_message",
         "hooks": [
           {
@@ -114,15 +105,6 @@
       },
       {
         "matcher": "mcp__claude_ai_Google_Calendar__update_event",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__claude_ai_Google_Calendar__delete_event",
         "hooks": [
           {
             "type": "command",

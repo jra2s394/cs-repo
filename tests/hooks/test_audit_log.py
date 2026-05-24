@@ -26,7 +26,8 @@ def run_audit(stdin_data, isolated_home):
     """Run the hook with a patched HOME so the log goes to a temp path."""
     env = os.environ.copy()
     env["HOME"] = str(isolated_home)
-    import subprocess, sys
+    import subprocess
+    import sys
     from pathlib import Path
     hooks_dir = Path(__file__).parent.parent.parent / "hooks"
     result = subprocess.run(
@@ -92,7 +93,7 @@ class TestBasicLogging:
                 isolated_home,
             )
         log_path = isolated_home / ".claude" / "tool-audit.log"
-        lines = [l for l in log_path.read_text().strip().split("\n") if l]
+        lines = [ln for ln in log_path.read_text().strip().split("\n") if ln]
         assert len(lines) == 3
 
 

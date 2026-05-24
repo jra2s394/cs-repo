@@ -3,32 +3,14 @@
 // Usage: node reports/renewals-nextquarter.js <path-to-metrics.json>
 // Output: out/Renewals_NextQuarter_YYYY-QN.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
+const { loadJson, requireFields, ensureOutDir } = require("../lib/data-loader");
 const path = require("path");
-const fs = require("fs");
 
-const jsonPath = process.argv[2];
-if (!jsonPath) {
-  console.error(`Usage: node ${path.basename(process.argv[1])} <path-to-metrics.json>`);
-  process.exit(1);
-}
-let d;
-try {
-  d = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-} catch (err) {
-  console.error(`Error loading metrics: ${err.message}`);
-  process.exit(1);
-}
+const d = loadJson("metrics");
 const REQUIRED = ["generated", "period", "dateRange", "preparedBy", "kpis", "summaryTable", "methodology"];
-const missing = REQUIRED.filter(k => d[k] == null);
-if (missing.length) {
-  console.error(`Missing required fields in metrics JSON: ${missing.join(", ")}`);
-  process.exit(1);
-}
+requireFields(d, REQUIRED);
 
-const outDir = path.resolve(__dirname, "../out");
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outDir = ensureOutDir();
 
 // Period "Q3 2026" → slug "2026-Q3"
 const parts = (d.period || "").split(" ");
@@ -160,22 +142,17 @@ children.push(T.dataTable({
   ],
 }));
 
+const csvSections = [
+  { title: "Summary", headers: ["Metric", d.period, "Prior Qtr", "Notes"], rows: d.summaryTable || [] },
+];
+for (const grp of (d.monthlyGroups || [])) {
+  if (!grp.pending && grp.invoiceTable && grp.invoiceTable.length > 0) {
+    csvSections.push({ title: grp.month, headers: ["Customer", "Type", "Curr ARR", "Billing Basis", "Invoice Amt", "Renew?", "CS Notes"], rows: grp.invoiceTable });
+  }
+}
+if ((d.monthlyGroups || []).length === 0 && d.invoiceTable) {
+  csvSections.push({ title: "Invoices", headers: ["Customer", "Type", "Curr ARR", "Billing Basis", "Invoice Amt", "Renew?", "CS Notes"], rows: d.invoiceTable });
+}
+
 const doc = T.buildDocument({ children, headerRight: `Renewal Pipeline — ${d.period}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Renewals", "NextQuarter");
-    const csvSections = [
-      { title: "Summary", headers: ["Metric", d.period, "Prior Qtr", "Notes"], rows: d.summaryTable || [] },
-    ];
-    for (const grp of (d.monthlyGroups || [])) {
-      if (!grp.pending && grp.invoiceTable && grp.invoiceTable.length > 0) {
-        csvSections.push({ title: grp.month, headers: ["Customer", "Type", "Curr ARR", "Billing Basis", "Invoice Amt", "Renew?", "CS Notes"], rows: grp.invoiceTable });
-      }
-    }
-    if ((d.monthlyGroups || []).length === 0 && d.invoiceTable) {
-      csvSections.push({ title: "Invoices", headers: ["Customer", "Type", "Curr ARR", "Billing Basis", "Invoice Amt", "Renew?", "CS Notes"], rows: d.invoiceTable });
-    }
-    writeCsv(outFile.replace(".docx", ".csv"), csvSections);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+T.publishReport(doc, outFile, { category: "Renewals", label: "NextQuarter", csvSections });

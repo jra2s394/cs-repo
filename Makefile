@@ -1,4 +1,4 @@
-.PHONY: test test-hooks test-lib test-js test-cov lint install-dev check-deps
+.PHONY: test test-hooks test-lib test-js test-cov lint lint-py lint-js install-dev check-deps
 
 # Verify pytest is installed; if not, point the user at install-dev.
 check-deps:
@@ -8,7 +8,7 @@ check-deps:
 # Run the full test suite (Python + JS)
 test: check-deps
 	python3 -m pytest
-	node tests/js/test_csv_export.js
+	$(MAKE) test-js
 
 # Run only hook tests
 test-hooks:
@@ -26,10 +26,23 @@ test-cov:
 install-dev:
 	pip install -r requirements-dev.txt
 
-# Run only JS tests
+# Run all JS tests
 test-js:
 	node tests/js/test_csv_export.js
+	node tests/js/test_report_theme.js
+	node tests/js/test_data_loader.js
+	node tests/js/test_copy_to_desktop.js
+	node tests/js/test_reports_smoke.js
 
-# Basic lint (no external linter required)
+# Lint: ruff on Python + biome on JS
 lint:
-	python3 -m py_compile hooks/*.py lib/report_charts.py && echo "Syntax OK"
+	$(MAKE) lint-py
+	$(MAKE) lint-js
+
+# Run ruff on hooks/, lib/, tests/
+lint-py:
+	python3 -m ruff check
+
+# Run biome on all JS (lib/, reports/, tests/js/)
+lint-js:
+	npx --no-install biome check

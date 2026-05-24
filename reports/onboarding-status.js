@@ -3,38 +3,17 @@
 // Usage: node reports/onboarding-status.js <path-to-metrics.json>
 // Output: out/Onboarding_Status_<CustomerSlug>_<Date>.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
+const { loadJson, requireFields, ensureOutDir, dateSlug } = require("../lib/data-loader");
 const path = require("path");
-const fs = require("fs");
 
-const jsonPath = process.argv[2];
-if (!jsonPath) {
-  console.error(`Usage: node ${path.basename(process.argv[1])} <path-to-metrics.json>`);
-  process.exit(1);
-}
-let d;
-try {
-  d = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-} catch (err) {
-  console.error(`Error loading metrics: ${err.message}`);
-  process.exit(1);
-}
-
+const d = loadJson("metrics");
 const REQUIRED = ["customer", "customerSlug", "generated", "preparedBy",
                   "kpis", "contactInfo", "timeline", "asanaTasks", "methodology"];
-const missing = REQUIRED.filter(k => d[k] == null);
-if (missing.length) {
-  console.error(`Missing required fields in metrics JSON: ${missing.join(", ")}`);
-  process.exit(1);
-}
+requireFields(d, REQUIRED);
 
-const outDir = path.resolve(__dirname, "../out");
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outDir = ensureOutDir();
 
-const dateSlug = (d.generated || "")
-  .replace(/[^0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "unknown";
-const outFile = path.join(outDir, `Onboarding_Status_${d.customerSlug}_${dateSlug}.docx`);
+const outFile = path.join(outDir, `Onboarding_Status_${d.customerSlug}_${dateSlug(d.generated)}.docx`);
 
 const tl = d.timeline || {};
 const tasks = d.asanaTasks || [];
@@ -226,11 +205,10 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `Onboarding Status — ${d.customer}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Onboarding", "Status");
-    writeCsv(outFile.replace(".docx", ".csv"), [
+T.publishReport(doc, outFile, {
+  category: "Onboarding",
+  label: "Status",
+  csvSections: [
       { title: "Contacts",
         headers: ["Name", "Role", "Email", "Phone"],
         rows: d.contactInfo.map(c => [c.name, c.role, c.email || "", c.phone || ""]) },
@@ -249,6 +227,5 @@ T.render(doc, outFile)
       { title: "Open Items",
         headers: ["Item", "Owner", "Due", "Urgent"],
         rows: (d.openItems || []).map(i => [i.item, i.owner || "", i.due || "", i.urgent ? "Yes" : "No"]) },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+    ],
+});

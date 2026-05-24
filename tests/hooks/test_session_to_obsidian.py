@@ -160,6 +160,40 @@ class TestDetectProject:
 
 
 # ---------------------------------------------------------------------------
+# OBSIDIAN_PROJECT_MAP env var override
+# ---------------------------------------------------------------------------
+
+class TestProjectMapEnvOverride:
+    def test_env_var_overrides_fallback(self, monkeypatch, tmp_path):
+        monkeypatch.setenv("OBSIDIAN_PROJECT_MAP", '{"my-app": "My App"}')
+        # Re-load the module so the env var is read at import time
+        sto = _load_sto()
+        assert sto.PROJECT_MAP == {"my-app": "My App"}
+        assert sto.detect_project({"cwd": "/x/my-app/y"}) == "My App"
+
+    def test_invalid_json_falls_back(self, monkeypatch):
+        monkeypatch.setenv("OBSIDIAN_PROJECT_MAP", "not json {{")
+        sto = _load_sto()
+        assert sto.PROJECT_MAP == sto.PROJECT_MAP_FALLBACK
+
+    def test_non_object_json_falls_back(self, monkeypatch):
+        # A JSON array is valid JSON but the wrong shape
+        monkeypatch.setenv("OBSIDIAN_PROJECT_MAP", '["not", "a", "dict"]')
+        sto = _load_sto()
+        assert sto.PROJECT_MAP == sto.PROJECT_MAP_FALLBACK
+
+    def test_empty_env_uses_fallback(self, monkeypatch):
+        monkeypatch.setenv("OBSIDIAN_PROJECT_MAP", "")
+        sto = _load_sto()
+        assert sto.PROJECT_MAP == sto.PROJECT_MAP_FALLBACK
+
+    def test_unset_env_uses_fallback(self, monkeypatch):
+        monkeypatch.delenv("OBSIDIAN_PROJECT_MAP", raising=False)
+        sto = _load_sto()
+        assert sto.PROJECT_MAP == sto.PROJECT_MAP_FALLBACK
+
+
+# ---------------------------------------------------------------------------
 # find_session_file — guard against missing CLAUDE_PROJECTS dir
 # ---------------------------------------------------------------------------
 
