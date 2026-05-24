@@ -98,6 +98,40 @@ Tells Finance exactly what to invoice each customer. Claude reads the Finance re
 
 ---
 
+## Portfolio health — `/health-score`
+
+Get a green/yellow/red view of every active account in one screen.
+
+Type `/health-score`. Claude pulls live data from Asana, Intercom, Shortcut, Gmail, and Calendar for every active account and scores each one against four dimensions: last contact recency, overdue tasks, open Intercom conversations, and Shortcut blockers. Shows a portfolio summary table, flags 🔴 accounts with a specific recommended action, and surfaces any renewals in the next 90 days. After reviewing the draft, Claude builds a branded `.docx` and auto-copies to `Desktop/CS Reports/Health Reports/`.
+
+---
+
+## At-risk triage — `/at-risk`
+
+Surface all risk signals across the portfolio in one place — read-only.
+
+Type `/at-risk`. Claude searches Asana (overdue tasks), Intercom (unanswered conversations), Shortcut (blocked stories), Gmail (unanswered threads and escalation language), and Calendar (dark accounts with no recent or upcoming meetings). Groups results into 🔴 Immediate / 🟡 Watch / 🟢 Recently Resolved. For each 🔴 item, offers a specific recommended next action you can approve and execute.
+
+Nothing is created or sent in this command — it's a triage view only.
+
+---
+
+## Expansion opportunities — `/expansion`
+
+Find customers ready for upsell or new location conversations.
+
+Type `/expansion`. Claude searches email, Intercom, Read.ai meeting reports, and Asana for growth signals: new plant mentions, feature requests, referral language, and recently-live accounts in the prime expansion window. Scores each account and ranks them by expansion readiness. Offers to draft outreach messages or talking points for any account you want to pursue.
+
+---
+
+## Renewal health — `/renewal-health`
+
+See the full renewal pipeline with risk scores and recommended actions.
+
+Type `/renewal-health`. Claude searches Gmail, Asana, and Intercom for renewal signals and derives a risk score (🔴 High / 🟡 Medium / 🟢 Low) for each account. Shows days until renewal, ARR at stake, current status, and the specific next action for each 🔴 account. After reviewing the draft, Claude builds a branded `.docx` and auto-copies to `Desktop/CS Reports/Renewals/`.
+
+---
+
 ## Customer snapshot — `/customer`
 
 Get a one-screen briefing before a call or when you need to get up to speed fast.
@@ -140,6 +174,46 @@ Type `/qbr` → give the customer name and quarter → Claude pulls a full quart
 - `slabstack-cs/qbr-templates/qbr-standard.md` — standard QBR for all active customers
 - `slabstack-cs/qbr-templates/qbr-at-risk.md` — modified QBR for at-risk customers
 - `slabstack-cs/qbr-templates/qbr-expansion.md` — QBR focused on upsell and expansion
+
+---
+
+## Start an onboarding — `/start-onboarding`
+
+Kick off a new customer from scratch — one command, all four systems.
+
+Type `/start-onboarding`. Claude collects the customer name, CSM, CARR, go-live date, and key contacts, then drafts all four setup items in a single block for review: the Asana onboarding project (from the standard template), the Google Drive folder, the Shortcut CSEng story, and the Slack channel name. After explicit approval, Claude creates the first three and gives you the Slack channel creation instructions. Once you confirm the channel exists, Claude posts the resource links.
+
+---
+
+## End an onboarding — `/end-onboarding`
+
+Close out a completed onboarding cleanly with a verified checklist and post-closure tasks.
+
+Type `/end-onboarding`. Claude pulls the current state from Asana, Intercom, Shortcut, Gmail, and Calendar and generates a closure checklist with 🔴 flags for anything that needs resolution before closing. After reviewing, Claude drafts the go-live confirmation email and the post-closure Asana tasks (30-day check-in, customer master update, QBR scheduling) for your approval before creating any of them.
+
+---
+
+## CSM handoff — `/handoff`
+
+Transfer account ownership with a complete context brief — no institutional knowledge lost.
+
+Type `/handoff`. Claude pulls 90 days of Intercom, Gmail, Calendar, Asana, Shortcut, and Read.ai data for the account and generates a structured handoff brief: relationship context, wins, open issues, outstanding commitments, active tasks, upcoming meetings, and a draft introduction email. You review the brief, approve any edits, and then decide whether to send the intro email and create post-handoff Asana tasks.
+
+---
+
+## Executive summary — `/executive-summary`
+
+Generate a portfolio-wide executive summary for leadership review.
+
+Type `/executive-summary`. Claude pulls a period's worth of data from all connected systems and drafts a cross-portfolio view: active accounts, support volume, onboarding health, renewal pipeline, open issues, upcoming events, and key highlights. After reviewing the draft, Claude builds a branded `.docx` and auto-copies to `Desktop/CS Reports/Executive Summaries/`.
+
+---
+
+## Weekly team summary — `/weekly-team`
+
+Roll up what the full team accomplished this week for manager standup or team Slack.
+
+Type `/weekly-team`. Claude pulls activity across Asana, Intercom, Shortcut, Calendar, and Gmail for each teammate listed in CLAUDE.md and drafts a team summary with top wins, per-person highlights, support volume, and onboarding status. Review the draft, then approve for posting to Slack with channel confirmation.
 
 ---
 
@@ -237,7 +311,7 @@ Before opening a PR for any code change, run the test suite to make sure nothing
 make test
 ```
 
-This runs 237 automated tests that cover every hook and chart helper. If all pass, you'll see `237 passed` and a green summary. If something fails, the output tells you the exact file and line.
+This runs 258 automated tests (237 Python + 21 JavaScript) that cover every hook, chart helper, and CSV export function. If all pass, you'll see `237 passed` and the JS runner prints `21 passed`. If something fails, the output tells you the exact file and line.
 
 GitHub Actions runs the same tests automatically on every pull request. A PR can't sneak a broken change onto `main` without the CI catching it first.
 
@@ -354,6 +428,16 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/meeting-prep` | Briefings for all customer meetings in the next 24h |
 | `/follow-up` | Draft follow-up email after a call |
 | `/go-live` | Go-live readiness check — blockers across all systems |
+| `/at-risk` | Surface all at-risk customers — read-only triage |
+| `/health-score` | Portfolio health scorecard — green/yellow/red per account |
+| `/expansion` | Identify expansion and upsell opportunities |
+| `/renewal-health` | Renewal pipeline with risk scores and next actions |
+| `/executive-summary` | Portfolio-wide executive summary for leadership |
+| `/weekly-team` | Weekly CS team summary for standup or Slack |
+| `/start-onboarding` | Kick off a new customer — Asana, Drive, Shortcut, Slack |
+| `/onboarding-status-report` | Customer-facing onboarding status report |
+| `/end-onboarding` | Close out a completed onboarding cleanly |
+| `/handoff` | Generate a CSM handoff brief |
 | `/qbr` | QBR prep — data pulled, wins sourced, agenda drafted |
 | `/escalate` | Escalate Intercom → Shortcut ticket |
 | `/story-CSEng` | CS Eng: create a Shortcut story for CSM support |
