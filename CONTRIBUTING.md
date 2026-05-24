@@ -11,6 +11,12 @@ does and how to customize it. Include the `settings.json` registration snippet.
 **Skills** follow the existing format (name, description, trigger conditions in frontmatter). Explain
 when to use the skill and when not to.
 
+**Slash commands** (files in `.claude/commands/*.md`) must start with a `---` frontmatter block
+containing a non-empty, single-line `description:` field (≥ 20 chars, no `TODO`/`TBD`/`WIP`
+placeholders, no trailing ellipsis). This is enforced by `tests/test_commands_frontmatter.py` —
+both `/commands` and CLAUDE.md tables read from this field. After adding a new command, also
+register it in CLAUDE.md's relevant command table and in `USER_GUIDE.md`'s quick-reference table.
+
 **Patterns** follow the Problem/Pattern/Implementation/Example structure. Must be based on real
 usage, not theoretical.
 
