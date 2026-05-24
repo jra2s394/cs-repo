@@ -4,9 +4,11 @@ You type a command. Claude reads your real data, writes the output, and shows it
 
 ---
 
-**New here?** → [SETUP.md](SETUP.md) — takes about 10 minutes
+**Joining as a teammate (fork → clone → configure)?** → [TEAM_SETUP.md](TEAM_SETUP.md) — full handoff path, ~20 min
 
-**Already set up?** → [USER_GUIDE.md](USER_GUIDE.md) — every command explained
+**Already cloned, need to configure your machine?** → [SETUP.md](SETUP.md) — per-person config, ~10 min
+
+**Already set up, want to know what commands exist?** → [USER_GUIDE.md](USER_GUIDE.md) — every command explained, plus Claude Code 101 and GitHub 101 sections for newcomers
 
 ---
 
@@ -57,7 +59,7 @@ Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutori
 Every hook, lib helper, chart, and report is covered by automated tests. Two linters (ruff for Python, biome for JS) catch undefined identifiers and unused imports before they reach CI. GitHub Actions runs the full test + lint suite on every pull request so broken changes can't land on `main`.
 
 ```
-make test       # 568 tests (439 Python + 129 JS)
+make test       # 572 tests (443 Python + 129 JS)
 make lint       # ruff + biome — undefined names, unused imports, etc.
 /review-code    # structured checklist — runs tests first, then 22 fixed sections
 ```

@@ -119,6 +119,7 @@ Renewal billing models:
 | Command | What it does |
 |---|---|
 | `/setup` | First-time setup wizard — fills in your personal CLAUDE.md, checks integrations |
+| `/check-setup` | Read-only validator — confirms CLAUDE.md is filled in, all 7 MCPs reachable, Intercom ID matches your authenticated session, output dirs exist |
 | `/commands` | List every available slash command live from `.claude/commands/*.md` — surfaces commands missing from this CLAUDE.md table |
 | `/review-code` | Run the 22-section QA checklist (tests + lint + per-component review) |
 
