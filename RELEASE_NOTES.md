@@ -19,7 +19,25 @@ Chronological history of every change merged to `main`, from the first commit to
 
 ## 2026-05-24
 
-### `<pending>` · PR #29 — Team-readiness: `/check-setup`, TEAM_SETUP.md, Claude Code 101 + GitHub 101
+### `<pending>` · PR #30 — Enhance `/health-score` from dogfooding lessons
+**Tags:** `[command] [docs]`
+
+Net: 4 files changed, +N (1 command rewrite + 3 doc updates).
+
+Battle-tested `/health-score` against the real portfolio (one full [CUSTOMER_A] deep-dive + one portfolio scorecard across 30 active customers). Three live gaps surfaced that would otherwise show up as broken-looking commands for the next teammate. All three are now documented and structurally addressed in the skill prompt:
+
+- **Single-customer mode added.** `/health-score <name>` now produces a focused per-customer snapshot (same rubric, one account, inline only — no `.docx`). Mode detection happens at Step 0; the portfolio path is unchanged. Useful before a customer call, a renewal, or any "is this account healthy?" check. The [CUSTOMER_A] deep-dive proved the value; without this, teammates would get a portfolio report when they wanted a focused one.
+- **Asana team filter now in the prompt.** Without it, an unfiltered `get_projects` returns projects from sibling product teams (e.g., [TEAM_OTHER]) that pollute the scorecard. Skill now instructs to pass the team GID; Slabstack's GID `[ASANA_TEAM_GID]` is documented and the discovery method (grep a known project URL) is spelled out for other teams.
+- **Intercom batching technique documented.** `search_contacts(per_page=25)` returns ~3KB per contact and blows the token budget; `search_conversations(contact_ids=[...])` caps the array at 15 per call. Skill now tells the model to paginate contacts, strip down to IDs, and batch conversation queries by 15. Plus the portfolio-mode shortcut: one workspace-wide `state='open'` query and group client-side by sender domain (works well when total open volume is small, which it currently is).
+- **Recent-overdues sort trick.** Naïve overdue queries return 2023 template tasks first; setting `due_on_after=~3 months ago` plus `sort_ascending=false` makes the first 100 results actionable.
+
+Plus a rule refinement: customer signals must be direct quotes from email/Intercom/Read.ai — never paraphrased, never invented. Caught and codified after the live run made this discipline matter.
+
+Docs sync:
+- CLAUDE.md command table updated to describe both modes
+- USER_GUIDE `/health-score` section expanded with the dual-mode description + the team-filter and batching transparency
+
+### `fa753e9` · PR #29 — Team-readiness: `/check-setup`, TEAM_SETUP.md, Claude Code 101 + GitHub 101
 **Tags:** `[command] [docs]`
 
 Net: 7 files changed, +N (1 new command file, 1 new top-level doc, 4 doc updates, 1 checklist update).

@@ -247,9 +247,13 @@ Tells Finance exactly what to invoice each customer. Claude reads the Finance re
 
 ## Portfolio health — `/health-score`
 
-Get a green/yellow/red view of every active account in one screen.
+Get a green/yellow/red view of every active account in one screen — or focus on a single customer.
 
-Type `/health-score`. Claude pulls live data from Asana, Intercom, Shortcut, Gmail, and Calendar for every active account and scores each one against four dimensions: last contact recency, overdue tasks, open Intercom conversations, and Shortcut blockers. Shows a portfolio summary table, flags 🔴 accounts with a specific recommended action, and surfaces any renewals in the next 90 days. After reviewing the draft, Claude builds a branded `.docx` and auto-copies to `Desktop/CS Reports/Health Reports/`.
+**Portfolio mode** (`/health-score` with no argument): Claude pulls live data from Asana, Intercom, Shortcut, Gmail, and Calendar for every active account and scores each one against four dimensions (last contact recency, overdue tasks, open Intercom conversations, Shortcut blockers). Shows a sorted scorecard (🔴 first, then 🟡, with 🟢 collapsed), flags every 🔴 with a specific recommended action, and surfaces upcoming renewals. After reviewing the draft, Claude builds a branded `.docx` and auto-copies to `Desktop/CS Reports/Health Reports/`.
+
+**Single-customer mode** (`/health-score [CUSTOMER_A]` or any other customer name): same rubric, one account. Output is an inline snapshot (no `.docx` is generated — for a full customer report use `/qbr` instead). Includes per-project Asana detail, verbatim customer signals (expansion/churn/competitor mentions quoted directly from email or Read.ai — never paraphrased), and recommended actions ranked by urgency. Use this before a customer call, before a renewal conversation, or any time you want a quick "is this account healthy?" check.
+
+Both modes filter Asana to your team's GID automatically so you don't get noise from sibling product teams' projects. If you hit a "result too large" error during contact-domain searches, the command knows to batch (Intercom caps contact_ids at 15 per query) — you'll see it batch-and-aggregate transparently.
 
 ---
 
