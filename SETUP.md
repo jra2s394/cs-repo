@@ -4,6 +4,8 @@ Setup takes about 10 minutes. You only do it once.
 
 When you're done, see **[USER_GUIDE.md](USER_GUIDE.md)** for how to use everything.
 
+> **On a Mac?** Follow the **Mac:** lines. **On Windows?** Follow the **PC:** lines. Skip the other half — they're alternates, not steps in sequence.
+
 ---
 
 ## Before you start
