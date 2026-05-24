@@ -128,6 +128,21 @@ Type `/kb-draft` → give Claude a topic or paste an Intercom conversation URL �
 
 ---
 
+## Review and quality check — `/review`
+
+Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
+
+Type `/review`. Claude will:
+1. Run all 237 automated tests first — if any fail, it stops and tells you exactly what's wrong
+2. Work through a fixed 9-section checklist covering every hook, report layout rule, and chart helper
+3. Report a pass/fail table at the end
+
+This gives you the same check every time, not a different result each session. If everything passes, you'll see "237 passed, 0 failed" and a full green table.
+
+> Use `/review` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
+
+---
+
 ## Saving changes to the repo (Git workflow)
 
 Any time you change a file in `cs-repo` — a prompt, a command, a script — those changes need to go through GitHub before they're "official." This keeps the shared copy clean and makes it easy to undo anything that breaks.
@@ -143,6 +158,20 @@ The required flow has five steps:
 Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seconds — see the tutorial below).
 
 > **Why not just save directly to main?** The hooks in this repo block it. Every change needs a branch and a PR so there's always a record and an easy way to roll back.
+
+### Testing and quality
+
+Before opening a PR for any code change, run the test suite to make sure nothing is broken:
+
+```
+make test
+```
+
+This runs 237 automated tests that cover every hook and chart helper. If all pass, you'll see `237 passed` and a green summary. If something fails, the output tells you the exact file and line.
+
+GitHub Actions runs the same tests automatically on every pull request. A PR can't sneak a broken change onto `main` without the CI catching it first.
+
+For a full structured review (tests + checklist), use `/review` — see above.
 
 ### What to tell Claude
 
@@ -255,3 +284,4 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/escalate` | Escalate Intercom → Shortcut ticket |
 | `/tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
+| `/review` | Run tests + structured quality checklist |

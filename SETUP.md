@@ -25,11 +25,14 @@ Paste these lines one at a time and press Enter after each:
 git clone https://github.com/jra2s394/cs-repo.git
 cd cs-repo
 npm install
+pip3 install -r requirements-dev.txt
 ```
 
 Text will scroll by — that's normal. Wait for the cursor to come back.
 
 > **Error on the first line?** You need to install git first. Ask your manager — takes 2 minutes.
+
+> **`pip3` not found?** Python isn't installed. Type `python3 --version` to check. If you get an error, ask your manager — the report generation tools need it.
 
 ---
 
@@ -165,11 +168,16 @@ Steps 2–5 are per person — you still need to do them yourself even if a team
 
 **A report came out empty or errored**
 - Run `npm install` inside `cs-repo`
+- Run `pip3 install -r requirements-dev.txt` inside `cs-repo`
 - Type `python3 --version` in Terminal — if you get an error, Python isn't installed. Ask your manager.
 
 **Can't read a Finance sheet**
 - Double-check the file path and wrap it in quotes if the name has spaces
 - File must be `.xlsx` or `.csv`
+
+**Tests are failing after a code change**
+- Run `make test` inside `cs-repo` — the output tells you exactly which test failed and why
+- Fix the issue on a feature branch, not directly on `main`
 
 **Still stuck?** Ask your CS lead.
 
