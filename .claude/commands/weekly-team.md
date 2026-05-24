@@ -6,6 +6,8 @@ Read `CLAUDE.md` from this repo before starting.
 
 Generate a weekly CS team summary. Pulls activity across all connected systems, organizes by team member, and drafts a Slack summary for review. **Draft before posting — never sends without explicit approval.**
 
+> **MCP gotchas across commands:** Asana team-filter noise (sibling-team projects polluting results), Intercom result-too-large errors (`per_page` token budget; `contact_ids` caps at 15), and stale 2023 overdue tasks all have documented fixes in `/health-score`'s Step 1. Read that section first if any MCP query here misbehaves.
+
 ---
 
 ## Step 1 — Get the week
