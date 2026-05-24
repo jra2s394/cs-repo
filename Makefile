@@ -1,8 +1,9 @@
-.PHONY: test test-hooks test-lib test-cov lint install-dev
+.PHONY: test test-hooks test-lib test-js test-cov lint install-dev
 
-# Run the full test suite
+# Run the full test suite (Python + JS)
 test:
 	python3 -m pytest
+	node tests/js/test_csv_export.js
 
 # Run only hook tests
 test-hooks:
@@ -19,6 +20,10 @@ test-cov:
 # Install dev dependencies
 install-dev:
 	pip install -r requirements-dev.txt
+
+# Run only JS tests
+test-js:
+	node tests/js/test_csv_export.js
 
 # Basic lint (no external linter required)
 lint:

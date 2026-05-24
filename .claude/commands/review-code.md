@@ -70,6 +70,19 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] No dead code (commented-out blocks that are not documentation of an alternative).
 - [ ] No print statements left in production paths of report scripts.
 
+## Section 10 — lib/csv-export.js
+
+- [ ] Does `escapeCsv(null)` return `""` (not the string `"null"`)?
+- [ ] Does `escapeCsv(undefined)` return `""` (not `"undefined"`)?
+- [ ] Does `escapeCsv(42)` return `"42"` without wrapping in quotes (numeric coercion, no false positive)?
+- [ ] Does a value containing a comma get wrapped in double quotes?
+- [ ] Does a value containing a double-quote character get the quote doubled (`say "hi"` → `"say ""hi"""`)?
+- [ ] Does a value containing a newline get wrapped in double quotes?
+- [ ] Does `sec.title` produce a `# Title` row as the first line of its section?
+- [ ] Does `sec.headers` produce a header row before data rows?
+- [ ] Are sections separated by exactly one blank line (no blank before the first section)?
+- [ ] Does `writeCsv` silently swallow file-write errors (non-fatal) — never throws on an unwritable path?
+
 ---
 
 After all sections: summarize findings as a table:
