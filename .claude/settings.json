@@ -431,6 +431,60 @@
             "command": "python3 hooks/draft-before-create.py"
           }
         ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-assign-current-user",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-unassign-current-user",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-add-external-link",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-remove-external-link",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-set-external-links",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__labels-create",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
       }
     ],
     "PostToolUse": [
