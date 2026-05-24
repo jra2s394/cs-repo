@@ -1,6 +1,10 @@
 # CS Ops Tool — User Guide
 
-Not set up yet? Start with **[SETUP.md](SETUP.md)** — takes about 10 minutes.
+New here? Two paths:
+- **Joining as a teammate?** → start with **[TEAM_SETUP.md](TEAM_SETUP.md)** (fork, clone, configure — ~20 min)
+- **Already cloned and configured?** → keep reading; this guide explains every command
+
+If you've never used Claude Code or GitHub before, jump to **[Claude Code 101](#claude-code-101)** and **[GitHub 101](#github-101)** below for the foundations.
 
 ---
 
@@ -22,6 +26,145 @@ Claude opens. Type any command.
 **Claude never posts, sends, or creates anything without showing it to you first.**
 
 Every command: Claude gathers the data → shows you the output → waits for your OK → then acts. If you close Claude before approving, nothing happens.
+
+---
+
+## Claude Code 101
+
+If you've never used Claude Code before, the four ideas below are the whole vocabulary you need to understand this tool.
+
+### What Claude Code is
+
+Claude Code is a terminal app from Anthropic that lets you chat with Claude — but Claude can also read files, run commands, and talk to your work apps (Gmail, Asana, Intercom, Slack, etc.). You type instructions in plain English; Claude does the work and shows you the result.
+
+You open it by typing `claude` in a terminal (after `cd`-ing into the repo folder). It runs locally on your machine. Close the terminal window and the session is over.
+
+### Slash commands (`/daily`, `/customer`, …)
+
+A **slash command** is a shortcut for a longer instruction the team has already written. When you type `/daily`, Claude opens `.claude/commands/daily.md` from the repo and follows the steps in that file.
+
+This is why every teammate gets the same output for the same command — the instructions live in the repo, not in your head. To see every available command run `/commands`. To read what a specific command does, open `.claude/commands/<name>.md` in any text editor.
+
+You can also just *describe* what you want in plain English (no slash). Claude figures it out. Slash commands are for the things you do over and over and want to be sure are done the same way every time.
+
+### MCP integrations (Gmail, Asana, Slack, …)
+
+**MCP** stands for Model Context Protocol — it's how Claude talks to your work apps. You connect each app once on claude.ai → Settings → Integrations (covered in SETUP.md Step 2). After that, commands like `/daily` can read your email, your calendar, your Asana tasks, and so on.
+
+The connections use YOUR work logins. Claude sees only what you can see. If `/daily` returns your conversations and not a teammate's, that's MCP doing its job — you authenticated as you.
+
+Run `/check-setup` to verify every MCP is connected and responding. If `/daily` ever returns the wrong person's data, the most likely cause is the Intercom Admin ID in your CLAUDE.md being wrong — `/check-setup` flags this loudly.
+
+### The approval flow (and why nothing gets sent by accident)
+
+Every command that *does something* in an external system (sends email, posts to Slack, creates an Asana task, files a Shortcut ticket) follows the same pattern:
+
+1. Claude gathers data
+2. Claude **drafts** the output and shows it to you
+3. Claude **waits** for you to say "send it" / "post it" / "create it"
+4. **Only then** does Claude actually take the action
+
+If you close Claude before approving, nothing happens. If you say "no, change X", Claude redoes it. If you walk away, the draft sits there. There is no "fire and forget" — every external action requires an explicit OK from you.
+
+This is enforced two ways: (a) every command file is written with the draft-first pattern in its prose, and (b) the repo has a hook (`draft-before-create.py`) that intercepts any attempt to call a write-tool and prompts for confirmation. Belt and suspenders.
+
+### What the hooks block (so you don't accidentally do something dumb)
+
+Hooks are small Python scripts in `hooks/` that run automatically on certain actions. You don't invoke them — Claude Code runs them. They exist to prevent classes of mistakes:
+
+| Hook | What it blocks |
+|---|---|
+| `branch-enforcer.py` | Committing directly to `main` (must use a feature branch) |
+| `push-guard.py` | Force-pushing, pushing to `main`, writing to `.env` files |
+| `secret-scan.py` | Committing API tokens (Shortcut, GitHub, OpenAI, Anthropic, Slack, AWS, Google, RSA, JWT) |
+| `file-protector.py` | Editing `.env`, private keys, `credentials.json`, `.git/` internals |
+| `block-attribution.py` | Committing messages with AI-attribution lines |
+| `draft-before-create.py` | Creating items in Asana/Slack/Intercom/Shortcut without an explicit draft+approval |
+
+If a hook blocks something you actually wanted, the error message tells you why. Don't disable hooks — they exist because someone (probably you in a different session) made the mistake they prevent.
+
+---
+
+## GitHub 101
+
+If you've never used GitHub before, the ideas below cover what this tool needs you to know. You don't need to be a developer. You need to know what's happening when the tool says "I pushed your branch."
+
+### What GitHub is
+
+GitHub is a website where code lives — like Google Drive for code. The "code" in this case is the repo (everything in your `cs-repo` folder). The team owner's GitHub account hosts the canonical copy; every teammate has their own copy (a "fork") on their own GitHub account.
+
+You do three things on GitHub:
+1. **Look at code** the team has written (browse files, see history)
+2. **Open Pull Requests (PRs)** when you want to propose a change
+3. **Merge PRs** when you've reviewed and want to ship them
+
+### Fork vs. clone (the difference matters)
+
+These two words sound interchangeable but they're not.
+
+- A **fork** is a copy of the repo on GitHub, owned by you. It lives in the cloud at `github.com/YOUR-USERNAME/cs-repo`. You "fork" once, the first time you join the team.
+- A **clone** is a copy of the repo on your laptop. You "clone" your fork so you can run commands locally. You can clone-and-delete-and-clone-again any time.
+
+The flow is: fork (once, on github.com) → clone (every machine you want to use the tool on) → make changes → push (back to your fork) → PR (from your fork to the canonical repo).
+
+If you accidentally cloned the team owner's repo directly (without forking first), you'll be unable to push your changes because the team owner has branch protection enabled. The fix is to fork now, then change the remote URL: `git remote set-url origin https://github.com/YOUR-USERNAME/cs-repo.git`.
+
+### Your fork URL pattern
+
+Look at your fork. The URL is **always** `github.com/YOUR-USERNAME/cs-repo`. The team owner's repo is at `github.com/OWNER-USERNAME/cs-repo` (a different username). When git asks where to push, it pushes to YOUR fork. When you open a PR, you ask the team owner to merge from your fork into theirs.
+
+You can confirm any time:
+
+```
+cd cs-repo
+git remote -v
+```
+
+You should see two remotes:
+- `origin` → your fork (where pushes go)
+- `upstream` → the team copy (where you pull updates from)
+
+If you don't see `upstream`, you skipped Step 3 of TEAM_SETUP.md — go back and do it.
+
+### What a Pull Request (PR) is
+
+A PR is a proposal: "here are changes on a branch in my fork — please merge them into your main."
+
+When Claude pushes a branch, GitHub prints a URL like `github.com/OWNER/cs-repo/pull/new/your-branch-name`. Clicking it opens the PR form. You:
+
+1. Write a title and short description (Claude usually drafts both)
+2. Click **Create pull request**
+3. Wait for CI checks (a couple minutes — the tests run automatically)
+4. Either the team owner reviews, or you self-merge if you're the owner
+
+The team uses **squash merge** — every PR becomes one clean commit on `main`, no matter how many commits were on the branch. This keeps history readable.
+
+### When to push vs. PR
+
+- **Push** = upload your local commits to your fork on GitHub. Doesn't affect the team copy. Happens automatically when Claude finishes a change.
+- **PR** = ask the team owner to merge your fork's changes into the team copy. This is what makes a change "official" for the team.
+
+You push many times during development. You open a PR when the change is ready to share.
+
+### Pulling team updates back
+
+When the team owner merges someone else's PR, your fork doesn't automatically get the update. You pull it in:
+
+```
+cd cs-repo
+git fetch upstream
+git merge upstream/main
+```
+
+Or use Claude — just ask "pull the latest from upstream main".
+
+If git complains about conflicts, you've changed something the team also changed. Tell Claude — it walks you through resolving each conflict file by file.
+
+### What the existing GitHub tutorial (further down) covers
+
+The original "GitHub tutorial (no tech experience needed)" section is still in this guide — it walks through the specific clicks for opening and merging a PR with screenshots-worth-of-detail. Read it before your first PR.
+
+---
 
 ---
 
@@ -309,6 +452,22 @@ Type `/kb-draft` → give Claude a topic or paste an Intercom conversation URL �
 
 ---
 
+## Verify your setup is healthy — `/check-setup`
+
+Run this right after `/setup` and any time something feels off ("why did `/daily` return the wrong person's data?").
+
+Type `/check-setup`. Claude runs read-only probes against every piece of your configuration:
+
+- **Personal CLAUDE.md** — name, email, and Intercom Admin ID are all real values (not placeholders)
+- **MCP integrations (all 7)** — Gmail, Calendar, Drive, Asana, Intercom, Slack, Shortcut each respond to a no-op call; failures are isolated per-MCP so one bad integration doesn't hide the rest
+- **Intercom ID cross-check** — the ID in your CLAUDE.md actually matches your authenticated Intercom session (silent mismatch is the highest-impact failure mode — `/daily` returns someone else's conversations and nobody notices)
+- **Filesystem** — `data/outputs/`, `out/`, and (optionally) `~/Desktop/CS Reports/` exist
+- **Dev tools** — `node_modules/`, pytest, ruff, biome — only flagged 🟡 if missing (not 🔴), since teammates who only use commands don't need them
+
+Output is a green/yellow/red report with specific next steps for any 🔴 item. Read-only — never modifies files, never reconnects integrations, never writes config. If you need to fix something, the report tells you exactly which command or settings page to use.
+
+---
+
 ## List every available command — `/commands`
 
 Quick discoverability for new teammates (or for yourself when you forget what's available).
@@ -329,12 +488,12 @@ Read-only — no MCP calls, no file edits.
 Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
 
 Type `/review-code`. Claude will:
-1. Run all 568 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
+1. Run all 572 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
 2. Run both linters (`make lint` — ruff for Python, biome for JS) to confirm no undefined names or unused imports
 3. Work through a fixed 22-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
 
-This gives you the same check every time, not a different result each session. If everything passes, you'll see "568 passed, 0 failed" and a full green table.
+This gives you the same check every time, not a different result each session. If everything passes, you'll see "572 passed, 0 failed" and a full green table.
 
 > Use `/review-code` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
 
@@ -361,13 +520,13 @@ Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seco
 Before opening a PR for any code change, run the test suite AND the linters:
 
 ```
-make test    # 568 automated tests (439 Python + 129 JavaScript)
+make test    # 572 automated tests (443 Python + 129 JavaScript)
 make lint    # ruff (Python) + biome (JS) — catches undefined names, unused imports
 ```
 
 The tests cover every hook, every lib helper (csv-export, report-theme, data-loader, copy-to-desktop, report_charts), every report's CLI contract, the publish pipeline, AND every command file's frontmatter (so adding a new slash command without a `description:` fails CI). The linters catch the runtime-bug class that tests can miss — e.g., a missing `require()` in a code path tests don't exercise.
 
-If all pass you'll see `439 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
+If all pass you'll see `443 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
 
 GitHub Actions runs all of `make test` + `make lint` automatically on every pull request. A PR can't sneak a broken change onto `main` without CI catching it first.
 
@@ -504,5 +663,6 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/prs` | CS Eng: show Shortcut stories pending eng review |
 | `/tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
+| `/check-setup` | Validate your config — CLAUDE.md, all 7 MCPs, Intercom ID match, output dirs |
 | `/commands` | List every available slash command (live from `.claude/commands/`) |
 | `/review-code` | Run tests + structured quality checklist |

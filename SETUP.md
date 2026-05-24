@@ -131,7 +131,7 @@ You only do this once.
 
 ---
 
-## You're set up
+## You're set up — verify it
 
 Open Terminal (Mac) or Command Prompt (PC) and type:
 
@@ -140,7 +140,15 @@ cd cs-repo
 claude
 ```
 
-Claude opens. See **[USER_GUIDE.md](USER_GUIDE.md)** for every command and how to use it.
+Claude opens. Then type:
+
+```
+/check-setup
+```
+
+This runs a battery of read-only checks (CLAUDE.md filled in, all 7 MCPs reachable, Intercom ID actually matches your authenticated Intercom session, output directories present) and reports green/yellow/red. **Do not skip this** — a misconfigured Intercom ID is the highest-impact silent failure and `/check-setup` is the only thing that catches it.
+
+When `/check-setup` is all green, see **[USER_GUIDE.md](USER_GUIDE.md)** for every command and how to use it. The "Claude Code 101" and "GitHub 101" sections at the top are required reading if any of this is new.
 
 ---
 

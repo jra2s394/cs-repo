@@ -19,7 +19,26 @@ Chronological history of every change merged to `main`, from the first commit to
 
 ## 2026-05-24
 
-### `<pending>` · PR #28 — Lock in the command frontmatter contract with a pytest
+### `<pending>` · PR #29 — Team-readiness: `/check-setup`, TEAM_SETUP.md, Claude Code 101 + GitHub 101
+**Tags:** `[command] [docs]`
+
+Net: 7 files changed, +N (1 new command file, 1 new top-level doc, 4 doc updates, 1 checklist update).
+
+The biggest gap before distributing to the team: a new teammate following SETUP.md would clone the canonical repo (blocked from pushing), miss the fork step entirely, and have no way to validate their setup actually worked. This PR closes that gap end-to-end.
+
+- **New command:** `/check-setup` — read-only validator that probes everything a teammate could miscofigure: personal CLAUDE.md filled in with real values (not placeholders), all 7 MCPs respond to a no-op call (Gmail / Calendar / Drive / Asana / Intercom / Slack / Shortcut), the **Intercom Admin ID in CLAUDE.md actually matches the authenticated Intercom session** (silent mismatch was the highest-impact failure mode — `/daily` returns someone else's data and nobody notices), output dirs exist, dev tools installed (only 🟡 if missing, since command-only users don't need them). Per-MCP error isolation so one bad integration doesn't hide the others. Reports green/yellow/red per check with specific next-step fixes.
+- **New top-level doc:** `TEAM_SETUP.md` — the canonical "teammate joining" path. Fork on github.com → clone YOUR fork → set upstream remote → follow SETUP.md from Step 2 → `/check-setup` → first command. Includes the update-flow (`git fetch upstream && git merge upstream/main`) and an "inviting a teammate" section for the repo owner.
+- **USER_GUIDE Claude Code 101 section** — what Claude Code is, what slash commands are, what MCPs do, the approval flow, and what each of the 11 hooks blocks. Top of the guide, before the standup section. Non-technical teammates can read it cold.
+- **USER_GUIDE GitHub 101 section** — what GitHub is, fork vs. clone (the difference and why it matters), your fork URL pattern, what a PR is, when to push vs. PR, how to pull team updates. Sits right after Claude Code 101.
+- **Docs sync:**
+  - README — two-path entry: TEAM_SETUP.md for teammates, SETUP.md for per-person config
+  - SETUP.md — the "you're set up" step now ends with running `/check-setup` so a misconfiguration can't sneak past
+  - CLAUDE.md — registered `/check-setup` in the Tooling table
+  - USER_GUIDE — detailed `/check-setup` section + quick-reference entry
+  - `/review-code` Section 20 — added `/check-setup` contract check (read-only, per-MCP error isolation)
+- **Commands:** 43 → 44.
+
+### `ab31af7` · PR #28 — Lock in the command frontmatter contract with a pytest
 **Tags:** `[testing] [docs]`
 
 Net: 5 files changed, +N (1 new test file + 4 docs).
@@ -245,12 +264,12 @@ Net: 124 files changed, +17,540. The bootstrap.
 
 ## Numbers at a glance
 
-| Metric | At v0 | After PR #28 (today) |
+| Metric | At v0 | After PR #29 (today) |
 |---|---|---|
-| Slash commands | 18 | 43 |
+| Slash commands | 18 | 44 |
 | Hooks | 10 | 11 (added `secret-scan.py`) |
 | Report generators | 9 | 17 |
-| Python tests | 0 | 439 |
+| Python tests | 0 | 443 |
 | JS tests | 0 | 129 |
 | Linters | 0 | 2 (ruff + biome) |
 | CI checks | 0 | 4 (pytest + ruff + biome + JS) |
