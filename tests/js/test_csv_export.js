@@ -160,14 +160,62 @@ test("section without title but with headers and rows", () => {
   assert.strictEqual(lines[1], "1,2");
 });
 
+// ── formula injection defense ───────────────────────────────────────────────
+console.log("\nformula injection defense");
+
+test("leading = is prefixed with a single quote", () => {
+  const out = write([{ rows: [["=SUM(A1:A10)"]] }]);
+  assert.strictEqual(out.trim(), "'=SUM(A1:A10)");
+});
+
+test("leading + is prefixed", () => {
+  const out = write([{ rows: [["+1234"]] }]);
+  assert.strictEqual(out.trim(), "'+1234");
+});
+
+test("leading - is prefixed (treated as formula by Excel)", () => {
+  const out = write([{ rows: [["-1234"]] }]);
+  assert.strictEqual(out.trim(), "'-1234");
+});
+
+test("leading @ is prefixed", () => {
+  const out = write([{ rows: [["@something"]] }]);
+  assert.strictEqual(out.trim(), "'@something");
+});
+
+test("leading tab is prefixed", () => {
+  const out = write([{ rows: [["\t=evil()"]] }]);
+  // The leading tab gets the quote, then the comma-free value isn't wrapped.
+  assert.strictEqual(out.trim(), "'\t=evil()");
+});
+
+test("equals NOT at the start is left alone", () => {
+  const out = write([{ rows: [["x=1"]] }]);
+  assert.strictEqual(out.trim(), "x=1");
+});
+
+test("injection value containing comma still gets both fixes", () => {
+  const out = write([{ rows: [["=HYPERLINK(\"http://x\"),foo"]] }]);
+  // Single quote prefix + wrapped in quotes + internal quote doubled.
+  assert.strictEqual(out.trim(), '"\'=HYPERLINK(""http://x""),foo"');
+});
+
 // ── resilience ───────────────────────────────────────────────────────────────
 console.log("\nresilience");
 
-test("non-fatal on unwritable path — does not throw", () => {
-  // /nonexistent/dir does not exist — writeFileSync would throw
-  assert.doesNotThrow(() => {
-    writeCsv("/nonexistent/dir/output.csv", [{ rows: [["x"]] }]);
-  });
+test("write failure logs to stderr but does not throw", () => {
+  const origErr = console.error;
+  let captured = "";
+  console.error = (msg) => { captured += msg; };
+  try {
+    assert.doesNotThrow(() => {
+      writeCsv("/nonexistent/dir/output.csv", [{ rows: [["x"]] }]);
+    });
+    assert.ok(captured.includes("CSV write failed"),
+      `expected error message on stderr, got: ${captured}`);
+  } finally {
+    console.error = origErr;
+  }
 });
 
 test("empty sections array — writes nothing but does not throw", () => {
