@@ -1,0 +1,33 @@
+name: Hook Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Configure git identity (needed by branch-enforcer tests)
+        run: |
+          git config --global user.email "ci@test.local"
+          git config --global user.name "CI"
+
+      - name: Run tests
+        run: python3 -m pytest --tb=short -q
+
+      - name: Run tests with coverage
+        run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing -q
