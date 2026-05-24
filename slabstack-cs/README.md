@@ -36,10 +36,10 @@ slabstack-cs/
 | # | Title | Status |
 |---|-------|--------|
 | 1 | Welcome & Account Setup | 🔲 In Progress |
-| 2 | Creating a Quote | 🔲 In Progress |
-| 3 | Managing Projects | 🔲 In Progress |
-| 4 | Customer & Contact Management | 🔲 In Progress |
-| 5 | Email & Communication | 🔲 In Progress |
+| 2 | Configurations | 🔲 In Progress |
+| 3 | Activities | 🔲 In Progress |
+| 4 | Creating a Quote | 🔲 In Progress |
+| 5 | Managing Projects | 🔲 In Progress |
 
 ---
 
