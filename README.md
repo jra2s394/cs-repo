@@ -26,7 +26,7 @@ You type a command. Claude reads your real data, writes the output, and shows it
 
 **Executive reporting** — `/executive-summary` for a portfolio-wide view combining onboarding, support, renewals, and health, `/weekly-team` to roll up the team's week for leadership.
 
-**Utilities** — `/customer` for a pre-call briefing, `/customer-search` for fuzzy customer lookup across all systems, `/standup-recap` to roll up the week's daily files for `/eow`, `/escalate` to create a Shortcut ticket, `/tasks` to manage Asana, `/kb-draft` to write a KB article.
+**Utilities** — `/customer` for a pre-call briefing, `/customer-search` for fuzzy customer lookup across all systems, `/inbox-triage` to sort the morning email pile, `/standup-recap` to roll up the week's daily files for `/eow`, `/escalate` to create a Shortcut ticket, `/tasks` to manage Asana, `/kb-draft` to write a KB article.
 
 ---
 
@@ -57,7 +57,7 @@ Every hook, lib helper, chart, and report is covered by automated tests. Two lin
 ```
 make test       # 394 tests (265 Python + 129 JS)
 make lint       # ruff + biome — undefined names, unused imports, etc.
-/review-code    # structured checklist — runs tests first, then 19 fixed sections
+/review-code    # structured checklist — runs tests first, then 22 fixed sections
 ```
 
 See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) for details.

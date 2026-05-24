@@ -60,6 +60,7 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 |---|---|
 | `/customer` | Full snapshot — Intercom, Gmail, Calendar, Asana, Shortcut, Read.ai |
 | `/customer-search` | Fuzzy lookup — find a customer across all systems when you don't know the exact name |
+| `/inbox-triage` | Morning Gmail triage — Respond / FYI / Escalation / Customer Signal buckets; drafts replies only on request, never sends without approval |
 | `/meeting-prep` | Briefings for all customer meetings in the next 24h |
 | `/follow-up` | Draft follow-up email after a call (Read.ai → draft → approval → send) |
 | `/go-live` | Go-live readiness check — blockers across Asana, Shortcut, Intercom, Gmail |
