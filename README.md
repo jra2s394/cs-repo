@@ -20,6 +20,12 @@ You type a command. Claude reads your real data, writes the output, and shows it
 
 **Renewal invoice reports** — reads the Finance renewals sheet and calculates exactly what each customer owes. Handles volume and fixed-rate contracts automatically.
 
+**Portfolio intelligence** — `/health-score` for a green/yellow/red view of every active account, `/at-risk` to surface risk signals across all systems, `/expansion` to find upsell opportunities, `/renewal-health` for upcoming renewal pipeline with risk scores.
+
+**Lifecycle commands** — `/start-onboarding` to kick off a new customer (Asana + Drive + Shortcut + Slack), `/end-onboarding` to close it out cleanly, `/handoff` to transfer account ownership with a full context brief.
+
+**Executive reporting** — `/executive-summary` for a portfolio-wide view combining onboarding, support, renewals, and health, `/weekly-team` to roll up the team's week for leadership.
+
 **Utilities** — `/customer` for a pre-call briefing, `/escalate` to create a Shortcut ticket, `/tasks` to manage Asana, `/kb-draft` to write a KB article.
 
 ---
@@ -49,8 +55,8 @@ Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutori
 Every hook and chart helper has automated tests. GitHub Actions runs them on every pull request so broken changes can't land on `main`.
 
 ```
-make test       # run all 237 tests
-/review-code    # structured checklist — runs tests first, then 9 fixed sections
+make test       # run all 258 tests (237 Python + 21 JS)
+/review-code    # structured checklist — runs tests first, then 11 fixed sections
 ```
 
 See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) for details.
