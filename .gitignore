@@ -14,6 +14,8 @@ out/
 # Finance data files — never commit customer or billing data
 *.xlsx
 *.csv
+*.pdf
+*.docx
 
 # Claude Code local state
 .claude/projects/
