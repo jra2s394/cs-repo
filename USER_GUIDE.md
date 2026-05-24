@@ -128,18 +128,18 @@ Type `/kb-draft` → give Claude a topic or paste an Intercom conversation URL �
 
 ---
 
-## Review and quality check — `/review`
+## Review and quality check — `/review-code`
 
 Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
 
-Type `/review`. Claude will:
+Type `/review-code`. Claude will:
 1. Run all 237 automated tests first — if any fail, it stops and tells you exactly what's wrong
 2. Work through a fixed 9-section checklist covering every hook, report layout rule, and chart helper
 3. Report a pass/fail table at the end
 
 This gives you the same check every time, not a different result each session. If everything passes, you'll see "237 passed, 0 failed" and a full green table.
 
-> Use `/review` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
+> Use `/review-code` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
 
 ---
 
@@ -171,7 +171,7 @@ This runs 237 automated tests that cover every hook and chart helper. If all pas
 
 GitHub Actions runs the same tests automatically on every pull request. A PR can't sneak a broken change onto `main` without the CI catching it first.
 
-For a full structured review (tests + checklist), use `/review` — see above.
+For a full structured review (tests + checklist), use `/review-code` — see above.
 
 ### What to tell Claude
 
@@ -284,4 +284,4 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/escalate` | Escalate Intercom → Shortcut ticket |
 | `/tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
-| `/review` | Run tests + structured quality checklist |
+| `/review-code` | Run tests + structured quality checklist |
