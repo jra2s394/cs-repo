@@ -136,11 +136,77 @@ Present the draft and ask: "Does this look right? Any sections to adjust before 
 
 ---
 
-## Step 4 — Save after approval
+## Step 4 — Generate report after approval
 
-Once approved:
-1. Save to `slabstack-cs/qbr-templates/qbr-[customer-slug]-[quarter].md`
-2. Ask if you want to create Asana tasks for the pre-QBR checklist items
+Once the draft is approved:
+
+**a) Write the metrics JSON** to `data/outputs/qbr-[customer-slug]-[quarter-slug]-metrics-[YYYY-MM-DD].json`:
+
+```json
+{
+  "customer":          "[Customer Name]",
+  "customerSlug":      "[customer-slug]",
+  "quarter":           "[e.g. Q2 2026]",
+  "dateRange":         "[e.g. Feb 1 – Apr 30, 2026]",
+  "generated":         "[e.g. May 26, 2026]",
+  "preparedBy":        "[Your Name from CLAUDE.md]",
+  "meetingDate":       "[e.g. May 28, 2026 or null]",
+  "attendeesCustomer": "[names or null]",
+  "attendeesSlabstack":"[names]",
+  "kpis": [
+    { "value": "[win count]",    "label": "Quarter Wins",    "delta": null },
+    { "value": "[open count]",   "label": "Open Issues",     "delta": "[e.g. 🔴 1 critical or null]" },
+    { "value": "[🟢/🟡/🔴]",     "label": "Renewal Status",  "delta": "[e.g. On track]" }
+  ],
+  "executiveSummary": [
+    ["Health",        "[🟢 Green / 🟡 Yellow / 🔴 Red]"],
+    ["ARR",           "[from Finance email or customer master — omit if unknown]"],
+    ["Renewal Date",  "[date or Confirm with Finance]"],
+    ["Meetings",      "[X meetings this quarter]"],
+    ["Support Volume","[X conversations]"],
+    ["Resolution Rate","[X%]"]
+  ],
+  "wins": [
+    { "win": "[description]", "impact": "[impact]", "source": "[calendar event / email / Asana / Shortcut]" }
+  ],
+  "openIssues": [
+    { "issue": "[description]", "status": "[status]", "owner": "[owner]", "eta": "[date]", "critical": true }
+  ],
+  "renewal": {
+    "date":       "[renewal date or null]",
+    "daysOut":    [days as number or null],
+    "currentARR": "[ARR or null]",
+    "risk":       "[High / Medium / Low or null]",
+    "strategy":   "[renewal approach or null]"
+  },
+  "agenda": [
+    ["Welcome & agenda",                    "2 min",  "CSM"],
+    ["Quarter in review — usage & adoption","10 min", "CSM"],
+    ["Value realized — wins",               "10 min", "CSM"],
+    ["Open issues",                         "5 min",  "CSM"],
+    ["Roadmap preview",                     "8 min",  "CSM"],
+    ["Next quarter goals",                  "8 min",  "Customer"],
+    ["Wrap up & next steps",                "2 min",  "Both"]
+  ],
+  "nextSteps": [
+    { "action": "Send QBR recap with action items", "owner": "[Your Name]", "due": "Within 24h" },
+    { "action": "Update health score in customer master", "owner": "[Your Name]", "due": "Within 24h" }
+  ],
+  "methodology": {
+    "period":  "[e.g. Feb 1 – Apr 30, 2026]",
+    "sources": ["Intercom", "Gmail", "Google Calendar", "Asana", "Shortcut"]
+  }
+}
+```
+
+**b) Build the .docx:**
+```bash
+node reports/qbr.js data/outputs/qbr-[customer-slug]-[quarter-slug]-metrics-[YYYY-MM-DD].json
+```
+Output: `out/QBR_[CustomerSlug]_[Quarter]_[Date].docx`
+Auto-copies to `~/Desktop/CS Reports/QBR/` if that folder exists (run `bash scripts/setup-desktop.sh` once to create it).
+
+**c) Ask if you want to create Asana tasks for any pre-QBR checklist items.**
 
 Draft any Asana tasks before creating them.
 
