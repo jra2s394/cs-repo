@@ -4,6 +4,7 @@
 // Output: out/Intercom_Daily_YYYY-MM-DD.docx  (via d.dateSlug, e.g. "2026-05-21")
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -119,5 +120,13 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `Daily Snapshot — ${d.period}` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Intercom", "Daily"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Intercom", "Daily");
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Summary", headers: ["Metric", "Today", d.priorPeriod || "Yesterday", "Change"], rows: d.summaryTable || [] },
+      { title: "Open Queue", headers: ["Customer", "Subject", "Age", "Urgent"],
+        rows: (d.openQueue || []).map(q => [q.customer, q.subject, q.age, q.urgent ? "Yes" : "No"]) },
+    ]);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });

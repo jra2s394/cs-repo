@@ -4,6 +4,7 @@
 // Output: out/Intercom_Monthly_YYYY-MM.docx
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -166,5 +167,15 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `Monthly Report — ${d.period}` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Intercom", "Monthly"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Intercom", "Monthly");
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Prior Month", "Change"], rows: d.summaryTable || [] },
+      { title: "Weekly Breakdown", headers: ["Week", "New", "Closed", "Resolution", "Avg FRT"], rows: d.weeklyTable || [] },
+      { title: "Top Customers", headers: ["Rank", "Domain", "Conversations"], rows: d.topCustomers || [] },
+      { title: "Open Queue", headers: ["Customer", "Subject", "Age", "Urgent"],
+        rows: (d.openQueue || []).map(q => [q.customer, q.subject, q.age, q.urgent ? "Yes" : "No"]) },
+    ]);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
