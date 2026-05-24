@@ -50,7 +50,7 @@ from collections import Counter
 # ── CONFIG ────────────────────────────────────────────────────────────────────
 
 # Primary: set OBSIDIAN_VAULT env var. Fallback: edit the path below.
-VAULT_ROOT_FALLBACK = Path.home() / "Documents" / "Obsidian" / "MyVault"
+VAULT_ROOT_FALLBACK = Path("/path/to/your/obsidian/vault")
 VAULT_ROOT = Path(os.environ.get("OBSIDIAN_VAULT", str(VAULT_ROOT_FALLBACK)))
 
 # Subdirectory inside the vault where session notes are saved.
@@ -121,14 +121,17 @@ def find_existing_export(session_id: str) -> Path | None:
 
 
 def find_session_file(session_id: str) -> Path | None:
+    if not CLAUDE_PROJECTS.exists():
+        return None
     for project_dir in CLAUDE_PROJECTS.iterdir():
         if not project_dir.is_dir():
             continue
         candidate = project_dir / f"{session_id}.jsonl"
         if candidate.exists():
             return candidate
-    for jsonl in CLAUDE_PROJECTS.rglob(f"{session_id}.jsonl"):
-        return jsonl
+    matches = list(CLAUDE_PROJECTS.rglob(f"{session_id}.jsonl"))
+    if matches:
+        return max(matches, key=lambda p: p.stat().st_mtime)
     return None
 
 
