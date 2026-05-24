@@ -6,6 +6,8 @@ Read `CLAUDE.md` from this repo before starting.
 
 Generate a renewal health pipeline for all accounts with renewals in the next 90–180 days. **Always draft for review before building the report.** Nothing is created, posted, or sent without explicit approval.
 
+> **MCP gotchas across commands:** Asana team-filter noise (sibling-team projects polluting results), Intercom result-too-large errors (`per_page` token budget; `contact_ids` caps at 15), and stale 2023 overdue tasks all have documented fixes in `/health-score`'s Step 1. Read that section first if any MCP query here misbehaves.
+
 ---
 
 ## Step 1 — Get the time window

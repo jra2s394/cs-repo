@@ -19,7 +19,23 @@ Chronological history of every change merged to `main`, from the first commit to
 
 ## 2026-05-24
 
-### `<pending>` · PR #30 — Enhance `/health-score` from dogfooding lessons
+### `<pending>` · PR #31 — Cross-reference 8 HIGH-priority commands to `/health-score` Step 1 gotchas
+**Tags:** `[command] [docs]`
+
+Net: 9 files changed, +9 (1 line added per command + a small RELEASE_NOTES entry).
+
+Audit recap: PR #30 documented four MCP query patterns in `/health-score` that surfaced from live dogfooding (Asana team filter, Intercom `per_page`/`contact_ids` batching, recent-overdues sort trick, verbatim-quote rule). Eight other commands share the same query patterns and would hit the same failure modes the first time a teammate runs them.
+
+This PR adds a one-line cross-reference block to those 8 commands, immediately after each intro paragraph, pointing teammates at `/health-score`'s Step 1 if any MCP query misbehaves. Same text in every file so future maintenance is one search-and-replace.
+
+Commands cross-referenced (all HIGH-priority per the meta-audit):
+- `/at-risk`, `/executive-summary`, `/renewal-health` (portfolio scans)
+- `/customer`, `/qbr`, `/handoff` (per-customer deep-dives)
+- `/expansion`, `/weekly-team` (aggregations)
+
+Deliberately **not** done in this PR: speculative pattern-by-pattern enhancements (mode detection, batching technique, team filter) baked into each command. Those will land per-command, dogfood-driven, when each is next actually run against real data (same flow as `/health-score`). Speculative bulk edits risk wrong instructions; pointers to the documented fixes are zero-risk and high-value.
+
+### `94101b1` · PR #30 — Enhance `/health-score` from dogfooding lessons
 **Tags:** `[command] [docs]`
 
 Net: 4 files changed, +N (1 command rewrite + 3 doc updates).
