@@ -7,11 +7,7 @@
     "node": ">=18"
   },
   "scripts": {
-    "generate:daily": "node reports/intercom-daily.js",
-    "generate:weekly": "node reports/intercom-weekly.js",
-    "generate:monthly": "node reports/intercom-monthly.js",
-    "generate:quarterly": "node reports/intercom-quarterly.js",
-    "generate:ytd": "node reports/intercom-yeartodate.js"
+    "test": "node tests/js/test_csv_export.js"
   },
   "dependencies": {
     "docx": "8.5.0"

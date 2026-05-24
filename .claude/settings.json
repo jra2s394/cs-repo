@@ -15,6 +15,10 @@
           {
             "type": "command",
             "command": "python3 hooks/block-attribution.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 hooks/secret-scan.py"
           }
         ]
       },

@@ -22,3 +22,8 @@ out/
 .claude/cache/
 .claude/settings.local.json
 .mcp.json
+
+# Test runner caches
+.pytest_cache/
+__pycache__/
+*.pyc

@@ -65,11 +65,4 @@ See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) fo
 
 ## Intercom ID reference
 
-Each teammate needs their own ID so Claude pulls your conversations, not a teammate's. See Step 3 in [SETUP.md](SETUP.md) for how to find yours.
-
-| Name | ID |
-|---|---|
-| [Your Name] | `YOUR_INTERCOM_ID` |
-| [Teammate 1] | `TEAMMATE_1_ID` |
-| [Teammate 2] | `TEAMMATE_2_ID` |
-| [Teammate 3] | `TEAMMATE_3_ID` |
+Each teammate needs their own ID so Claude pulls your conversations, not a teammate's. See Step 3 in [SETUP.md](SETUP.md) for how to find yours — `/setup` writes it into your local `CLAUDE.md`.
