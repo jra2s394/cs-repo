@@ -212,6 +212,7 @@ Configured server-side at `github.com/jra2s394/cs-repo/settings/branches`:
 |---|---|
 | Require pull request before merging | ✅ on |
 | Required approvals | 0 (solo repo) |
+| Required status checks | ✅ `test` must pass; strict (branch must be up-to-date with `main`) |
 | Allow force pushes | ❌ off |
 | Allow branch deletion | ❌ off |
 | Require linear history | ✅ on (squash/rebase only) |
