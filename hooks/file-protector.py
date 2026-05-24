@@ -23,9 +23,9 @@ except (json.JSONDecodeError, ValueError):
 file_path = (data.get("tool_input") or {}).get("file_path", "")
 basename = os.path.basename(file_path)
 
-if basename.startswith(".env") and not basename.endswith(
+if (basename == ".env" or (basename.startswith(".env.") and not basename.endswith(
     (".example", ".sample", ".template")
-):
+))):
     print(
         f"BLOCKED: '{file_path}' is an environment file that may contain secrets.",
         file=sys.stderr,
