@@ -222,6 +222,8 @@ These commands should NEVER call write-tools without an explicit draft + approva
 - [ ] Does `/customer-search` explicitly say "read-only" or "Never create, update, or comment on anything"?
 - [ ] Does `/standup-recap` explicitly say "no MCP calls" (it's a local-file-only aggregator)?
 - [ ] Does `/inbox-triage` explicitly forbid sending email without approval (draft-first like `/follow-up`)?
+- [ ] Does `/meeting-notes` explicitly say "read-only" with "never drafts email / never creates a task / never updates a story" (the only side effect is optional save-to-disk after explicit yes)?
+- [ ] Does `/commands` explicitly say "read-only" and "no MCP calls" (it's a directory walker)?
 - [ ] Does `/at-risk` explicitly state read-only — no tasks/messages/tickets created?
 - [ ] Does `/prs` explicitly state read-only — no story state changes?
 - [ ] Does each command's frontmatter `description` field accurately match what the command does (not stale)?

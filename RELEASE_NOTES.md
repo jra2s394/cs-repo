@@ -19,7 +19,17 @@ Chronological history of every change merged to `main`, from the first commit to
 
 ## 2026-05-24
 
-### `<pending>` · PR #26 — Add `/inbox-triage` and hard-polish `/review-code`
+### `<pending>` · PR #27 — Add `/commands` and `/meeting-notes`
+**Tags:** `[command] [docs]`
+
+Net: 5 files changed, +N (docs + 2 new command files).
+
+- **New command:** `/commands` — discoverability tool that lists every slash command live from `.claude/commands/*.md` frontmatter, grouped by category. Surfaces drift between the directory and CLAUDE.md (commands that exist in one but not the other), so the inventory can't silently rot. Read-only — no MCP calls.
+- **New command:** `/meeting-notes` — read-only counterpart to `/follow-up`. Pulls Read.ai + calendar + Gmail + Asana + Shortcut for a meeting that just ended and produces a structured note (summary, decisions, action items cross-referenced against existing Asana tasks and Shortcut stories so you don't propose duplicates, customer signals quoted verbatim from the transcript, open-questions parking lot). No email drafted, no tasks created — strictly note-taking. Only side effect: optional save to `slabstack-cs/meeting-notes/<customer>-<date>.md`, and only after explicit "yes save".
+- **CLAUDE.md** — added new "Tooling" command table covering `/setup`, `/commands`, `/review-code` (these were previously not listed in any table). Registered `/meeting-notes` in Customer intelligence.
+- **README + USER_GUIDE** — detailed sections for both new commands; updated quick-reference table.
+
+### `63c3b52` · PR #26 — Add `/inbox-triage` and hard-polish `/review-code`
 **Tags:** `[command] [docs]`
 
 Net: 6 files changed, +N (docs + 1 new command file + 4 new checklist sections).
@@ -222,9 +232,9 @@ Net: 124 files changed, +17,540. The bootstrap.
 
 ## Numbers at a glance
 
-| Metric | At v0 | After PR #26 (today) |
+| Metric | At v0 | After PR #27 (today) |
 |---|---|---|
-| Slash commands | 18 | 41 |
+| Slash commands | 18 | 43 |
 | Hooks | 10 | 11 (added `secret-scan.py`) |
 | Report generators | 9 | 17 |
 | Python tests | 0 | 265 |
