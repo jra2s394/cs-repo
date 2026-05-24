@@ -68,6 +68,12 @@ See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) fo
 
 ---
 
+## Reporting a security issue
+
+Found a vulnerability or a leaked token? See **[SECURITY.md](SECURITY.md)** for the reporting process, what's in scope, and the existing defense layers (`secret-scan`, `push-guard`, `file-protector`, `draft-before-create`, branch protection, etc.).
+
+---
+
 ## Intercom ID reference
 
 Each teammate needs their own ID so Claude pulls your conversations, not a teammate's. See Step 3 in [SETUP.md](SETUP.md) for how to find yours — `/setup` writes it into your local `CLAUDE.md`.
