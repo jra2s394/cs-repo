@@ -4,6 +4,7 @@
       {
         "matcher": "Bash",
         "hooks": [
+          { "type": "command", "command": "python3 hooks/branch-enforcer.py" },
           { "type": "command", "command": "python3 hooks/push-guard.py" },
           { "type": "command", "command": "python3 hooks/block-attribution.py" }
         ]

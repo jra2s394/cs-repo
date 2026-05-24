@@ -128,7 +128,85 @@ Type `/kb-draft` → give Claude a topic or paste an Intercom conversation URL �
 
 ---
 
-## Where files land
+## Saving changes to the repo (Git workflow)
+
+Any time you change a file in `cs-repo` — a prompt, a command, a script — those changes need to go through GitHub before they're "official." This keeps the shared copy clean and makes it easy to undo anything that breaks.
+
+The required flow has five steps:
+
+1. **Create a branch** — a branch is your own working copy, separate from the shared `main` version. Nothing you do on a branch affects anyone else until it's merged.
+2. **Make your changes** — edit files, add content, ask Claude to update things.
+3. **Commit** — save a snapshot of your changes with a short description.
+4. **Push** — upload your branch to GitHub so others can see it.
+5. **Open a pull request (PR) and merge** — ask for the branch to be merged into `main`. This is the moment your change becomes official.
+
+Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seconds — see the tutorial below).
+
+> **Why not just save directly to main?** The hooks in this repo block it. Every change needs a branch and a PR so there's always a record and an easy way to roll back.
+
+### What to tell Claude
+
+When you want to make a change, just describe it:
+
+> "Update the `/daily` prompt to include a section for blocked Asana tasks."
+
+Claude will make the edits, create a branch, commit the change, and push it. Then it will ask if you want to open a PR. Say yes — then finish on GitHub using the tutorial below.
+
+---
+
+## GitHub tutorial (no tech experience needed)
+
+GitHub is where the repo lives online. You use it for one thing in this workflow: reviewing and merging a pull request (PR). A PR is just a proposed change waiting for approval.
+
+### Step 1 — Open the PR
+
+After Claude pushes your branch, it will print a link like:
+
+```
+https://github.com/jra2s394/cs-repo/pull/new/chore/your-branch-name
+```
+
+Click that link. It opens GitHub in your browser.
+
+### Step 2 — Fill in the PR form
+
+You'll see two fields:
+
+- **Title** — a short description of what changed (Claude will suggest one)
+- **Description** — a short explanation of why (Claude fills this in using the team template)
+
+Review both. Edit anything that looks wrong. Then click the green **"Create pull request"** button.
+
+### Step 3 — Merge the PR
+
+Once the PR is open, you'll see a page with the title, description, and a list of changed files at the bottom.
+
+Scroll down to the merge button. Click the small arrow on the right side of the green button and select **"Squash and merge"** — this keeps the history clean by combining all your commits into one.
+
+Then click **"Confirm squash and merge."**
+
+That's it. Your change is now live on `main`.
+
+### Step 4 — Delete the branch (optional but tidy)
+
+After merging, GitHub shows a **"Delete branch"** button. Click it. The branch has done its job.
+
+---
+
+### GitHub quick-reference
+
+| What you see | What it means |
+|---|---|
+| **main** | The official shared version of the repo |
+| **Branch** | Your private working copy — safe to edit |
+| **Commit** | A saved snapshot with a description |
+| **Pull request (PR)** | A proposal to merge your branch into main |
+| **Squash and merge** | Combine all commits into one, then merge — keeps history clean |
+| **Files changed tab** | Shows exactly what was added (green) or removed (red) |
+
+---
+
+
 
 | What | Where |
 |---|---|
