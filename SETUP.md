@@ -1,0 +1,183 @@
+# CS Ops — Setup Guide
+
+Setup takes about 10 minutes. You only do it once.
+
+When you're done, see **[USER_GUIDE.md](USER_GUIDE.md)** for how to use everything.
+
+---
+
+## Before you start
+
+- [ ] A **Claude.ai account** (Pro or Team plan) — [claude.ai](https://claude.ai)
+- [ ] The **Claude Code app** — [claude.ai/code](https://claude.ai/code)
+- [ ] Access to this repo — if you're reading this, you're good
+
+---
+
+## Step 1 — Download the tool
+
+**Mac:** Press `Command + Space`, type "Terminal", press Enter.
+**PC:** Press the Windows key, type "cmd", press Enter.
+
+Paste these lines one at a time and press Enter after each:
+
+```
+git clone https://github.com/jra2s394/cs-repo.git
+cd cs-repo
+npm install
+```
+
+Text will scroll by — that's normal. Wait for the cursor to come back.
+
+> **Error on the first line?** You need to install git first. Ask your manager — takes 2 minutes.
+
+---
+
+## Step 2 — Connect your work accounts
+
+1. Go to [claude.ai](https://claude.ai) and log in
+2. Click your profile picture → **Settings** → **Integrations**
+3. Connect each one with your work login:
+
+| Account | Login to use |
+|---|---|
+| **Gmail** | Work Google account |
+| **Google Calendar** | Same Google account |
+| **Google Drive** | Same Google account |
+| **Asana** | Work Asana login |
+| **Intercom** | Shared Slabstack login |
+| **Slack** | Work Slack account |
+| **Shortcut** | Slabstack login |
+
+Each will ask you to sign in and approve — just click through.
+
+---
+
+## Step 3 — Find your Intercom ID
+
+Claude uses this number to find your conversations, not the whole team's inbox.
+
+1. Log in to [Intercom](https://app.intercom.com)
+2. Click **Settings** in the bottom left → **My Profile**
+3. Look at the URL in your browser:
+
+   `app.intercom.com/a/apps/abc123/admins/`**`12345678`**`/edit`
+
+4. That bold number is your ID. Write it down.
+
+Check the table at the bottom of [README.md](README.md) — your ID might already be there.
+
+---
+
+## Step 4 — Tell Claude who you are
+
+You need a small file on your computer with your name, email, and Intercom ID. It lives only on your machine and is never uploaded anywhere.
+
+> **Shortcut:** If you have Claude Code open in the `cs-repo` folder, type `/setup` and Claude will ask you the questions and write the file for you. Skip the steps below.
+
+**Mac:**
+
+1. In Terminal: `open ~/.claude` — a folder opens in Finder
+2. Look for **CLAUDE.md** inside:
+   - Found it → double-click to open in TextEdit
+   - Not there → open TextEdit, make a new file, save it as `CLAUDE.md` in that folder
+
+**PC:**
+
+1. In Command Prompt: `explorer %USERPROFILE%\.claude` — a folder opens
+2. Look for **CLAUDE.md**:
+   - Found it → right-click → open with Notepad
+   - Not there → open Notepad, make a new file, save it as `CLAUDE.md` in that folder
+
+**Paste this in — replace the placeholder text with your real info:**
+
+```
+## My CS Ops Settings
+
+Name: Your Full Name
+Email: your@company.com
+Intercom Admin ID: paste-your-number-from-step-3-here
+```
+
+Save and close.
+
+---
+
+## Step 5 — Desktop folder
+
+This creates a **CS Reports** folder on your Desktop with `Intercom/`, `Onboarding/`, and `Renewals/` subfolders. Every report you generate automatically copies there so you always know where to find it. Also adds a shortcut to the `cs-repo` folder on your Desktop.
+
+**Mac** — in Terminal:
+
+```
+bash cs-repo/scripts/setup-desktop.sh
+```
+
+**PC** — in Command Prompt:
+
+```
+cd cs-repo
+scripts\setup-desktop.bat
+```
+
+Or double-click `setup-desktop.bat` in File Explorer from inside the `cs-repo\scripts\` folder.
+
+You only do this once.
+
+---
+
+## You're set up
+
+Open Terminal (Mac) or Command Prompt (PC) and type:
+
+```
+cd cs-repo
+claude
+```
+
+Claude opens. See **[USER_GUIDE.md](USER_GUIDE.md)** for every command and how to use it.
+
+---
+
+## Joining a team that's already set up?
+
+Steps 2–5 are per person — you still need to do them yourself even if a teammate already cloned the repo.
+
+- **Skip Step 1** — instead, run `git pull` inside the `cs-repo` folder to get the latest
+- **Do Steps 2–5** — your own accounts, your own Intercom ID, your own CLAUDE.md, your own Desktop folder
+
+---
+
+## Something not working?
+
+**Commands like `/daily` don't appear**
+- Make sure you typed `cd cs-repo` before opening Claude
+- Close Claude, go back to the `cs-repo` folder, and reopen
+
+**An integration won't connect**
+- Go to claude.ai → Settings → Integrations and reconnect it
+- Gmail, Calendar, and Drive share one Google login — if one breaks, reconnect all three
+
+**Claude is pulling the wrong person's conversations**
+- Your Intercom ID in CLAUDE.md is wrong — re-do Step 3 and update the file
+
+**A report came out empty or errored**
+- Run `npm install` inside `cs-repo`
+- Type `python3 --version` in Terminal — if you get an error, Python isn't installed. Ask your manager.
+
+**Can't read a Finance sheet**
+- Double-check the file path and wrap it in quotes if the name has spaces
+- File must be `.xlsx` or `.csv`
+
+**Still stuck?** Ask your CS lead.
+
+---
+
+## Intercom ID reference
+
+| Name | ID |
+|---|---|
+| [Your Name] | `YOUR_INTERCOM_ID` |
+| [Teammate 1] | `TEAMMATE_1_ID` |
+| [Teammate 2] | `TEAMMATE_2_ID` |
+| [Teammate 3] | `TEAMMATE_3_ID` |
