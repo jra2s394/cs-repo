@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 # install.sh -- interactive installer for the dotclaude repo
 # Symlinks hooks, copies skills/templates, and sets up CLAUDE.md.
+#
+# Platform: macOS and Linux only. Requires bash, ln -s, and a POSIX shell.
+# Windows users: this script is NOT supported. The standard team setup in
+# SETUP.md / TEAM_SETUP.md does not call install.sh -- run `npm install`,
+# `pip3 install -r requirements-dev.txt`, then `/setup` in Claude Code.
+# For the Desktop folder, run `scripts\setup-desktop.ps1` in PowerShell.
 set -euo pipefail
 
 # ---------------------------------------------------------------------------
