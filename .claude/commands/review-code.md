@@ -2,7 +2,7 @@
 description: Run the structured QA checklist — same questions every time, same order
 ---
 
-Run `make test` first. If tests fail, stop and report failures — do not proceed with the review.
+Run `make test` first. If any of the 258 tests fail (237 Python + 21 JS), stop and report failures — do not proceed with the review.
 
 Then work through every section below in order. For each item: check it, mark ✅ (pass) or ❌ (fail + exact line), and do not skip. Report all findings at the end in a single block.
 
@@ -105,6 +105,74 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] Does `start-onboarding.md` present all four items (Asana, Drive, Shortcut, Slack channel name) and wait for explicit approval before executing any of them?
 - [ ] Does `start-onboarding.md` wait for Slack channel creation confirmation before posting the resource links?
 - [ ] Does `start-onboarding.md` include a graceful fallback for Drive folder creation failure (manual URL prompt)?
+
+## Section 12 — lib/data-loader.js
+
+- [ ] Does `loadJson()` call `process.exit(1)` when `process.argv[2]` is missing (not throw)?
+- [ ] Does `loadJson()` call `process.exit(1)` on invalid JSON (not crash with unhandled exception)?
+- [ ] Does `requireFields()` print the full list of missing fields before exiting — not just the first one?
+- [ ] Does `ensureOutDir()` return the absolute path to `out/` (not a relative path)?
+- [ ] Are all three exports present: `{ loadJson, requireFields, ensureOutDir }`?
+
+## Section 13 — reports/customer-health.js
+
+- [ ] Does the Account Scorecard table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[2400, 1600, 1200, 1760, 1200, 1200]` = 9360
+- [ ] Does the At-Risk table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[2400, 3160, 1600, 2200]` = 9360
+- [ ] Does the Renewal Radar table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[2800, 1760, 1200, 1600, 2000]` = 9360
+- [ ] Does the at-risk section render urgent items as `warn` callouts and watch items as a table?
+- [ ] Does `copyToDesktop` use category `"Health Reports"` and label `"Portfolio"`?
+- [ ] Does `writeCsv` export all four sections: Portfolio Summary, Account Scorecard, At-Risk Accounts, Renewal Radar?
+- [ ] Does the report exit cleanly (process.exit 1) on missing required fields?
+
+## Section 14 — reports/renewal-health.js
+
+- [ ] Does the Full Renewal Pipeline table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[2000, 1360, 800, 1200, 1000, 1200, 1800]` = 9360
+- [ ] Does the Renewal Pipeline Summary table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[2800, 1600, 2360, 2600]` = 9360
+- [ ] Does the High-Risk Renewals section only render when `highRisk.length > 0`?
+- [ ] Does the Renewal Playbook section only render when `d.playbook && d.playbook.length > 0`?
+- [ ] Does `copyToDesktop` use category `"Renewals"` and label `"Health"`?
+- [ ] Does `writeCsv` export all three sections: Pipeline Summary, Renewal Pipeline, Renewal Playbook?
+
+## Section 15 — reports/executive-summary.js
+
+- [ ] Does the Portfolio Overview table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[3360, 3000, 3000]` = 9360
+- [ ] Does the Open Issues section render critical items as `warn` callouts and watch items as a table?
+- [ ] Does the watch-items table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[1600, 1800, 3160, 1400, 1400]` = 9360
+- [ ] Does `copyToDesktop` use category `"Executive Summaries"` and label `"Summary"`?
+- [ ] Does `writeCsv` export all three sections: Portfolio Overview, Highlights, Open Issues?
+- [ ] Does the Onboarding Snapshot section only render when `d.onboardingSnapshot` is non-empty?
+- [ ] Does the Upcoming Events table use column widths that sum to exactly 9360 DXA?
+  - Expected: `[1600, 2400, 3760, 1600]` = 9360
+
+## Section 16 — New commands (at-risk, health-score, renewal-health, executive-summary)
+
+- [ ] Does `at-risk.md` explicitly state read-only: no tasks, messages, or tickets are created in this command?
+- [ ] Does `health-score.md` require data from at least 3 live tool sources before assigning 🟢 Green?
+- [ ] Does `health-score.md` default missing-data accounts to 🔴 (data gap is a risk signal)?
+- [ ] Does `renewal-health.md` explicitly forbid inventing renewal dates or ARR figures?
+- [ ] Does `executive-summary.md` require that every highlight is sourced before including it?
+
+## Section 17 — Lifecycle commands (start-onboarding, end-onboarding, handoff)
+
+- [ ] Does `end-onboarding.md` explicitly say NOT to mark Asana tasks complete via API?
+- [ ] Does `end-onboarding.md` wait for explicit approval before sending the go-live email?
+- [ ] Does `end-onboarding.md` wait for explicit approval before creating post-closure Asana tasks?
+- [ ] Does `handoff.md` flag outstanding email commitments as 🔴?
+- [ ] Does `handoff.md` explicitly say NOT to update Shortcut story ownership via API?
+- [ ] Does `handoff.md` wait for explicit approval before sending the introduction email?
+
+## Section 18 — setup-desktop.sh
+
+- [ ] Does `setup-desktop.sh` create `~/Desktop/CS Reports/Health Reports/`?
+- [ ] Does `setup-desktop.sh` create `~/Desktop/CS Reports/Executive Summaries/`?
+- [ ] Does the footer message list all six report folders (Intercom, Onboarding, Renewals, QBR, Health Reports, Executive Summaries)?
 
 ---
 
