@@ -50,7 +50,7 @@ Every hook and chart helper has automated tests. GitHub Actions runs them on eve
 
 ```
 make test       # run all 237 tests
-/review         # structured checklist — runs tests first, then 9 fixed sections
+/review-code    # structured checklist — runs tests first, then 9 fixed sections
 ```
 
 See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) for details.
