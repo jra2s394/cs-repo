@@ -4,225 +4,432 @@
       {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/branch-enforcer.py" },
-          { "type": "command", "command": "python3 hooks/push-guard.py" },
-          { "type": "command", "command": "python3 hooks/block-attribution.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/branch-enforcer.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 hooks/push-guard.py"
+          },
+          {
+            "type": "command",
+            "command": "python3 hooks/block-attribution.py"
+          }
         ]
       },
       {
         "matcher": "Edit",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/file-protector.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/file-protector.py"
+          }
         ]
       },
       {
         "matcher": "Write",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/file-protector.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/file-protector.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Intercom__create_article",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Intercom__update_article",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Asana__create_tasks",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Asana__update_tasks",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Asana__delete_task",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Slack__slack_send_message",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Slack__slack_schedule_message",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Google_Calendar__create_event",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Google_Calendar__update_event",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Google_Calendar__delete_event",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__shortcut__stories-create",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__shortcut__stories-update",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__shortcut__stories-create-comment",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__shortcut__epics-create",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__shortcut__epics-update",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__shortcut__epics-delete",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Asana__create_task_confirm",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Asana__save_task_changes_confirm",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Asana__save_project_changes_confirm",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Slack__slack_create_canvas",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Slack__slack_update_canvas",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Google_Drive__create_file",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Google_Drive__copy_file",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__create_draft",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__create_label",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__label_message",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__label_thread",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__unlabel_message",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__unlabel_thread",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__update_label",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Gmail__delete_label",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Google_Calendar__respond_to_event",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Asana__add_comment",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       },
       {
         "matcher": "mcp__claude_ai_Slack__slack_send_message_draft",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/draft-before-create.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-delete",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__epics-create-comment",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-add-task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-update-task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-add-relation",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__documents-create",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__documents-update",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__iterations-create",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__iterations-update",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__iterations-delete",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
         ]
       }
     ],
@@ -230,7 +437,10 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/audit-log.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/audit-log.py"
+          }
         ]
       }
     ],
@@ -238,7 +448,10 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/compact-reinject.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/compact-reinject.py"
+          }
         ]
       }
     ],
@@ -246,7 +459,10 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/notify.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/notify.py"
+          }
         ]
       }
     ],
@@ -254,7 +470,10 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/pr-template-reminder.py" }
+          {
+            "type": "command",
+            "command": "python3 hooks/pr-template-reminder.py"
+          }
         ]
       }
     ],
@@ -262,9 +481,21 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "python3 hooks/session-to-obsidian.py", "async": true }
+          {
+            "type": "command",
+            "command": "python3 hooks/session-to-obsidian.py",
+            "async": true
+          }
         ]
       }
+    ]
+  },
+  "permissions": {
+    "allow": [
+      "Bash(shellcheck *)",
+      "mcp__claude_ai_Slack__slack_search_channels",
+      "mcp__b3337fbd-b704-42f2-b1a3-953a3847cbb4__search",
+      "mcp__claude_ai_Slack__slack_search_public_and_private"
     ]
   }
 }
