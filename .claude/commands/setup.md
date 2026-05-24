@@ -47,6 +47,23 @@ Wait for all answers before continuing. If they skip any, ask for it specificall
 
 ---
 
+## Step 1.5 — Identify role
+
+Send this message:
+
+```
+One quick question before we continue — which role best describes you?
+
+  1. Customer Success Manager (CSM)
+  2. Customer Success Engineer (CS Engineer)
+  3. Customer Success Director
+  4. President of Slabstack
+```
+
+Wait for their answer. Record their role — you'll use it in Step 6 to show them the commands most relevant to their work.
+
+---
+
 ## Step 2 — Get Intercom admin ID
 
 Send this message:
@@ -143,19 +160,95 @@ If all are connected, continue.
 
 ## Step 6 — Smoke test
 
-Tell the user:
+Start with:
 
 ```
 Everything looks good. Here's a quick smoke test to confirm it's all working:
 
   1. Type /daily — Claude should start pulling your Gmail, Calendar, Asana, and Intercom data
   2. If it asks "which calendar / which inbox?" that means an integration needs reconnecting
+```
 
-You're all set. A few things to know:
+Then show the role-specific command list based on their answer from Step 1.5:
+
+---
+
+**If CSM:**
+
+```
+Your most-used commands:
+
+  /daily            Standup update — Tue–Fri
+  /midweek          Wednesday extended standup
+  /eow              Friday end-of-week recap
+  /weekstart        Monday week-start update
+  /customer         Full customer snapshot before a call
+  /tasks            View and manage your Asana tasks
+  /escalate         Escalate an Intercom conversation to a Shortcut ticket
+  /kb-draft         Draft a KB article from a topic or conversation
+  /intercom-weekly  Weekly Intercom support report
+```
+
+---
+
+**If CS Engineer:**
+
+```
+Your most-used commands:
+
+  /prs              Show all Shortcut stories pending eng review — your queue
+  /story-CSEng      Create a Shortcut story to support a CSM or track customer eng work
+  /customer         Full customer snapshot before a call
+  /tasks            View and manage your Asana tasks
+  /escalate         Escalate an Intercom conversation to a Shortcut ticket
+```
+
+---
+
+**If CS Director:**
+
+```
+Your most-used commands:
+
+  /daily            Standup update — Tue–Fri
+  /midweek          Wednesday extended standup
+  /eow              Friday end-of-week recap
+  /weekstart        Monday week-start update
+  /customer         Full customer snapshot before a call
+  /tasks            View and manage your Asana tasks
+  /onboarding-weekly     Onboarding health — this week
+  /onboarding-monthly    Onboarding health — this month
+  /renewals-thismonth    Renewal invoice report — what Finance bills now
+  /renewals-nextquarter  Three-month renewal forecast
+  /intercom-monthly      Monthly Intercom support report
+  /review-code           Run the repo QA checklist
+```
+
+---
+
+**If President:**
+
+```
+Your most-used commands:
+
+  /onboarding-quarterly  Quarterly onboarding scorecard
+  /onboarding-yearly     Full-year onboarding summary + top accounts
+  /intercom-quarterly    Quarterly Intercom support intelligence
+  /intercom-yeartodate   Full-year Intercom report
+  /renewals-nextquarter  Three-month renewal forecast
+  /customer              Full customer snapshot before a call
+```
+
+---
+
+Then close with:
+
+```
+A few things to know:
 
   • Claude never posts or sends anything without your approval — it always shows a draft first
   • Reports save to out/ (and Desktop/CS Reports/ if you ran scripts/setup-desktop.sh)
-  • The full command list is in USER_GUIDE.md or type /help
+  • The full command list is in USER_GUIDE.md
   • If something breaks, check SETUP.md → "Something not working?" section
 
 Welcome to the team.
