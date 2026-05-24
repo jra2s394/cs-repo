@@ -1,0 +1,178 @@
+# CS Ops Tool — User Guide
+
+Not set up yet? Start with **[SETUP.md](SETUP.md)** — takes about 10 minutes.
+
+---
+
+## Opening the tool
+
+Every session:
+
+```
+cd cs-repo
+claude
+```
+
+Claude opens. Type any command.
+
+---
+
+## The one rule
+
+**Claude never posts, sends, or creates anything without showing it to you first.**
+
+Every command: Claude gathers the data → shows you the output → waits for your OK → then acts. If you close Claude before approving, nothing happens.
+
+---
+
+## Standup updates
+
+| Day | Command |
+|---|---|
+| Monday | `/weekstart` |
+| Tuesday – Friday | `/daily` |
+| Wednesday | `/midweek` |
+| Friday | `/eow` |
+
+Claude checks your Gmail, Calendar, Asana, and Intercom for the relevant period, writes the update in the team format, and asks if you want to post it to Slack.
+
+Read the draft before approving. Common fixes: remove a meeting that got cancelled, move a task that's still in progress, clarify anything flagged 🔴. Just tell Claude what to change.
+
+---
+
+## Intercom reports
+
+Pulls live data and saves a Word doc with conversation counts, response times, and a customer breakdown.
+
+| Command | Use it for |
+|---|---|
+| `/intercom-daily` | Quick check — today vs yesterday |
+| `/intercom-weekly` | Weekly rhythm check |
+| `/intercom-monthly` | Month-over-month review |
+| `/intercom-quarterly` | QBR prep, leadership updates |
+| `/intercom-yeartodate` | Annual reviews, board prep |
+
+No file needed — Claude pulls directly from Intercom. Doc saves to `out/` (and `Desktop/CS Reports/Intercom/` if you ran the Desktop setup).
+
+---
+
+## Onboarding reports
+
+Shows which accounts are on track, at risk, or completed. Pulls from the Finance Pending Transactions sheet and cross-checks with your Asana tasks.
+
+**Before running:** get the latest Pending Transactions Excel file from Finance and save it to your Downloads.
+
+| Command | Use it for |
+|---|---|
+| `/onboarding-weekly` | At-risk flags + Asana task health |
+| `/onboarding-monthly` | Month-over-month + week-by-week breakdown |
+| `/onboarding-quarterly` | Quarter-over-quarter + YTD summary |
+| `/onboarding-yearly` | Full year + top accounts + all-time totals |
+
+**To run:** type the command → Claude asks for the file path → paste it → Claude saves the Word doc.
+
+```
+Mac: /Users/yourname/Downloads/Slabstack Pending Transactions 4 2 26.xlsx
+ PC: C:\Users\yourname\Downloads\Slabstack Pending Transactions 4 2 26.xlsx
+```
+
+> Wrap the path in quotes if the filename has spaces. Accounts labeled "Backlog Subscription" show in a separate section and aren't counted in the main numbers.
+
+---
+
+## Renewal invoice reports
+
+Tells Finance exactly what to invoice each customer. Claude reads the Finance renewals sheet and calculates the amounts — volume contracts (quantity × unit cost) and fixed-rate contracts (ARR × uplift) are both handled automatically.
+
+**Before running:** get the monthly renewals Excel file from Finance and save it to your Downloads.
+
+| Command | Use it for |
+|---|---|
+| `/renewals-thismonth` | What Finance needs to bill right now |
+| `/renewals-nextmonth` | Next month's pipeline — review before month end |
+| `/renewals-nextquarter` | Three-month forecast, grouped by month |
+
+**To run:** same as onboarding — type the command, paste the file path when asked.
+
+> For the quarterly report: if Finance only has one month's file, run it anyway. Missing months show as "Data Pending" automatically.
+
+---
+
+## Customer snapshot — `/customer`
+
+Get a one-screen briefing before a call or when you need to get up to speed fast.
+
+Type `/customer` (or `/customer Cemstone`). Claude pulls from Intercom, Gmail, Calendar, and Asana in parallel and shows you: current status, open conversations, recent emails and meetings, upcoming calls, open Asana tasks, and anything flagged 🔴.
+
+---
+
+## Escalate to Shortcut — `/escalate`
+
+Turn an Intercom conversation into a Shortcut ticket for the product team.
+
+Type `/escalate` → paste the conversation URL → Claude drafts the ticket (title, description, steps to reproduce, severity) → review it → say "create it." Claude never creates the ticket until you approve the draft.
+
+---
+
+## Manage tasks — `/tasks`
+
+Shows your open Asana tasks grouped by urgency: overdue, due today, due this week, upcoming.
+
+Tell Claude what to do in plain language: "mark the Cemstone task complete," "add a task for Colas go-live next Friday," "move the Heritage item to next week." Claude confirms before making any change.
+
+---
+
+## Draft a KB article — `/kb-draft`
+
+Type `/kb-draft` → give Claude a topic or paste an Intercom conversation URL → Claude writes a full draft (title, intro, step-by-step body, related articles) → review and ask for changes → say "publish it."
+
+---
+
+## Where files land
+
+| What | Where |
+|---|---|
+| Standup updates | `data/outputs/` as `.md` files |
+| All reports | `out/` as `.docx` files |
+| Desktop copies (Mac) | `Desktop/CS Reports/Intercom`, `Onboarding`, or `Renewals` |
+
+---
+
+## When something goes wrong
+
+**Command not found** — type `cd cs-repo` first, then reopen Claude
+
+**Report came out blank** — run `npm install` inside `cs-repo`; check your file path to the Finance sheet
+
+**Wrong person's Intercom conversations** — your Intercom ID in `~/.claude/CLAUDE.md` is wrong; re-do Step 3 in [SETUP.md](SETUP.md)
+
+**Integration not connecting** — go to claude.ai → Settings → Integrations and reconnect; Gmail, Calendar, and Drive share one Google login
+
+**Still stuck?** Ask your CS lead.
+
+---
+
+## Quick reference
+
+| Command | What it does |
+|---|---|
+| `/daily` | Standup — Tue–Fri |
+| `/midweek` | Standup — Wednesday extended |
+| `/eow` | Standup — Friday full recap |
+| `/weekstart` | Standup — Monday |
+| `/intercom-daily` | Intercom report — today vs yesterday |
+| `/intercom-weekly` | Intercom report — this week |
+| `/intercom-monthly` | Intercom report — this month |
+| `/intercom-quarterly` | Intercom report — this quarter |
+| `/intercom-yeartodate` | Intercom report — full year |
+| `/onboarding-weekly` | Onboarding report — this week |
+| `/onboarding-monthly` | Onboarding report — this month |
+| `/onboarding-quarterly` | Onboarding report — this quarter |
+| `/onboarding-yearly` | Onboarding report — full year |
+| `/renewals-thismonth` | Renewal invoices — bill now |
+| `/renewals-nextmonth` | Renewal invoices — next month |
+| `/renewals-nextquarter` | Renewal invoices — three-month forecast |
+| `/customer` | Customer snapshot before a call |
+| `/escalate` | Escalate Intercom → Shortcut ticket |
+| `/tasks` | View and manage Asana tasks |
+| `/kb-draft` | Draft a KB article for Intercom |
