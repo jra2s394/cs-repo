@@ -19,7 +19,24 @@ Chronological history of every change merged to `main`, from the first commit to
 
 ## 2026-05-24
 
-### `<pending>` · PR #31 — Cross-reference 8 HIGH-priority commands to `/health-score` Step 1 gotchas
+### `<pending>` · PR #32 — Add `SECURITY.md`
+**Tags:** `[docs]`
+
+Net: 3 files changed, +N (1 new top-level doc, 1 README link, 1 RELEASE_NOTES entry).
+
+Closes the one remaining low-hanging item from the original audit: a public repo handling customer data patterns shouldn't ship without a security policy. `SECURITY.md` covers:
+
+- **Reporting channels:** GitHub private vulnerability reporting (preferred) or email
+- **In-scope:** hooks, lib, reports, scripts, command prompts, hook bypass techniques, CI config
+- **Out of scope:** third-party MCP servers, customer data in connected systems, forks, Claude Code itself
+- **Existing safeguards inventoried:** `secret-scan.py`, `push-guard.py`, `file-protector.py`, `draft-before-create.py`, `block-attribution.py`, `permissions.deny` denylist, GitHub branch protection
+- **Token leak response procedure:** rotate first, report second; git-history rewrite is not sufficient (assume compromised the moment it hit a remote)
+- **What's gitignored** (and why): `.env*`, `.mcp.json`, `data/outputs/*`, `out/*.docx`, Finance sheets, personal `~/.claude/CLAUDE.md`
+- **Customer PII clause:** runtime use is fine; commits are not — references the PR scrub checklist
+
+README gains a "Reporting a security issue" section linking to SECURITY.md.
+
+### `675a465` · PR #31 — Cross-reference 8 HIGH-priority commands to `/health-score` Step 1 gotchas
 **Tags:** `[command] [docs]`
 
 Net: 9 files changed, +9 (1 line added per command + a small RELEASE_NOTES entry).
