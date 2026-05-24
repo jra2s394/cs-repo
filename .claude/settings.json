@@ -158,15 +158,6 @@
         ]
       },
       {
-        "matcher": "mcp__shortcut__epics-delete",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
-          }
-        ]
-      },
-      {
         "matcher": "mcp__claude_ai_Asana__create_task_confirm",
         "hooks": [
           {
@@ -329,15 +320,6 @@
         ]
       },
       {
-        "matcher": "mcp__shortcut__stories-delete",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
-          }
-        ]
-      },
-      {
         "matcher": "mcp__shortcut__epics-create-comment",
         "hooks": [
           {
@@ -402,15 +384,6 @@
       },
       {
         "matcher": "mcp__shortcut__iterations-update",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
-          }
-        ]
-      },
-      {
-        "matcher": "mcp__shortcut__iterations-delete",
         "hooks": [
           {
             "type": "command",
