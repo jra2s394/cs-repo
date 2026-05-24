@@ -7,21 +7,29 @@
 # Run once after cloning. In PowerShell:
 #   cd cs-repo
 #   PowerShell -ExecutionPolicy Bypass -File scripts\setup-desktop.ps1
+#
+# If you see a permissions error, right-click PowerShell -> "Run as administrator"
+# and run the command again.
 
-$ErrorActionPreference = "Stop"
-
-$repoDir  = (Resolve-Path "$PSScriptRoot\..").Path
-$desktop  = [Environment]::GetFolderPath("Desktop")
-$reports  = Join-Path $desktop "CS Reports"
+$repoDir = (Resolve-Path "$PSScriptRoot\..").Path
+$desktop = [Environment]::GetFolderPath("Desktop")
+$reports = Join-Path $desktop "CS Reports"
 
 Write-Host "Setting up CS Reports folder on your Desktop..."
 
+# Create report subfolders
 foreach ($sub in "Intercom", "Onboarding", "Renewals") {
     $dir = Join-Path $reports $sub
-    if (-not (Test-Path $dir)) {
-        New-Item -ItemType Directory -Path $dir | Out-Null
+    try {
+        if (-not (Test-Path $dir)) {
+            New-Item -ItemType Directory -Path $dir | Out-Null
+        }
+        Write-Host "  OK $dir"
+    } catch {
+        Write-Warning "Could not create folder: $dir"
+        Write-Host "  Try right-clicking PowerShell and selecting 'Run as administrator', then run this script again."
+        exit 1
     }
-    Write-Host "  OK $dir"
 }
 
 # Create a Desktop shortcut to the repo

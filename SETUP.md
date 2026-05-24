@@ -122,6 +122,8 @@ PowerShell -ExecutionPolicy Bypass -File scripts\setup-desktop.ps1
 
 > **Why `-ExecutionPolicy Bypass`?** Windows blocks unsigned scripts by default. This flag allows the script to run just this once — it doesn't change any permanent settings.
 
+> **Getting a permissions error?** Right-click the PowerShell icon → **"Run as administrator"**, then run the command again. This is only needed if your IT team has locked down folder creation on your Desktop.
+
 You only do this once.
 
 ---
