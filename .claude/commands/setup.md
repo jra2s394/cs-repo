@@ -183,6 +183,9 @@ Your most-used commands:
   /eow              Friday end-of-week recap
   /weekstart        Monday week-start update
   /customer         Full customer snapshot before a call
+  /meeting-prep     Briefings for all customer meetings in the next 24h
+  /follow-up        Draft follow-up email after a call
+  /go-live          Go-live readiness check before a customer launch
   /tasks            View and manage your Asana tasks
   /escalate         Escalate an Intercom conversation to a Shortcut ticket
   /kb-draft         Draft a KB article from a topic or conversation
@@ -215,6 +218,9 @@ Your most-used commands:
   /eow              Friday end-of-week recap
   /weekstart        Monday week-start update
   /customer         Full customer snapshot before a call
+  /meeting-prep     Briefings for all customer meetings in the next 24h
+  /qbr              QBR prep — data pulled, wins sourced, agenda drafted
+  /go-live          Go-live readiness check before a customer launch
   /tasks            View and manage your Asana tasks
   /onboarding-weekly     Onboarding health — this week
   /onboarding-monthly    Onboarding health — this month
@@ -236,6 +242,7 @@ Your most-used commands:
   /intercom-quarterly    Quarterly Intercom support intelligence
   /intercom-yeartodate   Full-year Intercom report
   /renewals-nextquarter  Three-month renewal forecast
+  /qbr                   QBR prep — data pulled, wins sourced, agenda drafted
   /customer              Full customer snapshot before a call
 ```
 

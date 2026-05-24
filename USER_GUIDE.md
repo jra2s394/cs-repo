@@ -102,7 +102,44 @@ Tells Finance exactly what to invoice each customer. Claude reads the Finance re
 
 Get a one-screen briefing before a call or when you need to get up to speed fast.
 
-Type `/customer` (or `/customer Cemstone`). Claude pulls from Intercom, Gmail, Calendar, and Asana in parallel and shows you: current status, open conversations, recent emails and meetings, upcoming calls, open Asana tasks, and anything flagged 🔴.
+Type `/customer` (or `/customer Cemstone`). Claude pulls from Intercom, Gmail, Calendar, Asana, and Shortcut in parallel and shows you: current status, open conversations, recent emails and meetings, upcoming calls, open Asana tasks, open Shortcut stories, and anything flagged 🔴. Read.ai meeting reports are used as the authoritative meeting source when available.
+
+---
+
+## Meeting prep — `/meeting-prep`
+
+Get a briefing for every customer meeting in the next 24 hours — all at once, without running `/customer` for each one.
+
+Type `/meeting-prep` → Claude scans your calendar for customer-facing meetings in the next 24 hours → pulls Intercom, Gmail, Asana, and Shortcut context for each → presents one brief per meeting, ordered by start time.
+
+---
+
+## Follow-up email — `/follow-up`
+
+After a customer call, draft a follow-up email with action items.
+
+Type `/follow-up` → Claude finds the most recent completed meeting → searches for the Read.ai report (if the meeting was recorded) → drafts a follow-up email with summary and action items → review it → say "send it." Claude never sends without approval.
+
+---
+
+## Go-live readiness — `/go-live`
+
+Before a customer launch, check every system for open blockers.
+
+Type `/go-live` → give the customer name and go-live date → Claude checks Asana (open tasks), Shortcut (open stories), Intercom (unanswered conversations), and Gmail (unanswered emails) → presents a readiness scorecard with 🔴/🟡/🟢 status per area → offer to create Asana tasks for anything blocking.
+
+---
+
+## QBR prep — `/qbr`
+
+Prepare a Quarterly Business Review for a customer — data pulled, wins sourced, agenda drafted.
+
+Type `/qbr` → give the customer name and quarter → Claude pulls a full quarter of Intercom, Gmail, Calendar, Asana, and Shortcut data → drafts the full QBR brief (wins, open issues, renewal context, agenda) → review it → approve to save. Every win is sourced — no hallucinated outcomes.
+
+**QBR templates** (for use standalone or as `/qbr` output):
+- `slabstack-cs/qbr-templates/qbr-standard.md` — standard QBR for all active customers
+- `slabstack-cs/qbr-templates/qbr-at-risk.md` — modified QBR for at-risk customers
+- `slabstack-cs/qbr-templates/qbr-expansion.md` — QBR focused on upsell and expansion
 
 ---
 
@@ -314,6 +351,10 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/renewals-nextmonth` | Renewal invoices — next month |
 | `/renewals-nextquarter` | Renewal invoices — three-month forecast |
 | `/customer` | Customer snapshot before a call |
+| `/meeting-prep` | Briefings for all customer meetings in the next 24h |
+| `/follow-up` | Draft follow-up email after a call |
+| `/go-live` | Go-live readiness check — blockers across all systems |
+| `/qbr` | QBR prep — data pulled, wins sourced, agenda drafted |
 | `/escalate` | Escalate Intercom → Shortcut ticket |
 | `/story-CSEng` | CS Eng: create a Shortcut story for CSM support |
 | `/prs` | CS Eng: show Shortcut stories pending eng review |

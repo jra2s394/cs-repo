@@ -57,7 +57,11 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 
 | Command | What it does |
 |---|---|
-| `/customer` | Full snapshot before a call — open tickets, recent email, meetings, Asana tasks |
+| `/customer` | Full snapshot — Intercom, Gmail, Calendar, Asana, Shortcut, Read.ai |
+| `/meeting-prep` | Briefings for all customer meetings in the next 24h |
+| `/follow-up` | Draft follow-up email after a call (Read.ai → draft → approval → send) |
+| `/go-live` | Go-live readiness check — blockers across Asana, Shortcut, Intercom, Gmail |
+| `/qbr` | QBR prep — full quarter data pull, wins sourced, agenda drafted |
 | `/escalate` | Escalate an Intercom conversation to a Shortcut ticket (draft → approval → create) |
 | `/story-CSEng` | CS Eng: create a Shortcut story for CSM support (draft → approval → create) |
 | `/prs` | CS Eng: show Shortcut stories pending eng review — read-only status check |
