@@ -144,6 +144,21 @@ Type `/customer` (or `/customer Cemstone`). Claude pulls from Intercom, Gmail, C
 
 ---
 
+## Morning inbox triage — `/inbox-triage`
+
+Sort the overnight email pile into Respond / Escalate / Customer Signal / FYI in under 60 seconds.
+
+Type `/inbox-triage` (or `/inbox-triage since Friday` to widen the window). Claude pulls Gmail for the chosen range (default: `newer_than:1d`, excluding promotions/social/drafts) and sorts every thread into one of four buckets:
+
+- **🔴 Respond today** — threads where you're the next expected reply, with a one-line summary and a suggested action
+- **🟣 Escalate** — bug reports → suggests `/escalate`; onboarding blockers → suggests `/story-CSEng`
+- **🟡 Customer signal** — competitor mentions, expansion language (new plants/regions), risk language, renewal context — with the exact trigger phrase quoted
+- **🟢 FYI** — Asana/GitHub/Slack notifications and digests, summarized by sender count (not listed individually)
+
+Ends with "top picks for the next hour" so you know where to start. If you want, ask for reply drafts on any 🔴 items — Claude writes them inline and only sends after you per-draft approve. Never auto-sends.
+
+---
+
 ## Find a customer when you don't know the exact name — `/customer-search`
 
 Fuzzy lookup across Asana, Shortcut, Intercom, and Gmail. Use this before `/customer`, `/qbr`, etc. when you've only got a partial name, a misspelling, or a contact's first name.
@@ -291,7 +306,7 @@ Runs a structured quality check on the repo. Use this any time you've made chang
 Type `/review-code`. Claude will:
 1. Run all 394 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
 2. Run both linters (`make lint` — ruff for Python, biome for JS) to confirm no undefined names or unused imports
-3. Work through a fixed 19-section checklist covering every hook, library file, report layout rule, and chart helper
+3. Work through a fixed 22-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
 
 This gives you the same check every time, not a different result each session. If everything passes, you'll see "394 passed, 0 failed" and a full green table.
@@ -331,7 +346,7 @@ If all pass you'll see `265 passed, 0 failed` (Python), each JS suite prints its
 
 GitHub Actions runs all of `make test` + `make lint` automatically on every pull request. A PR can't sneak a broken change onto `main` without CI catching it first.
 
-For a full structured review (tests + lint + 19-section checklist), use `/review-code` — see above.
+For a full structured review (tests + lint + 22-section checklist), use `/review-code` — see above.
 
 ### What to tell Claude
 
@@ -443,6 +458,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/renewals-nextquarter` | Renewal invoices — three-month forecast |
 | `/customer` | Customer snapshot before a call |
 | `/customer-search` | Fuzzy customer lookup across all systems when you don't know the exact name |
+| `/inbox-triage` | Morning Gmail triage — Respond/Escalate/Signal/FYI buckets, drafts only on request |
 | `/meeting-prep` | Briefings for all customer meetings in the next 24h |
 | `/follow-up` | Draft follow-up email after a call |
 | `/go-live` | Go-live readiness check — blockers across all systems |

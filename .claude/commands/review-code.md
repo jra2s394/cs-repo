@@ -4,6 +4,8 @@ description: Run the structured QA checklist — same questions every time, same
 
 Run `make test` first. If any of the 394 tests fail (265 Python + 129 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
 
+The checklist has 22 sections covering every hook, every lib helper, every report's contract, and every read-only/draft-first slash command. Walk them in order, don't skip.
+
 Then work through every section below in order. For each item: check it, mark ✅ (pass) or ❌ (fail + exact line), and do not skip. Report all findings at the end in a single block.
 
 ---
@@ -35,6 +37,14 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] Is the check case-insensitive (`.lower()` before comparison)?
 - [ ] Does it only fire on `git commit` commands, not `git log`, `git push`, etc.?
 - [ ] Does it exit 0 on invalid JSON?
+
+## Section 4b — secret-scan.py
+
+- [ ] Does the hook only run on `git commit` (not `git log`, `git diff`, etc.)?
+- [ ] Does it exit 0 (not block) when no staged diff exists?
+- [ ] Does it exit 0 on invalid JSON input (not crash)?
+- [ ] Are all expected token patterns present: Shortcut (`sct_`), GitHub (`ghp_` / `gho_` / `ghs_`), OpenAI (`sk-`), Anthropic (`sk-ant-`), Slack (`xox[baprs]-`), AWS (`AKIA`), Google API (`AIza`), RSA/OPENSSH/EC private key, JWT (3-part dot-separated base64)?
+- [ ] Does the hook print the matched pattern name AND the offending line context (not just "blocked") so the user can find and rotate the leaked token?
 
 ## Section 5 — session-to-obsidian.py
 
@@ -96,6 +106,15 @@ Delete operations are gated by `permissions.deny` (Section 9b), not by `draft-be
 - [ ] Does `sec.headers` produce a header row before data rows?
 - [ ] Are sections separated by exactly one blank line (no blank before the first section)?
 - [ ] Does `writeCsv` silently swallow file-write errors (non-fatal) — never throws on an unwritable path?
+
+### CSV injection defense
+
+- [ ] Does a value starting with `=` get prefixed with a single quote (`=SUM(...)` → `'=SUM(...)`)?
+- [ ] Does a value starting with `+` get prefixed (`+1234` → `'+1234`)?
+- [ ] Does a value starting with `-` get prefixed (Excel treats leading `-` as a formula)?
+- [ ] Does a value starting with `@` get prefixed?
+- [ ] Does a value starting with a tab character get prefixed (some sheet apps strip leading whitespace then treat as formula)?
+- [ ] Does `=` *not* at the start (e.g. `x=1`) stay untouched?
 
 ## Section 11 — reports/onboarding-status.js & onboarding commands
 
@@ -187,7 +206,25 @@ Delete operations are gated by `permissions.deny` (Section 9b), not by `draft-be
 - [ ] Does `publishReport` catch render errors and `process.exit(1)` so callers don't need their own `.catch`?
 - [ ] Do all 17 reports/*.js call `T.publishReport()` exactly once and NOT call `copyToDesktop`/`writeCsv`/`T.render` directly?
 - [ ] Does `biome check` pass (`make lint-js`) — no undeclared variables or unused imports?
-- [ ] Does `.github/workflows/test.yml` run `make lint-js`, `make test-js`, AND `pytest` (Python-only CI is a regression)?
+- [ ] Does `.github/workflows/test.yml` run `make lint-py`, `make lint-js`, `make test-js`, AND `pytest` (Python-only CI is a regression)?
+
+## Section 19b — ruff (Python lint)
+
+- [ ] Does `ruff.toml` `select` include `E`, `F`, `B`, `UP` (errors, pyflakes, bugbear, pyupgrade)?
+- [ ] Does `ruff.toml` `target-version` match the minimum Python this repo supports (currently `py39`)?
+- [ ] Does the `per-file-ignores` for `tests/**/*.py` include `F401` (unused imports — fixtures) and `B011` (assert False patterns)?
+- [ ] Does `make lint-py` and `python3 -m ruff check` both pass with zero findings on a clean tree?
+
+## Section 20 — Read-only / draft-first command contracts
+
+These commands should NEVER call write-tools without an explicit draft + approval step. Verify each command file states the contract in its prose:
+
+- [ ] Does `/customer-search` explicitly say "read-only" or "Never create, update, or comment on anything"?
+- [ ] Does `/standup-recap` explicitly say "no MCP calls" (it's a local-file-only aggregator)?
+- [ ] Does `/inbox-triage` explicitly forbid sending email without approval (draft-first like `/follow-up`)?
+- [ ] Does `/at-risk` explicitly state read-only — no tasks/messages/tickets created?
+- [ ] Does `/prs` explicitly state read-only — no story state changes?
+- [ ] Does each command's frontmatter `description` field accurately match what the command does (not stale)?
 
 ---
 
