@@ -183,6 +183,16 @@ Type `/follow-up` → Claude finds the most recent completed meeting → searche
 
 ---
 
+## Meeting notes (no email) — `/meeting-notes`
+
+Counterpart to `/follow-up` for the case where you just want notes — not an email. Use when you want to file a structured summary for your records, paste into Asana/Shortcut, or hand off to a teammate.
+
+Type `/meeting-notes` (or `/meeting-notes [CUSTOMER_A]`). Claude finds the meeting, pulls Read.ai + calendar + Gmail + Asana + Shortcut in parallel, and presents: a 2–3 sentence summary, decisions, an action-items table (each action cross-referenced against existing Asana tasks and Shortcut stories so you don't duplicate work), customer signals quoted verbatim from the Read.ai transcript, and a parking-lot section for open questions.
+
+Strictly read-only — no email drafts, no task creation, no story updates. After the notes, Claude asks if you want to save them to `slabstack-cs/meeting-notes/` (the only action this command will take, and only after explicit "yes save"). For follow-up actions, Claude points you at `/follow-up`, `/tasks`, `/story-CSEng`, or `/escalate` so you stay in control.
+
+---
+
 ## Go-live readiness — `/go-live`
 
 Before a customer launch, check every system for open blockers.
@@ -296,6 +306,21 @@ Tell Claude what to do in plain language: "mark the [CUSTOMER_A] task complete,"
 ## Draft a KB article — `/kb-draft`
 
 Type `/kb-draft` → give Claude a topic or paste an Intercom conversation URL → Claude writes a full draft (title, intro, step-by-step body, related articles) → review and ask for changes → say "publish it."
+
+---
+
+## List every available command — `/commands`
+
+Quick discoverability for new teammates (or for yourself when you forget what's available).
+
+Type `/commands`. Claude walks `.claude/commands/*.md`, reads each frontmatter, and presents every command grouped by category (Standup, Intercom reports, Onboarding reports, Renewal reports, Customer intelligence, Onboarding lifecycle, Renewal & executive, Tooling). The descriptions come from each command file's frontmatter — the authoritative source.
+
+Use this when:
+- You're new to the repo and want to see what's possible
+- You think there might be a command for X but can't remember the name
+- You added a new command and want to confirm it's discoverable (the command also flags any commands in the directory but missing from CLAUDE.md's tables — handy as a drift check)
+
+Read-only — no MCP calls, no file edits.
 
 ---
 
@@ -460,6 +485,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/customer-search` | Fuzzy customer lookup across all systems when you don't know the exact name |
 | `/inbox-triage` | Morning Gmail triage — Respond/Escalate/Signal/FYI buckets, drafts only on request |
 | `/meeting-prep` | Briefings for all customer meetings in the next 24h |
+| `/meeting-notes` | Read-only post-meeting summary — notes only, no email |
 | `/follow-up` | Draft follow-up email after a call |
 | `/go-live` | Go-live readiness check — blockers across all systems |
 | `/at-risk` | Surface all at-risk customers — read-only triage |
@@ -478,4 +504,5 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/prs` | CS Eng: show Shortcut stories pending eng review |
 | `/tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
+| `/commands` | List every available slash command (live from `.claude/commands/`) |
 | `/review-code` | Run tests + structured quality checklist |
