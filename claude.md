@@ -127,10 +127,13 @@ These hooks run automatically. Know what they block:
 | `branch-enforcer.py` | Blocks `git commit` directly on `main` or `master` — must be on a feature branch |
 | `push-guard.py` | Blocks `git push --force` / `-f`, direct pushes to `main`/`master`, `gh pr merge`, and Bash-level writes to `.env` files (bare and directory-prefixed, e.g. `> config/.env`); allows `.envrc` (direnv) |
 | `block-attribution.py` | Blocks commits containing AI attribution strings (`Co-Authored-By: Claude`, etc.) |
+| `secret-scan.py` | Blocks `git commit` when staged content matches a known token pattern (Shortcut, GitHub, OpenAI, Anthropic, Slack, AWS, Google API, RSA private key, JWT) |
 | `draft-before-create.py` | Forces a permission prompt before creating or mutating items in Slack, Asana, Intercom, Shortcut — covers all write/delete/update operations including Shortcut stories, epics, iterations, documents, and task mutations |
 | `file-protector.py` | Blocks edits to `.env` and `.env.*` files (but not `.envrc`), private keys, and named credential files via Edit/Write tools |
+| `pr-template-reminder.py` | Reminds you to use the PR template when running `gh pr create` without `--body-file` |
 | `compact-reinject.py` | Re-injects critical rules from this file when context compacts mid-session |
 | `audit-log.py` | Logs every tool call to `~/.claude/tool-audit.log` (PostToolUse, non-blocking) |
+| `notify.py` | Plays a sound / shows a notification when Claude needs your attention |
 | `session-to-obsidian.py` | Exports session transcript to Obsidian vault on session end (async); set `OBSIDIAN_VAULT` env var or run `install.sh` to configure the vault path |
 
 ---

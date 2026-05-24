@@ -1,7 +1,12 @@
-.PHONY: test test-hooks test-lib test-js test-cov lint install-dev
+.PHONY: test test-hooks test-lib test-js test-cov lint install-dev check-deps
+
+# Verify pytest is installed; if not, point the user at install-dev.
+check-deps:
+	@python3 -c "import pytest" 2>/dev/null || { \
+	  echo "✗ pytest is not installed. Run 'make install-dev' first."; exit 1; }
 
 # Run the full test suite (Python + JS)
-test:
+test: check-deps
 	python3 -m pytest
 	node tests/js/test_csv_export.js
 
