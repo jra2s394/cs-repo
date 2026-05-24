@@ -37,6 +37,7 @@ SETUP (.claude/settings.json):
     }
   }
 """
+from __future__ import annotations
 
 import json
 import os
@@ -296,8 +297,10 @@ def generate_wikilinks(data: dict) -> list[str]:
     return links
 
 
-def format_duration(start: str, end: str) -> str:
+def format_duration(start: str | None, end: str | None) -> str:
     try:
+        if start is None or end is None:
+            return "unknown"
         s = datetime.fromisoformat(start.replace("Z", "+00:00"))
         e = datetime.fromisoformat(end.replace("Z", "+00:00"))
         delta = e - s
