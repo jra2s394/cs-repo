@@ -71,18 +71,24 @@ LOG_FILE = Path.home() / ".claude" / "session-export.log"
 # Map cwd substrings to Obsidian note names for auto-tagging and wikilinks.
 # Leave empty ({}) to disable project detection.
 #
-# Format:
-#   "cwd-substring": "Obsidian Note Name"
-#
-# Example:
-#   PROJECT_MAP = {
-#       "my-project": "My Project",
-#       "client-work": "Client Work",
-#   }
+# Primary: set OBSIDIAN_PROJECT_MAP to a JSON object, e.g.
+#   export OBSIDIAN_PROJECT_MAP='{"cs-repo":"CS Repo","client-x":"Client X"}'
+# Fallback: edit PROJECT_MAP_FALLBACK below. Env var wins if both are set.
 
-PROJECT_MAP = {
+PROJECT_MAP_FALLBACK = {
     "cs-repo": "CS Repo",
 }
+
+_env_map = os.environ.get("OBSIDIAN_PROJECT_MAP", "").strip()
+if _env_map:
+    try:
+        PROJECT_MAP = json.loads(_env_map)
+        if not isinstance(PROJECT_MAP, dict):
+            PROJECT_MAP = PROJECT_MAP_FALLBACK
+    except json.JSONDecodeError:
+        PROJECT_MAP = PROJECT_MAP_FALLBACK
+else:
+    PROJECT_MAP = PROJECT_MAP_FALLBACK
 
 # ── END CONFIG ────────────────────────────────────────────────────────────────
 

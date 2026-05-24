@@ -21,8 +21,32 @@ usage, not theoretical.
 1. Fork the repo
 2. Create a branch: `feat/my-hook-name`
 3. Add your files
-4. Run the scrub checklist below
-5. Open a PR with a clear description of what the contribution does and why
+4. Run `make test` and `make lint` — both must be green before opening a PR
+5. Run the scrub checklist below
+6. Open a PR with a clear description of what the contribution does and why
+
+## Local test + lint workflow
+
+```bash
+make install-dev   # one-time: installs pytest, ruff, matplotlib, pillow
+npm install        # one-time: installs docx (runtime) and biome (lint)
+
+make test          # full suite — Python (pytest) + JS (5 suites)
+make lint          # ruff (Python) + biome (JS)
+```
+
+Subtargets if you only need part of it:
+
+| Command | What it runs |
+|---|---|
+| `make test-hooks` | Python hook tests only |
+| `make test-lib`   | Python lib tests only |
+| `make test-js`    | All JS suites |
+| `make lint-py`    | ruff only |
+| `make lint-js`    | biome only |
+| `make test-cov`   | pytest with coverage report |
+
+CI runs the same `make` targets, so if it's green locally it'll stay green on PR.
 
 ## Scrub checklist
 
