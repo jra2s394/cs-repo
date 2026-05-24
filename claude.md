@@ -66,7 +66,7 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 | `/follow-up` | Draft follow-up email after a call (Read.ai → draft → approval → send) |
 | `/go-live` | Go-live readiness check — blockers across Asana, Shortcut, Intercom, Gmail |
 | `/at-risk` | Surface all at-risk customers across all systems — read-only triage |
-| `/health-score` | Portfolio health scorecard — green/yellow/red for every active account |
+| `/health-score` | Portfolio health scorecard, or single-customer snapshot if you pass a name (`/health-score [CUSTOMER_A]`) — green/yellow/red across Asana, Intercom, Shortcut |
 | `/expansion` | Identify expansion and upsell opportunities from live signals |
 | `/qbr` | QBR prep — full quarter data pull, wins sourced, agenda drafted |
 | `/escalate` | Escalate an Intercom conversation to a Shortcut ticket (draft → approval → create) |
