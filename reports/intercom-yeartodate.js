@@ -4,6 +4,7 @@
 // Output: out/Intercom_YTD_YYYY.docx
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -196,5 +197,14 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `YTD Intelligence — ${yr}` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Intercom", "YTD"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Intercom", "YTD");
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Year Comparison", headers: ["Year", "Conversations", "Closed", "Res%", "Avg FRT", "Reopen%", "Contacts", "Domains"], rows: d.multiYearTable || [] },
+      { title: "Quarterly Breakdown", headers: ["Quarter", "New", "Closed", "Resolution", "Avg FRT", "Avg Close", "Fin%"], rows: d.quarterlyTable || [] },
+      { title: "Top Customers", headers: ["Rank", "Domain", `All-Time`, `YTD ${yr}`, "Active?"], rows: d.topCustomers || [] },
+      { title: "Fin AI Adoption", headers: ["Period", "Sessions", "Resolved", "Escalated", "% of Convs"], rows: d.finAdoptionTable || [] },
+    ]);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });

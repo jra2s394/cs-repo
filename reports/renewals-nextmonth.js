@@ -4,6 +4,7 @@
 // Output: out/Renewals_NextMonth_YYYY-MM.docx
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -138,5 +139,12 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `Upcoming Renewals — ${d.period}` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Renewals", "NextMonth"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Renewals", "NextMonth");
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Summary", headers: ["Metric", d.period, "Prior", "Notes"], rows: d.summaryTable || [] },
+      { title: "Invoices", headers: ["Customer", "Type", "Curr ARR", "Billing Basis", "Invoice Amt", "Renew?", "CS Notes"], rows: d.invoiceTable || [] },
+    ]);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });

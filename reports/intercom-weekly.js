@@ -4,6 +4,7 @@
 // Output: out/Intercom_Weekly_YYYY-MM-DD.docx  (Monday date via d.weekStartDate)
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -145,5 +146,15 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `Weekly Report — ${d.period}` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Intercom", "Weekly"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Intercom", "Weekly");
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Summary", headers: ["Metric", "This Week", d.priorPeriod || "Last Week", "Change"], rows: d.summaryTable || [] },
+      { title: "Day-by-Day", headers: ["Day", "This Week", "Last Week", "Δ"], rows: d.dailyTable || [] },
+      { title: "Top Customers", headers: ["Rank", "Domain", "Conversations"], rows: d.topCustomers || [] },
+      { title: "Open Queue", headers: ["Customer", "Subject", "Age", "Urgent"],
+        rows: (d.openQueue || []).map(q => [q.customer, q.subject, q.age, q.urgent ? "Yes" : "No"]) },
+    ]);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });

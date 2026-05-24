@@ -4,6 +4,7 @@
 // Output: out/Renewals_NextQuarter_YYYY-QN.docx
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -161,5 +162,20 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `Renewal Pipeline — ${d.period}` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Renewals", "NextQuarter"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Renewals", "NextQuarter");
+    const csvSections = [
+      { title: "Summary", headers: ["Metric", d.period, "Prior Qtr", "Notes"], rows: d.summaryTable || [] },
+    ];
+    for (const grp of (d.monthlyGroups || [])) {
+      if (!grp.pending && grp.invoiceTable && grp.invoiceTable.length > 0) {
+        csvSections.push({ title: grp.month, headers: ["Customer", "Type", "Curr ARR", "Billing Basis", "Invoice Amt", "Renew?", "CS Notes"], rows: grp.invoiceTable });
+      }
+    }
+    if ((d.monthlyGroups || []).length === 0 && d.invoiceTable) {
+      csvSections.push({ title: "Invoices", headers: ["Customer", "Type", "Curr ARR", "Billing Basis", "Invoice Amt", "Renew?", "CS Notes"], rows: d.invoiceTable });
+    }
+    writeCsv(outFile.replace(".docx", ".csv"), csvSections);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
