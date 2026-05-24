@@ -212,6 +212,20 @@ Draft any Asana tasks before creating them.
 
 ---
 
+## Google Drive upload (optional)
+
+After generating the report, ask: "Want me to upload the QBR data to Google Sheets?"
+
+If yes:
+1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
+2. Call `mcp__claude_ai_Google_Drive__create_file` with:
+   - `title`: "QBR — [Customer] — [Quarter]"
+   - `textContent`: the CSV file contents
+   - `contentMimeType`: "text/csv"
+3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
+
+---
+
 ## Rules
 
 - Every win must be sourced (calendar event, sent email, Asana completion, or Shortcut resolution)

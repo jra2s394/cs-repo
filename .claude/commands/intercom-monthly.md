@@ -239,4 +239,18 @@ Output: `out/Intercom_Monthly_[YYYY-MM].docx`
 
 ---
 
-End with: "Want me to send this to Slack, drop it in a Google Doc, or tweak anything?"
+## Google Drive upload (optional)
+
+After showing the report, ask: "Want me to upload the data to Google Sheets?"
+
+If yes:
+1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
+2. Call `mcp__claude_ai_Google_Drive__create_file` with:
+   - `title`: "Intercom Monthly — [Period]"
+   - `textContent`: the CSV file contents
+   - `contentMimeType`: "text/csv"
+3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
+
+---
+
+End with: "Want me to upload the data to Google Sheets, post this to Slack, or tweak anything?"

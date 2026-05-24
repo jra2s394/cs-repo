@@ -4,6 +4,7 @@
 // Output: out/Intercom_Quarterly_YYYY-QN.docx  (e.g. Intercom_Quarterly_2026-Q2.docx)
 const T = require("../lib/report-theme");
 const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { writeCsv } = require("../lib/csv-export");
 const path = require("path");
 const fs = require("fs");
 
@@ -148,5 +149,13 @@ children.push(T.dataTable({
 
 const doc = T.buildDocument({ children, headerRight: `${d.period} Quarterly Report` });
 T.render(doc, outFile)
-  .then(() => { console.log(`✓ ${outFile}`); copyToDesktop(outFile, "Intercom", "Quarterly"); })
+  .then(() => {
+    console.log(`✓ ${outFile}`);
+    copyToDesktop(outFile, "Intercom", "Quarterly");
+    writeCsv(outFile.replace(".docx", ".csv"), [
+      { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Last Q", "Change", "YoY"], rows: d.summaryTable || [] },
+      { title: "Monthly Breakdown", headers: ["Month", "New", "Closed", "Resolution", "Avg FRT", "Fin%"], rows: d.monthlyTable || [] },
+      { title: "Top Customers", headers: ["Rank", "Domain", "Conversations"], rows: d.topCustomers || [] },
+    ]);
+  })
   .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });

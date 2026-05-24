@@ -224,4 +224,18 @@ Convert to PDF *(skip if LibreOffice not installed)*:
 
 ---
 
-End with: "Want me to share this in Slack, drop it in Google Drive, or tweak anything?"
+## Google Drive upload (optional)
+
+After showing the report, ask: "Want me to upload the data to Google Sheets?"
+
+If yes:
+1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
+2. Call `mcp__claude_ai_Google_Drive__create_file` with:
+   - `title`: "Onboarding Quarterly — [Period]"
+   - `textContent`: the CSV file contents
+   - `contentMimeType`: "text/csv"
+3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
+
+---
+
+End with: "Want me to upload the data to Google Sheets, share this in Slack, or tweak anything?"
