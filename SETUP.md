@@ -103,17 +103,26 @@ Save and close.
 
 ---
 
-## Step 5 — Desktop folder (Mac only)
+## Step 5 — Desktop folder
 
-This creates a **CS Reports** folder on your Desktop with `Intercom/`, `Onboarding/`, and `Renewals/` subfolders. Every report you generate automatically copies there so you always know where to find it.
+This creates a **CS Reports** folder on your Desktop with `Intercom/`, `Onboarding/`, and `Renewals/` subfolders. Every report you generate automatically copies there so you always know where to find it. Also adds a shortcut to the `cs-repo` folder on your Desktop.
 
-In Terminal, run:
+**Mac** — in Terminal:
 
 ```
 bash cs-repo/scripts/setup-desktop.sh
 ```
 
-You only do this once. On a PC, skip it — reports save to the `out/` folder inside `cs-repo`.
+**PC** — in Command Prompt:
+
+```
+cd cs-repo
+scripts\setup-desktop.bat
+```
+
+Or double-click `setup-desktop.bat` in File Explorer from inside the `cs-repo\scripts\` folder.
+
+You only do this once.
 
 ---
 

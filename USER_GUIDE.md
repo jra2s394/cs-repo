@@ -212,7 +212,8 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 |---|---|
 | Standup updates | `data/outputs/` as `.md` files |
 | All reports | `out/` as `.docx` files |
-| Desktop copies (Mac) | `Desktop/CS Reports/Intercom`, `Onboarding`, or `Renewals` |
+| Desktop copies (Mac) | `~/Desktop/CS Reports/Intercom`, `Onboarding`, or `Renewals` |
+| Desktop copies (PC) | `%USERPROFILE%\Desktop\CS Reports\Intercom`, `Onboarding`, or `Renewals` |
 
 ---
 
