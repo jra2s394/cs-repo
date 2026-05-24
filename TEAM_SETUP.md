@@ -4,6 +4,8 @@ You've been invited to use this tool. This guide gets you from zero to "ran my f
 
 If you're reading this because you're the **owner** of the canonical repo and want to invite a teammate, skip to [Inviting a teammate](#inviting-a-teammate-owner-only) at the bottom.
 
+> **On a Mac?** Follow the **Mac:** lines. **On Windows?** Follow the **PC:** lines. Skip the other half — they're alternates, not steps in sequence.
+
 ---
 
 ## Before you start
