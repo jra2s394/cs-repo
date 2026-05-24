@@ -550,6 +550,14 @@
       "mcp__claude_ai_Slack__slack_search_channels",
       "mcp__b3337fbd-b704-42f2-b1a3-953a3847cbb4__search",
       "mcp__claude_ai_Slack__slack_search_public_and_private"
+    ],
+    "deny": [
+      "mcp__claude_ai_Asana__delete_task",
+      "mcp__claude_ai_Asana__create_project_status_update",
+      "mcp__claude_ai_Google_Calendar__delete_event",
+      "mcp__shortcut__stories-delete",
+      "mcp__shortcut__epics-delete",
+      "mcp__shortcut__iterations-delete"
     ]
   }
 }

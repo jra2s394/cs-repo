@@ -4,7 +4,7 @@ description: Show all Shortcut stories from the CSEng team that are pending engi
 
 Read `CLAUDE.md` from this repo before starting.
 
-Surface every Shortcut story that needs engineering eyes right now. Read-only — nothing is created or changed.
+Surface every Shortcut story that needs engineering eyes right now. **Read-only — nothing is created, updated, or moved.** Story state changes happen in Shortcut, not here.
 
 ---
 
@@ -55,18 +55,23 @@ If no stories are found in any state, say: "No stories pending eng review right 
 
 ---
 
-## Step 3 — Offer next actions
+## Step 3 — Suggest next actions (do not execute them)
 
-After the list, ask:
+After the list, surface what should happen next for each bucket — tell the user what to do in Shortcut, not do it for them:
 
-> "Want to open any of these, add a comment, or ping someone?"
+- 🔴 stories: "SC-[id] needs eng review — open it in Shortcut and move to In Review when picked up."
+- 🟢 stories: "SC-[id] is ready to merge — merge it in Shortcut when ready."
 
-If they want to add a comment: draft it in the conversation and wait for approval before posting.
-If they want to ping someone: draft a one-line Slack message and wait for approval before sending.
+If the user wants to add a comment: draft it in conversation and wait for approval before posting via `stories-create-comment`.
+
+If the user wants to ping someone: draft a one-line Slack message and wait for approval before sending.
+
+**Never call `stories-update` to change workflow state.** The user moves stories in Shortcut.
 
 ---
 
 ## Rules
 
-- Never post, comment, or update a story without explicit approval
+- Read-only: never update story state, assign/unassign, or close a story
+- Never post a comment or Slack message without explicit approval
 - If any MCP tool is unavailable, say which one and show results from what you have
