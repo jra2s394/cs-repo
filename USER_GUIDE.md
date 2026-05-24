@@ -114,6 +114,23 @@ Type `/escalate` → paste the conversation URL → Claude drafts the ticket (ti
 
 ---
 
+## Create a CS Engineering story — `/story-CSEng`
+
+For CS Engineers: create a Shortcut story to support a CSM or track customer-specific engineering work (onboarding blockers, config tasks, escalations, bug reports).
+
+Type `/story-CSEng` → Claude asks for the customer, story type, description, affected CSM, and priority → searches Shortcut for existing stories → drafts the full story → review it → say "create it."
+
+**Story types:**
+- 🐛 Bug — something broken in the product
+- ⚙️ Config task — customer-specific setup (quotes, workflows, email, integrations)
+- 🚧 Onboarding blocker — blocking go-live or a training milestone
+- 💬 CSM support request — CSM needs eng help to answer a question or resolve an issue
+- 🔧 Feature / custom work — non-standard request that needs product/eng awareness
+
+After creating, Claude will ask if you want to notify the CSM via Slack with the story link.
+
+---
+
 ## Manage tasks — `/tasks`
 
 Shows your open Asana tasks grouped by urgency: overdue, due today, due this week, upcoming.
@@ -282,6 +299,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/renewals-nextquarter` | Renewal invoices — three-month forecast |
 | `/customer` | Customer snapshot before a call |
 | `/escalate` | Escalate Intercom → Shortcut ticket |
+| `/story-CSEng` | CS Eng: create a Shortcut story for CSM support |
 | `/tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
 | `/review-code` | Run tests + structured quality checklist |
