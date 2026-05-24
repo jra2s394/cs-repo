@@ -177,6 +177,7 @@ Steps 2–5 are per person — you still need to do them yourself even if a team
 
 **Tests are failing after a code change**
 - Run `make test` inside `cs-repo` — the output tells you exactly which test failed and why
+- Run `make lint` to also catch lint errors (undefined names, unused imports) that tests might miss
 - Fix the issue on a feature branch, not directly on `main`
 
 **Still stuck?** Ask your CS lead.

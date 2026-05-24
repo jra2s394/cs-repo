@@ -26,7 +26,7 @@ You type a command. Claude reads your real data, writes the output, and shows it
 
 **Executive reporting** — `/executive-summary` for a portfolio-wide view combining onboarding, support, renewals, and health, `/weekly-team` to roll up the team's week for leadership.
 
-**Utilities** — `/customer` for a pre-call briefing, `/escalate` to create a Shortcut ticket, `/tasks` to manage Asana, `/kb-draft` to write a KB article.
+**Utilities** — `/customer` for a pre-call briefing, `/customer-search` for fuzzy customer lookup across all systems, `/standup-recap` to roll up the week's daily files for `/eow`, `/escalate` to create a Shortcut ticket, `/tasks` to manage Asana, `/kb-draft` to write a KB article.
 
 ---
 
@@ -52,11 +52,12 @@ Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutori
 
 ## Repo quality
 
-Every hook and chart helper has automated tests. GitHub Actions runs them on every pull request so broken changes can't land on `main`.
+Every hook, lib helper, chart, and report is covered by automated tests. Two linters (ruff for Python, biome for JS) catch undefined identifiers and unused imports before they reach CI. GitHub Actions runs the full test + lint suite on every pull request so broken changes can't land on `main`.
 
 ```
-make test       # run all 258 tests (237 Python + 21 JS)
-/review-code    # structured checklist — runs tests first, then 11 fixed sections
+make test       # 394 tests (265 Python + 129 JS)
+make lint       # ruff + biome — undefined names, unused imports, etc.
+/review-code    # structured checklist — runs tests first, then 19 fixed sections
 ```
 
 See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) for details.
