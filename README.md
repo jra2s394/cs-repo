@@ -44,6 +44,19 @@ Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutori
 
 ---
 
+## Repo quality
+
+Every hook and chart helper has automated tests. GitHub Actions runs them on every pull request so broken changes can't land on `main`.
+
+```
+make test       # run all 237 tests
+/review         # structured checklist — runs tests first, then 9 fixed sections
+```
+
+See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) for details.
+
+---
+
 ## Intercom ID reference
 
 Each teammate needs their own ID so Claude pulls your conversations, not a teammate's. See Step 3 in [SETUP.md](SETUP.md) for how to find yours.
