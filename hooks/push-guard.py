@@ -31,8 +31,9 @@ blocked = [
     (r"gh\s+pr\s+merge", "gh pr merge"),
     (r"gh\s+repo\s+edit\s+.*--visibility\s+public", "gh repo edit --visibility public"),
     # Block direct pushes to protected branches — use a feature branch + PR instead
-    (r"git\s+push\s+(origin\s+)?main\b", "git push to main"),
-    (r"git\s+push\s+(origin\s+)?master\b", "git push to master"),
+    # (?=\s|$) avoids false positives on branch names like "main-feature" or "mainstream"
+    (r"git\s+push\s+(origin\s+)?main(?=\s|$)", "git push to main"),
+    (r"git\s+push\s+(origin\s+)?master(?=\s|$)", "git push to master"),
     # Bash-level writes to .env files that bypass file-protector (which only guards Edit/Write tools)
     (r"[>|]\s*\.env(?!\.example|\.sample|\.template)", "redirect to .env"),
     (r"cp\s+.*\s+\.env(?!\.example|\.sample|\.template)", "cp to .env"),
