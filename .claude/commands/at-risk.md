@@ -6,6 +6,8 @@ Read `CLAUDE.md` from this repo before starting.
 
 Identify every customer showing risk signals right now. **Read-only — no tasks are created, no messages are sent, no tickets are opened.** This command surfaces risk; the user decides what to act on.
 
+> **MCP gotchas across commands:** Asana team-filter noise (sibling-team projects polluting results), Intercom result-too-large errors (`per_page` token budget; `contact_ids` caps at 15), and stale 2023 overdue tasks all have documented fixes in `/health-score`'s Step 1. Read that section first if any MCP query here misbehaves.
+
 ---
 
 ## Step 1 — Pull risk signals in parallel
