@@ -178,18 +178,22 @@ Then show the role-specific command list based on their answer from Step 1.5:
 ```
 Your most-used commands:
 
-  /daily            Standup update — Tue–Fri
-  /midweek          Wednesday extended standup
-  /eow              Friday end-of-week recap
-  /weekstart        Monday week-start update
-  /customer         Full customer snapshot before a call
-  /meeting-prep     Briefings for all customer meetings in the next 24h
-  /follow-up        Draft follow-up email after a call
-  /go-live          Go-live readiness check before a customer launch
-  /tasks            View and manage your Asana tasks
-  /escalate         Escalate an Intercom conversation to a Shortcut ticket
-  /kb-draft         Draft a KB article from a topic or conversation
-  /intercom-weekly  Weekly Intercom support report
+  /daily                  Standup update — Tue–Fri
+  /midweek                Wednesday extended standup
+  /eow                    Friday end-of-week recap
+  /weekstart              Monday week-start update
+  /customer               Full customer snapshot before a call
+  /meeting-prep           Briefings for all customer meetings in the next 24h
+  /follow-up              Draft follow-up email after a call
+  /go-live                Go-live readiness check before a customer launch
+  /at-risk                Surface all at-risk customers — read-only triage
+  /start-onboarding       Kick off a new customer onboarding
+  /end-onboarding         Close out a completed onboarding
+  /handoff                Generate a handoff brief when account ownership changes
+  /tasks                  View and manage your Asana tasks
+  /escalate               Escalate an Intercom conversation to a Shortcut ticket
+  /kb-draft               Draft a KB article from a topic or conversation
+  /intercom-weekly        Weekly Intercom support report
 ```
 
 ---
@@ -213,21 +217,27 @@ Your most-used commands:
 ```
 Your most-used commands:
 
-  /daily            Standup update — Tue–Fri
-  /midweek          Wednesday extended standup
-  /eow              Friday end-of-week recap
-  /weekstart        Monday week-start update
-  /customer         Full customer snapshot before a call
-  /meeting-prep     Briefings for all customer meetings in the next 24h
-  /qbr              QBR prep — data pulled, wins sourced, agenda drafted
-  /go-live          Go-live readiness check before a customer launch
-  /tasks            View and manage your Asana tasks
-  /onboarding-weekly     Onboarding health — this week
-  /onboarding-monthly    Onboarding health — this month
-  /renewals-thismonth    Renewal invoice report — what Finance bills now
-  /renewals-nextquarter  Three-month renewal forecast
-  /intercom-monthly      Monthly Intercom support report
-  /review-code           Run the repo QA checklist
+  /daily                  Standup update — Tue–Fri
+  /midweek                Wednesday extended standup
+  /eow                    Friday end-of-week recap
+  /weekstart              Monday week-start update
+  /health-score           Portfolio health scorecard — green/yellow/red per account
+  /at-risk                Surface all at-risk customers — read-only triage
+  /expansion              Identify expansion and upsell opportunities
+  /renewal-health         Renewal pipeline with risk scores
+  /executive-summary      Portfolio-wide executive summary for leadership
+  /weekly-team            Weekly CS team summary
+  /customer               Full customer snapshot before a call
+  /meeting-prep           Briefings for all customer meetings in the next 24h
+  /qbr                    QBR prep — data pulled, wins sourced, agenda drafted
+  /go-live                Go-live readiness check before a customer launch
+  /tasks                  View and manage your Asana tasks
+  /onboarding-weekly      Onboarding health — this week
+  /onboarding-monthly     Onboarding health — this month
+  /renewals-thismonth     Renewal invoice report — what Finance bills now
+  /renewals-nextquarter   Three-month renewal forecast
+  /intercom-monthly       Monthly Intercom support report
+  /review-code            Run the repo QA checklist
 ```
 
 ---
@@ -237,13 +247,16 @@ Your most-used commands:
 ```
 Your most-used commands:
 
-  /onboarding-quarterly  Quarterly onboarding scorecard
-  /onboarding-yearly     Full-year onboarding summary + top accounts
-  /intercom-quarterly    Quarterly Intercom support intelligence
-  /intercom-yeartodate   Full-year Intercom report
-  /renewals-nextquarter  Three-month renewal forecast
-  /qbr                   QBR prep — data pulled, wins sourced, agenda drafted
-  /customer              Full customer snapshot before a call
+  /executive-summary      Portfolio-wide executive summary for leadership
+  /health-score           Portfolio health scorecard — all accounts at a glance
+  /renewal-health         Renewal pipeline with risk scores and ARR at stake
+  /onboarding-quarterly   Quarterly onboarding scorecard
+  /onboarding-yearly      Full-year onboarding summary + top accounts
+  /intercom-quarterly     Quarterly Intercom support intelligence
+  /intercom-yeartodate    Full-year Intercom report
+  /renewals-nextquarter   Three-month renewal forecast
+  /qbr                    QBR prep — data pulled, wins sourced, agenda drafted
+  /customer               Full customer snapshot before a call
 ```
 
 ---

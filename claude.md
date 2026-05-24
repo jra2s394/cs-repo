@@ -53,7 +53,7 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 | `/intercom-quarterly` | This quarter vs last quarter |
 | `/intercom-yeartodate` | Full year to date |
 
-**Utilities**
+**Customer intelligence**
 
 | Command | What it does |
 |---|---|
@@ -61,12 +61,32 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 | `/meeting-prep` | Briefings for all customer meetings in the next 24h |
 | `/follow-up` | Draft follow-up email after a call (Read.ai → draft → approval → send) |
 | `/go-live` | Go-live readiness check — blockers across Asana, Shortcut, Intercom, Gmail |
+| `/at-risk` | Surface all at-risk customers across all systems — read-only triage |
+| `/health-score` | Portfolio health scorecard — green/yellow/red for every active account |
+| `/expansion` | Identify expansion and upsell opportunities from live signals |
 | `/qbr` | QBR prep — full quarter data pull, wins sourced, agenda drafted |
 | `/escalate` | Escalate an Intercom conversation to a Shortcut ticket (draft → approval → create) |
 | `/story-CSEng` | CS Eng: create a Shortcut story for CSM support (draft → approval → create) |
 | `/prs` | CS Eng: show Shortcut stories pending eng review — read-only status check |
 | `/tasks` | View/manage Asana tasks grouped by urgency |
 | `/kb-draft` | Draft a new Intercom KB article from a topic or conversation ID |
+
+**Onboarding lifecycle**
+
+| Command | What it does |
+|---|---|
+| `/start-onboarding` | Kick off a new customer — Asana project, Drive folder, Shortcut story, Slack channel |
+| `/onboarding-status-report` | Customer-facing onboarding status report — email, calendar, Asana, Intercom |
+| `/end-onboarding` | Close out a completed onboarding — checklist, go-live email, post-closure tasks |
+| `/handoff` | Generate a CSM handoff brief when account ownership changes |
+
+**Renewal & executive**
+
+| Command | What it does |
+|---|---|
+| `/renewal-health` | Renewal pipeline health — upcoming renewals, risk scores, recommended actions |
+| `/executive-summary` | Portfolio-wide executive summary — onboarding + support + renewals + health |
+| `/weekly-team` | Weekly CS team summary for manager standup or team Slack channel |
 
 **Onboarding reports** — upload the finance mastersheet first, then run the command to generate a branded `.docx` in `out/`. Data sources: mastersheet (CARR) + Asana (task health).
 
@@ -197,6 +217,38 @@ Process (no exceptions):
 4. **Only then** take the action.
 
 This applies to: standup posts, KB articles, article edits, Asana tasks, Shortcut tickets, Slack messages, and any comments or updates on existing items.
+
+---
+
+## System Action Policy — Read, Suggest, Draft Only
+
+This is a CS Ops intelligence tool. It reads data, surfaces insights, and drafts content for human review. **It does not complete, close, delete, or change the state of items in external systems.** Users perform those actions themselves in Asana, Shortcut, Intercom, and their other tools.
+
+### What Claude does and does not do per system
+
+| System | Claude DOES | Claude does NOT do |
+|---|---|---|
+| **Asana** | Pull tasks, surface blockers, suggest next actions, create NEW tasks (draft-first) | Mark tasks complete, update task status, delete tasks |
+| **Shortcut** | Pull story status, surface waiting PRs, create NEW stories (draft-first) | Update workflow state, close/complete stories, delete stories/epics/iterations |
+| **Intercom** | Pull conversations, surface open issues, create/update KB articles (draft-first) | Close or resolve conversations |
+| **Slack** | Draft and post standup updates (draft-first), post onboarding resource links (approval required) | Archive channels, manage membership |
+| **Gmail** | Search threads, surface action items, create email drafts | Send email, archive, or delete |
+| **Google Calendar** | Pull events, suggest meeting times, create/update events (draft-first) | Delete calendar events |
+| **Google Drive** | Read files, create new files and folders (approval required for `/start-onboarding`) | Delete files or folders |
+
+### How to handle completion and status changes
+
+When a task, story, conversation, or item should be updated or completed:
+
+1. **Tell the user what action to take** — e.g., "You can mark 'Configure dispatch integration' complete in Asana."
+2. **Provide the direct link** if available from the API response.
+3. **Never attempt the update yourself** — not even with draft-before-create — unless the user explicitly says "do it" after reviewing a draft.
+
+**Asana specifically:** Show task lists, flag overdue items, suggest what to mark complete. Never call `update_tasks` for completion. The user marks tasks done in Asana.
+
+**Shortcut specifically:** Show story states and waiting PRs. Suggest what the next workflow state should be. Never call `stories-update` to change workflow state. The user moves stories in Shortcut.
+
+**Intercom conversations:** Surface open and overdue conversations. Never close or resolve a conversation. The user resolves in Intercom.
 
 ---
 
