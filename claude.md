@@ -62,6 +62,7 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 | `/customer-search` | Fuzzy lookup — find a customer across all systems when you don't know the exact name |
 | `/inbox-triage` | Morning Gmail triage — Respond / FYI / Escalation / Customer Signal buckets; drafts replies only on request, never sends without approval |
 | `/meeting-prep` | Briefings for all customer meetings in the next 24h |
+| `/meeting-notes` | Read-only post-meeting summary (Read.ai + calendar + Gmail + Asana + Shortcut). Counterpart to `/follow-up` when you just want notes, not an email |
 | `/follow-up` | Draft follow-up email after a call (Read.ai → draft → approval → send) |
 | `/go-live` | Go-live readiness check — blockers across Asana, Shortcut, Intercom, Gmail |
 | `/at-risk` | Surface all at-risk customers across all systems — read-only triage |
@@ -112,6 +113,14 @@ Renewal billing models:
 - **Volume-based**: Quantity (projected cubic yards/meters) × Per Unit Cost = Invoice Amount
 - **Fixed-rate**: Current ARR × (1 + uplift rate, e.g. 1.05) = Invoice Amount
 - Claude detects the model automatically from the Finance sheet columns.
+
+**Tooling**
+
+| Command | What it does |
+|---|---|
+| `/setup` | First-time setup wizard — fills in your personal CLAUDE.md, checks integrations |
+| `/commands` | List every available slash command live from `.claude/commands/*.md` — surfaces commands missing from this CLAUDE.md table |
+| `/review-code` | Run the 22-section QA checklist (tests + lint + per-component review) |
 
 ---
 
