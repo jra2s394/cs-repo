@@ -131,6 +131,22 @@ After creating, Claude will ask if you want to notify the CSM via Slack with the
 
 ---
 
+## Check the eng review queue — `/prs`
+
+For CS Engineers: see every Shortcut story that's sitting and waiting on engineering review or approval.
+
+Type `/prs` → Claude searches the CSEng workflow and Engineering workflow in parallel → shows stories grouped by urgency with how long each has been waiting → offer to add a comment or ping someone.
+
+**What it surfaces:**
+- 🔴 Stories in "Ready for Eng Review" or "001 - Product Review ASAP" (needs action now)
+- 🔴 Any review-state story waiting 5+ days
+- 🟡 Stories in "In Review" or "Ready for Review" (in progress, watching)
+- 🟢 Stories in "Ready to Merge" (approved, just needs the merge)
+
+Nothing is created or changed — this is a read-only status check.
+
+---
+
 ## Manage tasks — `/tasks`
 
 Shows your open Asana tasks grouped by urgency: overdue, due today, due this week, upcoming.
@@ -300,6 +316,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/customer` | Customer snapshot before a call |
 | `/escalate` | Escalate Intercom → Shortcut ticket |
 | `/story-CSEng` | CS Eng: create a Shortcut story for CSM support |
+| `/prs` | CS Eng: show Shortcut stories pending eng review |
 | `/tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
 | `/review-code` | Run tests + structured quality checklist |

@@ -59,6 +59,8 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 |---|---|
 | `/customer` | Full snapshot before a call — open tickets, recent email, meetings, Asana tasks |
 | `/escalate` | Escalate an Intercom conversation to a Shortcut ticket (draft → approval → create) |
+| `/story-CSEng` | CS Eng: create a Shortcut story for CSM support (draft → approval → create) |
+| `/prs` | CS Eng: show Shortcut stories pending eng review — read-only status check |
 | `/tasks` | View/manage Asana tasks grouped by urgency |
 | `/kb-draft` | Draft a new Intercom KB article from a topic or conversation ID |
 
