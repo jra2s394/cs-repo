@@ -19,6 +19,33 @@ Chronological history of every change merged to `main`, from the first commit to
 
 ## 2026-05-24
 
+### `<pending>` · PR #26 — Add `/inbox-triage` and hard-polish `/review-code`
+**Tags:** `[command] [docs]`
+
+Net: 6 files changed, +N (docs + 1 new command file + 4 new checklist sections).
+
+- **New command:** `/inbox-triage` — morning Gmail triage that sorts overnight email into 🔴 Respond / 🟣 Escalate / 🟢 FYI / 🟡 Customer Signal buckets in under 60 seconds. Quotes the exact trigger phrase for customer signals (no inventing). Drafts replies only on request, never sends without per-draft approval. Defaults to `newer_than:1d -in:draft -category:promotions -category:social`.
+- **`/review-code` hard polish** — closed 4 gaps that had accumulated since the checklist was first written:
+  - New **Section 4b** for `secret-scan.py` (added in PR #23 but never got into the checklist) — verifies all 9 token patterns and the helpful-error-message contract.
+  - **Section 10** gained 6 CSV-injection-defense items (leading `=`/`+`/`-`/`@`/tab prefix + the negative case that `x=1` mid-string stays untouched).
+  - New **Section 19b** for `ruff.toml` config (E/F/B/UP rule selection, target-version match, test-dir per-file-ignores).
+  - New **Section 20** for read-only / draft-first command contracts — verifies `/customer-search`, `/standup-recap`, `/inbox-triage`, `/at-risk`, `/prs` all state their contracts in prose, and that every command's frontmatter `description` field still matches what the command does (catches doc drift).
+  - Section count in header bumped 19 → 22; CI parity check now includes `make lint-py`.
+- **Docs sync:** README/USER_GUIDE updated for the new section count, the new command, and the new triage workflow. RELEASE_NOTES entry for this PR.
+- **Standing rule:** Every new command from now on must update CLAUDE.md (table), README.md, USER_GUIDE.md (detailed section + quick reference), and add a RELEASE_NOTES entry. `/review-code` Section 20 catches frontmatter drift if descriptions go stale.
+
+### `3dc9fad` · PR #25 — Add `/standup-recap`, clean up settings, refresh user docs, add `RELEASE_NOTES`
+**Tags:** `[command] [safety] [docs]`
+
+Net: 8 files changed, +352 / −47.
+
+- **New command:** `/standup-recap` — aggregates the week's `data/outputs/daily-*.md` files into a deduplicated recap that feeds `/eow`. Read-only file aggregation, no MCP calls, no drafts.
+- **Settings cleanup:** removed the 3 remaining redundant Shortcut delete matchers from `.claude/settings.json` (`stories-delete`, `epics-delete`, `iterations-delete`). All five delete operations are now gated by `permissions.deny` only — no dead matchers.
+- **`/review-code` Section 8** updated to reflect the new architecture (delete operations are denied, not draft-gated) and added a check for matcher/deny overlap.
+- **User-facing doc refresh:** corrected stale test count (258 → 394), section count (11 → 19), added `/customer-search` + `/standup-recap` to USER_GUIDE quick-reference table, expanded "Testing and quality" to cover ruff + biome, fixed Desktop folder list (now includes Health Reports and Executive Summaries).
+- **Housekeeping:** deleted stale local `fix/code-review-findings` branch (fixes already in main, branch was 8.6K lines behind).
+- **New file:** `RELEASE_NOTES.md` — comprehensive chronological history from origin through PR #24.
+
 ### `46e0bbd` · PR #24 — Add test coverage, refactor reports, add `/customer-search`
 **Tags:** `[testing] [refactor] [command] [lint] [infra]`
 
@@ -195,15 +222,16 @@ Net: 124 files changed, +17,540. The bootstrap.
 
 ## Numbers at a glance
 
-| Metric | At v0 | After PR #24 (today) |
+| Metric | At v0 | After PR #26 (today) |
 |---|---|---|
-| Slash commands | 18 | 38 |
+| Slash commands | 18 | 41 |
 | Hooks | 10 | 11 (added `secret-scan.py`) |
 | Report generators | 9 | 17 |
 | Python tests | 0 | 265 |
 | JS tests | 0 | 129 |
 | Linters | 0 | 2 (ruff + biome) |
 | CI checks | 0 | 4 (pytest + ruff + biome + JS) |
+| `/review-code` sections | n/a | 22 |
 
 ---
 
