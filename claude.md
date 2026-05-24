@@ -42,6 +42,7 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 | `/midweek` | Wed — Mon–today wins + rest of week (house format) |
 | `/eow` | Fri — full week recap + carryover + next week (house format) |
 | `/weekstart` | Mon — last week carryover + this week goals (house format) |
+| `/standup-recap` | Aggregate the week's `data/outputs/daily-*.md` into a recap that feeds `/eow` (read-only file aggregation, no MCP calls) |
 
 **Intercom reports** — pull live Intercom data, generate a JSON metrics file, then run `node reports/intercom-<period>.js <path-to-metrics.json>` to produce a `.docx` in `out/`
 
