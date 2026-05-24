@@ -152,7 +152,7 @@ If anything isn't connected, run `/mcp` in the Claude Code prompt to see status.
 
 ## Git Workflow
 
-All changes follow the feature-branch PR flow. Direct commits and pushes to `main` are blocked by hooks.
+All changes follow the feature-branch PR flow. Direct commits and pushes to `main` are blocked at two levels: local hooks (Claude Code) and GitHub branch protection rules (server-side).
 
 1. **Branch** — `git checkout -b <descriptive-name>` from main
 2. **Commit** — `git commit` (blocked on `main`; must be on a feature branch)
@@ -161,6 +161,21 @@ All changes follow the feature-branch PR flow. Direct commits and pushes to `mai
 5. **Merge** — squash and merge via GitHub web UI
 
 Branch naming: `chore/`, `fix/`, `feature/`, or `docs/` prefix + short description.
+
+### GitHub branch protection rules (main)
+
+Configured server-side at `github.com/jra2s394/cs-repo/settings/branches`:
+
+| Rule | Setting |
+|---|---|
+| Require pull request before merging | ✅ on |
+| Required approvals | 0 (solo repo) |
+| Allow force pushes | ❌ off |
+| Allow branch deletion | ❌ off |
+| Require linear history | ✅ on (squash/rebase only) |
+| Enforce for admins | ❌ off (escape hatch retained) |
+
+These rules apply even when pushing from your own terminal — GitHub rejects the push before it lands.
 
 ---
 
