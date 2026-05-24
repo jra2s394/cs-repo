@@ -134,7 +134,7 @@ Type `/go-live` → give the customer name and go-live date → Claude checks As
 
 Prepare a Quarterly Business Review for a customer — data pulled, wins sourced, agenda drafted.
 
-Type `/qbr` → give the customer name and quarter → Claude pulls a full quarter of Intercom, Gmail, Calendar, Asana, and Shortcut data → drafts the full QBR brief (wins, open issues, renewal context, agenda) → review it → approve to save. Every win is sourced — no hallucinated outcomes.
+Type `/qbr` → give the customer name and quarter → Claude pulls a full quarter of Intercom, Gmail, Calendar, Asana, and Shortcut data → drafts the full QBR brief (wins, open issues, renewal context, agenda) → review it → approve → Claude generates a branded `.docx` in `out/` and auto-copies to `Desktop/CS Reports/QBR/`. Every win is sourced — no hallucinated outcomes.
 
 **QBR templates** (for use standalone or as `/qbr` output):
 - `slabstack-cs/qbr-templates/qbr-standard.md` — standard QBR for all active customers
@@ -311,8 +311,8 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 |---|---|
 | Standup updates | `data/outputs/` as `.md` files |
 | All reports | `out/` as `.docx` files |
-| Desktop copies (Mac) | `~/Desktop/CS Reports/Intercom`, `Onboarding`, or `Renewals` |
-| Desktop copies (PC) | `%USERPROFILE%\Desktop\CS Reports\Intercom`, `Onboarding`, or `Renewals` |
+| Desktop copies (Mac) | `~/Desktop/CS Reports/Intercom`, `Onboarding`, `Renewals`, or `QBR` |
+| Desktop copies (PC) | `%USERPROFILE%\Desktop\CS Reports\Intercom`, `Onboarding`, `Renewals`, or `QBR` |
 
 ---
 
