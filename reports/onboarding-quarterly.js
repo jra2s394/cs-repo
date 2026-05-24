@@ -3,34 +3,15 @@
 // Usage: node reports/onboarding-quarterly.js <path-to-metrics.json>
 // Output: out/Onboarding_Quarterly_YYYY-QN.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
+const { loadJson, requireFields, ensureOutDir } = require("../lib/data-loader");
 const path = require("path");
-const fs = require("fs");
 
-const jsonPath = process.argv[2];
-if (!jsonPath) {
-  console.error(`Usage: node ${path.basename(process.argv[1])} <path-to-metrics.json>`);
-  process.exit(1);
-}
-let d;
-try {
-  d = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-} catch (err) {
-  console.error(`Error loading metrics: ${err.message}`);
-  process.exit(1);
-}
-
+const d = loadJson("metrics");
 const REQUIRED = ["generated", "period", "dateRange", "preparedBy", "sourceFile",
                   "kpis", "scorecardTable", "methodology"];
-const missing = REQUIRED.filter(k => d[k] == null);
-if (missing.length) {
-  console.error(`Missing required fields in metrics JSON: ${missing.join(", ")}`);
-  process.exit(1);
-}
+requireFields(d, REQUIRED);
 
-const outDir = path.resolve(__dirname, "../out");
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outDir = ensureOutDir();
 
 const periodParts = d.period ? d.period.split(" ") : [];
 if (periodParts.length < 2) {
@@ -196,17 +177,15 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `${d.period} Onboarding Report` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Onboarding", "Quarterly");
-    writeCsv(outFile.replace(".docx", ".csv"), [
+T.publishReport(doc, outFile, {
+  category: "Onboarding",
+  label: "Quarterly",
+  csvSections: [
       { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Last Q", "Change", "YoY"], rows: d.summaryTable || [] },
       { title: "Monthly Breakdown", headers: ["Month", "Started", "Completed", "CARR Completed", "CARR In-Flight"], rows: d.monthlyTable || [] },
       { title: "Accounts", headers: ["Customer", "Project", "CARR", "Started", "Completed", "Status"], rows: d.accountsTable || [] },
       { title: "At-Risk & Blocked", headers: ["Customer", "Project", "CARR", "Issue", "Urgent"],
         rows: (d.atRisk || []).map(r => [r.customer, r.project, r.carr, r.issue, r.urgent ? "Yes" : "No"]) },
       { title: "Backlog Pipeline", headers: ["Customer", "Project", "CARR"], rows: d.backlogTable || [] },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+    ],
+});

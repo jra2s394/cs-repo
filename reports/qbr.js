@@ -3,38 +3,20 @@
 // Usage: node reports/qbr.js <path-to-metrics.json>
 // Output: out/QBR_<CustomerSlug>_<Quarter>_<Date>.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
+const { loadJson, requireFields, ensureOutDir, dateSlug } = require("../lib/data-loader");
 const path = require("path");
-const fs = require("fs");
 
-const jsonPath = process.argv[2];
-if (!jsonPath) {
-  console.error(`Usage: node ${path.basename(process.argv[1])} <path-to-metrics.json>`);
-  process.exit(1);
-}
-let d;
-try {
-  d = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-} catch (err) {
-  console.error(`Error loading metrics: ${err.message}`);
-  process.exit(1);
-}
-
+const d = loadJson("metrics");
 const REQUIRED = ["customer", "customerSlug", "quarter", "generated", "preparedBy",
                   "kpis", "executiveSummary", "wins", "openIssues", "renewal",
                   "agenda", "nextSteps", "methodology"];
-const missing = REQUIRED.filter(k => d[k] == null);
-if (missing.length) {
-  console.error(`Missing required fields in metrics JSON: ${missing.join(", ")}`);
-  process.exit(1);
-}
+requireFields(d, REQUIRED);
 
-const outDir = path.resolve(__dirname, "../out");
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outDir = ensureOutDir();
 
-const dateSlug = (d.generated || "").replace(/[^0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "unknown-date";
+const slug = dateSlug(d.generated);
 const quarterSlug = (d.quarter || "").replace(/\s+/g, "-");
-const outFile = path.join(outDir, `QBR_${d.customerSlug}_${quarterSlug}_${dateSlug}.docx`);
+const outFile = path.join(outDir, `QBR_${d.customerSlug}_${quarterSlug}_${slug}.docx`);
 
 const children = [];
 
@@ -188,18 +170,16 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `QBR — ${d.customer} — ${d.quarter}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "QBR", `${d.customerSlug}_${quarterSlug}`);
-    writeCsv(outFile.replace(".docx", ".csv"), [
-      { title: "Wins", headers: ["Win", "Impact", "Source"],
-        rows: (d.wins || []).map(w => [w.win, w.impact, w.source]) },
-      { title: "Open Issues", headers: ["Issue", "Status", "Owner", "ETA", "Critical"],
-        rows: (d.openIssues || []).map(i => [i.issue, i.status, i.owner, i.eta, i.critical ? "Yes" : "No"]) },
-      { title: "Agenda", headers: ["Section", "Time", "Owner"], rows: d.agenda || [] },
-      { title: "Next Steps", headers: ["Action", "Owner", "Due"],
-        rows: (d.nextSteps || []).map(s => [s.action, s.owner, s.due]) },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+T.publishReport(doc, outFile, {
+  category: "QBR",
+  label: `${d.customerSlug}_${quarterSlug}`,
+  csvSections: [
+    { title: "Wins", headers: ["Win", "Impact", "Source"],
+      rows: (d.wins || []).map(w => [w.win, w.impact, w.source]) },
+    { title: "Open Issues", headers: ["Issue", "Status", "Owner", "ETA", "Critical"],
+      rows: (d.openIssues || []).map(i => [i.issue, i.status, i.owner, i.eta, i.critical ? "Yes" : "No"]) },
+    { title: "Agenda", headers: ["Section", "Time", "Owner"], rows: d.agenda || [] },
+    { title: "Next Steps", headers: ["Action", "Owner", "Due"],
+      rows: (d.nextSteps || []).map(s => [s.action, s.owner, s.due]) },
+  ],
+});

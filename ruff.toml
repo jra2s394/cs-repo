@@ -1,0 +1,27 @@
+# ruff config — minimal, focused on catching real bugs (not style noise).
+# Run: `make lint` (or `python3 -m ruff check` directly).
+
+target-version = "py39"
+
+# Only check these dirs (skip node_modules, .pytest_cache, etc.)
+include = ["hooks/**/*.py", "lib/**/*.py", "tests/**/*.py"]
+
+[lint]
+# Rule groups (https://docs.astral.sh/ruff/rules/):
+#   E   — pycodestyle errors (real syntax / runtime issues)
+#   F   — pyflakes (undefined names, unused imports, etc.)
+#   B   — flake8-bugbear (likely bugs: mutable defaults, bare except, etc.)
+#   UP  — pyupgrade (catch deprecated syntax)
+select = ["E", "F", "B", "UP"]
+
+# Style noise we don't care about
+ignore = [
+    "E501",   # line too long — let lines be long when they're intentional
+    "E402",   # module imports not at top — hooks legitimately do this
+    "UP015",  # `open(..., "r")` is fine and explicit
+    "UP032",  # f-string conversion — let .format() coexist
+]
+
+[lint.per-file-ignores]
+# Tests can have unused imports (fixtures) and assert-based patterns
+"tests/**/*.py" = ["F401", "B011"]

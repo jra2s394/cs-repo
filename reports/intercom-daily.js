@@ -3,34 +3,16 @@
 // Usage: node reports/intercom-daily.js <path-to-metrics.json>
 // Output: out/Intercom_Daily_YYYY-MM-DD.docx  (via d.dateSlug, e.g. "2026-05-21")
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
+const { loadJson, requireFields, ensureOutDir, dateSlug } = require("../lib/data-loader");
 const path = require("path");
-const fs = require("fs");
 
-const jsonPath = process.argv[2];
-if (!jsonPath) {
-  console.error(`Usage: node ${path.basename(process.argv[1])} <path-to-metrics.json>`);
-  process.exit(1);
-}
-let d;
-try {
-  d = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-} catch (err) {
-  console.error(`Error loading metrics: ${err.message}`);
-  process.exit(1);
-}
+const d = loadJson("metrics");
 const REQUIRED = ["generated", "period", "dateRange", "preparedBy", "kpis", "summaryTable", "methodology"];
-const missing = REQUIRED.filter(k => d[k] == null);
-if (missing.length) {
-  console.error(`Missing required fields in metrics JSON: ${missing.join(", ")}`);
-  process.exit(1);
-}
+requireFields(d, REQUIRED);
 
-const outDir = path.resolve(__dirname, "../out");
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outDir = ensureOutDir();
 
-const slug = d.dateSlug || (d.generated || "").replace(/[^0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "unknown-date";
+const slug = d.dateSlug || dateSlug(d.generated);
 const outFile = path.join(outDir, `Intercom_Daily_${slug}.docx`);
 
 const children = [];
@@ -119,14 +101,12 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `Daily Snapshot — ${d.period}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Intercom", "Daily");
-    writeCsv(outFile.replace(".docx", ".csv"), [
+T.publishReport(doc, outFile, {
+  category: "Intercom",
+  label: "Daily",
+  csvSections: [
       { title: "Summary", headers: ["Metric", "Today", d.priorPeriod || "Yesterday", "Change"], rows: d.summaryTable || [] },
       { title: "Open Queue", headers: ["Customer", "Subject", "Age", "Urgent"],
         rows: (d.openQueue || []).map(q => [q.customer, q.subject, q.age, q.urgent ? "Yes" : "No"]) },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+    ],
+});

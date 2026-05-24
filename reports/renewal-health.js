@@ -3,9 +3,7 @@
 // Usage: node reports/renewal-health.js <path-to-metrics.json>
 // Output: out/Renewal_Health_YYYY-MM-DD.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
-const { loadJson, requireFields, ensureOutDir } = require("../lib/data-loader");
+const { loadJson, requireFields, ensureOutDir, dateSlug } = require("../lib/data-loader");
 const path = require("path");
 
 const d = loadJson("renewal health metrics");
@@ -15,8 +13,8 @@ const REQUIRED = ["generated", "period", "preparedBy", "kpis", "renewals",
 requireFields(d, REQUIRED);
 
 const outDir = ensureOutDir();
-const dateSlug = (d.generated || "").replace(/[^0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "unknown-date";
-const outFile = path.join(outDir, `Renewal_Health_${dateSlug}.docx`);
+const slug = dateSlug(d.generated);
+const outFile = path.join(outDir, `Renewal_Health_${slug}.docx`);
 
 const children = [];
 
@@ -142,16 +140,14 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `Renewal Health — ${d.period}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Renewals", "Health");
-    writeCsv(outFile.replace(".docx", ".csv"), [
+T.publishReport(doc, outFile, {
+  category: "Renewals",
+  label: "Health",
+  csvSections: [
       { title: "Pipeline Summary", headers: ["Bucket", "# Accounts", "ARR at Stake", "Notes"], rows: d.summary || [] },
       { title: "Renewal Pipeline", headers: ["Customer", "Renewal Date", "Days Out", "ARR", "Risk", "Status", "Notes"],
         rows: (d.renewals || []).map(r => [r.customer, r.renewalDate, r.daysOut, r.arr || r.currentARR, r.risk, r.status, r.notes]) },
       { title: "Renewal Playbook", headers: ["Customer", "Owner", "Action", "Due Date"],
         rows: (d.playbook || []).map(p => [p.customer, p.owner, p.action, p.dueDate]) },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+    ],
+});
