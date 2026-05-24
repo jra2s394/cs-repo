@@ -1,0 +1,19 @@
+{
+  "name": "cs-repo",
+  "version": "1.0.0",
+  "description": "Slabstack CS operations — report generation",
+  "private": true,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "generate:daily": "node reports/intercom-daily.js",
+    "generate:weekly": "node reports/intercom-weekly.js",
+    "generate:monthly": "node reports/intercom-monthly.js",
+    "generate:quarterly": "node reports/intercom-quarterly.js",
+    "generate:ytd": "node reports/intercom-yeartodate.js"
+  },
+  "dependencies": {
+    "docx": "8.5.0"
+  }
+}
