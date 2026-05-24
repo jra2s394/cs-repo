@@ -3,6 +3,7 @@
 # Creates: ~/Desktop/CS Reports/Intercom/
 #          ~/Desktop/CS Reports/Onboarding/
 #          ~/Desktop/CS Reports/Renewals/
+#          ~/Desktop/CS Reports/QBR/
 #          ~/Desktop/cs-repo  (symlink to this repo)
 # Run once after cloning: bash scripts/setup-desktop.sh
 
@@ -18,9 +19,11 @@ echo "Setting up CS Reports folder on your Desktop..."
 mkdir -p "$REPORTS_DIR/Intercom"
 mkdir -p "$REPORTS_DIR/Onboarding"
 mkdir -p "$REPORTS_DIR/Renewals"
+mkdir -p "$REPORTS_DIR/QBR"
 echo "  ✓ $REPORTS_DIR/Intercom/"
 echo "  ✓ $REPORTS_DIR/Onboarding/"
 echo "  ✓ $REPORTS_DIR/Renewals/"
+echo "  ✓ $REPORTS_DIR/QBR/"
 
 # Create symlink to repo (skip if already exists or Desktop is unavailable)
 LINK="$DESKTOP/cs-repo"
@@ -38,5 +41,6 @@ echo "Done. After running any report command, the latest .docx will auto-copy to
 echo "  $REPORTS_DIR/Intercom/   (Intercom reports)"
 echo "  $REPORTS_DIR/Onboarding/ (Onboarding reports)"
 echo "  $REPORTS_DIR/Renewals/   (Renewal invoice reports)"
+echo "  $REPORTS_DIR/QBR/        (QBR prep briefs)"
 echo ""
 echo "To open Claude Code in this repo quickly: open $LINK in your terminal or Finder."
