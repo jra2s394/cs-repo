@@ -31,7 +31,7 @@ The xlsx workbook should contain at least two sheets:
 | `Contract Start` | date | yes | YYYY-MM-DD |
 | `Renewal Date` | date | yes | YYYY-MM-DD; drives `/renewal-health` and renewal reports |
 | `Contract Length` | enum | yes | 12 / 24 / 36 (months) |
-| `CSM Owner` | text | yes | Full name; must match a name in `claude.md` "Key People" |
+| `CSM Owner` | text | yes | Full name; must match a name in `CLAUDE.md` "Key People" |
 | `Health Score` | enum | yes | `green` / `yellow` / `red` |
 | `Plan` | text | yes | Tier or plan name |
 | `Integration` | text | no | `Sysdyne`, `None`, or other; drives integration-specific reports |
