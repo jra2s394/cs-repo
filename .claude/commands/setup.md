@@ -113,7 +113,7 @@ Wait for explicit confirmation ("yes", "looks good", "go ahead") before writing 
 
 Once confirmed:
 
-1. Read `claude.md` from this repo (the public template).
+1. Read `CLAUDE.md` from this repo (the public template).
 2. Replace each placeholder in that template with the user's answers:
    - `[Your Name]` → their name
    - `[Your Title]` → their title
