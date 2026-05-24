@@ -32,9 +32,13 @@ Every command: Claude gathers the data → shows you the output → waits for yo
 | Monday | `/weekstart` |
 | Tuesday – Friday | `/daily` |
 | Wednesday | `/midweek` |
-| Friday | `/eow` |
+| Friday | `/eow` (optionally preceded by `/standup-recap`) |
 
 Claude checks your Gmail, Calendar, Asana, and Intercom for the relevant period, writes the update in the team format, and asks if you want to post it to Slack.
+
+**Friday shortcut — `/standup-recap`**
+
+Before `/eow`, run `/standup-recap` to roll up the week's `data/outputs/daily-*.md` files into a single deduplicated recap. This avoids re-pulling Mon–Thu data from Gmail/Calendar that's already captured in your daily files. Read-only — no MCP calls, no drafts. Saves to `data/outputs/recap-<Friday>.md` which `/eow` can then use as its primary win source.
 
 Read the draft before approving. Common fixes: remove a meeting that got cancelled, move a task that's still in progress, clarify anything flagged 🔴. Just tell Claude what to change.
 
@@ -137,6 +141,14 @@ Type `/renewal-health`. Claude searches Gmail, Asana, and Intercom for renewal s
 Get a one-screen briefing before a call or when you need to get up to speed fast.
 
 Type `/customer` (or `/customer Cemstone`). Claude pulls from Intercom, Gmail, Calendar, Asana, and Shortcut in parallel and shows you: current status, open conversations, recent emails and meetings, upcoming calls, open Asana tasks, open Shortcut stories, and anything flagged 🔴. Read.ai meeting reports are used as the authoritative meeting source when available.
+
+---
+
+## Find a customer when you don't know the exact name — `/customer-search`
+
+Fuzzy lookup across Asana, Shortcut, Intercom, and Gmail. Use this before `/customer`, `/qbr`, etc. when you've only got a partial name, a misspelling, or a contact's first name.
+
+Type `/customer-search hollingshead` (or `/customer-search hi grade`, `/customer-search hi-grade.com`). Claude searches all four systems in parallel, clusters the matches into candidate customers using domain and substring signals, and ranks each candidate with a 🟢/🟡/🔴 confidence label. If exactly one high-confidence match exists, Claude offers to run `/customer` on it. Read-only — nothing is created or modified.
 
 ---
 
@@ -277,11 +289,12 @@ Type `/kb-draft` → give Claude a topic or paste an Intercom conversation URL �
 Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
 
 Type `/review-code`. Claude will:
-1. Run all 237 automated tests first — if any fail, it stops and tells you exactly what's wrong
-2. Work through a fixed 9-section checklist covering every hook, report layout rule, and chart helper
-3. Report a pass/fail table at the end
+1. Run all 394 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
+2. Run both linters (`make lint` — ruff for Python, biome for JS) to confirm no undefined names or unused imports
+3. Work through a fixed 19-section checklist covering every hook, library file, report layout rule, and chart helper
+4. Report a pass/fail table at the end
 
-This gives you the same check every time, not a different result each session. If everything passes, you'll see "237 passed, 0 failed" and a full green table.
+This gives you the same check every time, not a different result each session. If everything passes, you'll see "394 passed, 0 failed" and a full green table.
 
 > Use `/review-code` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
 
@@ -305,17 +318,20 @@ Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seco
 
 ### Testing and quality
 
-Before opening a PR for any code change, run the test suite to make sure nothing is broken:
+Before opening a PR for any code change, run the test suite AND the linters:
 
 ```
-make test
+make test    # 394 automated tests (265 Python + 129 JavaScript)
+make lint    # ruff (Python) + biome (JS) — catches undefined names, unused imports
 ```
 
-This runs 258 automated tests (237 Python + 21 JavaScript) that cover every hook, chart helper, and CSV export function. If all pass, you'll see `237 passed` and the JS runner prints `21 passed`. If something fails, the output tells you the exact file and line.
+The tests cover every hook, every lib helper (csv-export, report-theme, data-loader, copy-to-desktop, report_charts), every report's CLI contract, and the publish pipeline. The linters catch the runtime-bug class that tests can miss — e.g., a missing `require()` in a code path tests don't exercise.
 
-GitHub Actions runs the same tests automatically on every pull request. A PR can't sneak a broken change onto `main` without the CI catching it first.
+If all pass you'll see `265 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
 
-For a full structured review (tests + checklist), use `/review-code` — see above.
+GitHub Actions runs all of `make test` + `make lint` automatically on every pull request. A PR can't sneak a broken change onto `main` without CI catching it first.
+
+For a full structured review (tests + lint + 19-section checklist), use `/review-code` — see above.
 
 ### What to tell Claude
 
@@ -383,10 +399,10 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 
 | What | Where |
 |---|---|
-| Standup updates | `data/outputs/` as `.md` files |
-| All reports | `out/` as `.docx` files |
-| Desktop copies (Mac) | `~/Desktop/CS Reports/Intercom`, `Onboarding`, `Renewals`, or `QBR` |
-| Desktop copies (PC) | `%USERPROFILE%\Desktop\CS Reports\Intercom`, `Onboarding`, `Renewals`, or `QBR` |
+| Standup updates + recaps | `data/outputs/` as `.md` files |
+| All reports | `out/` as `.docx` files (plus a `.csv` sidecar for spreadsheets) |
+| Desktop copies (Mac) | `~/Desktop/CS Reports/{Intercom, Onboarding, Renewals, QBR, Health Reports, Executive Summaries}` |
+| Desktop copies (PC) | `%USERPROFILE%\Desktop\CS Reports\{Intercom, Onboarding, Renewals, QBR, Health Reports, Executive Summaries}` |
 
 ---
 
@@ -412,6 +428,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/midweek` | Standup — Wednesday extended |
 | `/eow` | Standup — Friday full recap |
 | `/weekstart` | Standup — Monday |
+| `/standup-recap` | Aggregate the week's `daily-*.md` files before `/eow` (no MCP calls) |
 | `/intercom-daily` | Intercom report — today vs yesterday |
 | `/intercom-weekly` | Intercom report — this week |
 | `/intercom-monthly` | Intercom report — this month |
@@ -425,6 +442,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/renewals-nextmonth` | Renewal invoices — next month |
 | `/renewals-nextquarter` | Renewal invoices — three-month forecast |
 | `/customer` | Customer snapshot before a call |
+| `/customer-search` | Fuzzy customer lookup across all systems when you don't know the exact name |
 | `/meeting-prep` | Briefings for all customer meetings in the next 24h |
 | `/follow-up` | Draft follow-up email after a call |
 | `/go-live` | Go-live readiness check — blockers across all systems |
