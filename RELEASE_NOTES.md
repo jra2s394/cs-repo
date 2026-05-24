@@ -19,7 +19,20 @@ Chronological history of every change merged to `main`, from the first commit to
 
 ## 2026-05-24
 
-### `<pending>` · PR #27 — Add `/commands` and `/meeting-notes`
+### `<pending>` · PR #28 — Lock in the command frontmatter contract with a pytest
+**Tags:** `[testing] [docs]`
+
+Net: 5 files changed, +N (1 new test file + 4 docs).
+
+- **New test:** `tests/test_commands_frontmatter.py` — 4 parametrized checks × every `.claude/commands/*.md` file: opening `---` block present and closed, non-empty `description:` field, description is ≥ 20 chars + no `TODO`/`TBD`/`WIP`/`placeholder`/`fixme` prefix + no trailing ellipsis, and the description is single-line (so it renders correctly in CLAUDE.md tables and `/commands` output). Plus 2 directory-level guards (commands dir exists, ≥ 1 command file present). Stress-tested all 5 failure modes — each produces a clear, actionable assertion message.
+- **Net new tests:** 174 (4 checks × 43 commands + 2 directory checks). Python total: 265 → 439. Grand total: 394 → 568.
+- **`/review-code` Section 20** — added an automated check that references `tests/test_commands_frontmatter.py`. The manual prose check ("does each command's description match what it does") remains for content drift; the new test catches structural drift automatically.
+- **CONTRIBUTING.md** — added a paragraph documenting the frontmatter contract for command authors, plus the registration steps (CLAUDE.md table + USER_GUIDE quick-reference).
+- **README + USER_GUIDE** — bumped test count 394 → 568 everywhere; expanded "Testing and quality" to mention the frontmatter contract.
+
+The motivation: with 43 commands and growing, an unregistered or stub command in `.claude/commands/` was silently rotting the inventory `/commands` reads. Now CI rejects it.
+
+### `2efd32e` · PR #27 — Add `/commands` and `/meeting-notes`
 **Tags:** `[command] [docs]`
 
 Net: 5 files changed, +N (docs + 2 new command files).
@@ -232,12 +245,12 @@ Net: 124 files changed, +17,540. The bootstrap.
 
 ## Numbers at a glance
 
-| Metric | At v0 | After PR #27 (today) |
+| Metric | At v0 | After PR #28 (today) |
 |---|---|---|
 | Slash commands | 18 | 43 |
 | Hooks | 10 | 11 (added `secret-scan.py`) |
 | Report generators | 9 | 17 |
-| Python tests | 0 | 265 |
+| Python tests | 0 | 439 |
 | JS tests | 0 | 129 |
 | Linters | 0 | 2 (ruff + biome) |
 | CI checks | 0 | 4 (pytest + ruff + biome + JS) |

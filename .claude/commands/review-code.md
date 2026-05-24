@@ -2,7 +2,7 @@
 description: Run the structured QA checklist — same questions every time, same order
 ---
 
-Run `make test` first. If any of the 394 tests fail (265 Python + 129 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
+Run `make test` first. If any of the 568 tests fail (439 Python + 129 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
 
 The checklist has 22 sections covering every hook, every lib helper, every report's contract, and every read-only/draft-first slash command. Walk them in order, don't skip.
 
@@ -227,6 +227,7 @@ These commands should NEVER call write-tools without an explicit draft + approva
 - [ ] Does `/at-risk` explicitly state read-only — no tasks/messages/tickets created?
 - [ ] Does `/prs` explicitly state read-only — no story state changes?
 - [ ] Does each command's frontmatter `description` field accurately match what the command does (not stale)?
+- [ ] Does `tests/test_commands_frontmatter.py` pass for every command (frontmatter present, `description:` field present, ≥20 chars, no `todo`/`tbd`/`wip`/`placeholder`/`fixme` prefix, no trailing ellipsis, single-line)? This is the automated half of Section 20 — failures here mean a command was added without registering its description properly.
 
 ---
 
