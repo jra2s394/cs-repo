@@ -98,7 +98,8 @@ These hooks run automatically. Know what they block:
 
 | Hook | Blocks / does |
 |---|---|
-| `push-guard.py` | Blocks `git push --force` / `-f` and `gh pr merge` — plain pushes allowed, force pushes blocked |
+| `branch-enforcer.py` | Blocks `git commit` directly on `main` or `master` — must be on a feature branch |
+| `push-guard.py` | Blocks `git push --force` / `-f`, direct pushes to `main`/`master`, and `gh pr merge` |
 | `block-attribution.py` | Blocks commits containing AI attribution strings (`Co-Authored-By: Claude`, etc.) |
 | `draft-before-create.py` | Forces a permission prompt before creating items in Slack, Asana, Intercom, Shortcut |
 | `file-protector.py` | Blocks edits to `.env` files, private keys, and named credential files |
@@ -146,6 +147,20 @@ If anything isn't connected, run `/mcp` in the Claude Code prompt to see status.
 | **Slack** | Standup posts, team communication |
 | **Google Drive** | Docs and shared files |
 | **Shortcut** | Bug and feature tracking; escalation to product/eng |
+
+---
+
+## Git Workflow
+
+All changes follow the feature-branch PR flow. Direct commits and pushes to `main` are blocked by hooks.
+
+1. **Branch** — `git checkout -b <descriptive-name>` from main
+2. **Commit** — `git commit` (blocked on `main`; must be on a feature branch)
+3. **Push** — `git push -u origin <branch-name>` (pushes to feature branch only)
+4. **PR** — open a pull request on GitHub; use the PR template
+5. **Merge** — squash and merge via GitHub web UI
+
+Branch naming: `chore/`, `fix/`, `feature/`, or `docs/` prefix + short description.
 
 ---
 
