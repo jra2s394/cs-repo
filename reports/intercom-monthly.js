@@ -3,32 +3,14 @@
 // Usage: node reports/intercom-monthly.js <path-to-metrics.json>
 // Output: out/Intercom_Monthly_YYYY-MM.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
+const { loadJson, requireFields, ensureOutDir } = require("../lib/data-loader");
 const path = require("path");
-const fs = require("fs");
 
-const jsonPath = process.argv[2];
-if (!jsonPath) {
-  console.error(`Usage: node ${path.basename(process.argv[1])} <path-to-metrics.json>`);
-  process.exit(1);
-}
-let d;
-try {
-  d = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-} catch (err) {
-  console.error(`Error loading metrics: ${err.message}`);
-  process.exit(1);
-}
+const d = loadJson("metrics");
 const REQUIRED = ["generated", "period", "dateRange", "preparedBy", "kpis", "summaryTable", "methodology"];
-const missing = REQUIRED.filter(k => d[k] == null);
-if (missing.length) {
-  console.error(`Missing required fields in metrics JSON: ${missing.join(", ")}`);
-  process.exit(1);
-}
+requireFields(d, REQUIRED);
 
-const outDir = path.resolve(__dirname, "../out");
-if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
+const outDir = ensureOutDir();
 
 const MONTHS = ["January","February","March","April","May","June",
                 "July","August","September","October","November","December"];
@@ -166,16 +148,14 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `Monthly Report — ${d.period}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Intercom", "Monthly");
-    writeCsv(outFile.replace(".docx", ".csv"), [
+T.publishReport(doc, outFile, {
+  category: "Intercom",
+  label: "Monthly",
+  csvSections: [
       { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Prior Month", "Change"], rows: d.summaryTable || [] },
       { title: "Weekly Breakdown", headers: ["Week", "New", "Closed", "Resolution", "Avg FRT"], rows: d.weeklyTable || [] },
       { title: "Top Customers", headers: ["Rank", "Domain", "Conversations"], rows: d.topCustomers || [] },
       { title: "Open Queue", headers: ["Customer", "Subject", "Age", "Urgent"],
         rows: (d.openQueue || []).map(q => [q.customer, q.subject, q.age, q.urgent ? "Yes" : "No"]) },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+    ],
+});

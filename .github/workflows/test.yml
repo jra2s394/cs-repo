@@ -1,4 +1,4 @@
-name: Hook Tests
+name: Tests
 
 on:
   push:
@@ -19,16 +19,34 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-dev.txt
 
-      - name: Install dependencies
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install Python dependencies
         run: pip install -r requirements-dev.txt
+
+      - name: Install Node dependencies
+        run: npm ci
 
       - name: Configure git identity (needed by branch-enforcer tests)
         run: |
           git config --global user.email "ci@test.local"
           git config --global user.name "CI"
 
-      - name: Run tests
+      - name: Run Python tests
         run: python3 -m pytest --tb=short -q
 
-      - name: Run tests with coverage
+      - name: Lint Python (ruff)
+        run: make lint-py
+
+      - name: Lint JS (biome)
+        run: make lint-js
+
+      - name: Run JS tests
+        run: make test-js
+
+      - name: Run Python tests with coverage
         run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing -q

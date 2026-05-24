@@ -3,9 +3,7 @@
 // Usage: node reports/customer-health.js <path-to-metrics.json>
 // Output: out/Customer_Health_YYYY-MM-DD.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
-const { loadJson, requireFields, ensureOutDir } = require("../lib/data-loader");
+const { loadJson, requireFields, ensureOutDir, dateSlug } = require("../lib/data-loader");
 const path = require("path");
 
 const d = loadJson("customer health metrics");
@@ -15,8 +13,8 @@ const REQUIRED = ["generated", "period", "preparedBy", "kpis", "accounts",
 requireFields(d, REQUIRED);
 
 const outDir = ensureOutDir();
-const dateSlug = (d.generated || "").replace(/[^0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "unknown-date";
-const outFile = path.join(outDir, `Customer_Health_${dateSlug}.docx`);
+const slug = dateSlug(d.generated);
+const outFile = path.join(outDir, `Customer_Health_${slug}.docx`);
 
 const children = [];
 
@@ -150,11 +148,10 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `Portfolio Health — ${d.period}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Health Reports", "Portfolio");
-    writeCsv(outFile.replace(".docx", ".csv"), [
+T.publishReport(doc, outFile, {
+  category: "Health Reports",
+  label: "Portfolio",
+  csvSections: [
       { title: "Portfolio Summary", headers: ["Status", "Accounts", "% of Portfolio"], rows: d.summary || [] },
       { title: "Account Scorecard", headers: ["Customer", "CSM", "Health", "Last Contact", "Open Issues", "Tasks Overdue"],
         rows: (d.accounts || []).map(a => [a.customer, a.csm, a.healthScore, a.lastContact, a.openIssues, a.tasksOverdue]) },
@@ -162,6 +159,5 @@ T.render(doc, outFile)
         rows: atRisk.map(r => [r.customer, r.issue, r.owner, r.action, r.critical ? "Yes" : "No"]) },
       { title: "Renewal Radar", headers: ["Customer", "Renewal Date", "Days Out", "ARR", "Risk"],
         rows: upcoming.map(r => [r.customer, r.renewalDate, r.daysOut, r.arr, r.risk]) },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+    ],
+});

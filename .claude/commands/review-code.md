@@ -2,7 +2,7 @@
 description: Run the structured QA checklist — same questions every time, same order
 ---
 
-Run `make test` first. If any of the 258 tests fail (237 Python + 21 JS), stop and report failures — do not proceed with the review.
+Run `make test` first. If any of the 394 tests fail (265 Python + 129 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
 
 Then work through every section below in order. For each item: check it, mark ✅ (pass) or ❌ (fail + exact line), and do not skip. Report all findings at the end in a single block.
 
@@ -41,12 +41,13 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] Does `find_session_file()` guard `CLAUDE_PROJECTS.iterdir()` with `if not CLAUDE_PROJECTS.exists(): return None`?
 - [ ] Does `VAULT_ROOT_FALLBACK` use a literal string (`Path("/path/to/your/obsidian/vault")`), not a Python expression, so `install.sh`'s `str.replace()` finds it?
 - [ ] Does `rglob` fall back to `max(matches, key=…)` when the session isn't in a predictable path?
+- [ ] Does `OBSIDIAN_PROJECT_MAP` env var (JSON object) override `PROJECT_MAP_FALLBACK`, and fall back cleanly on invalid JSON / wrong shape (not crash)?
 
 ## Section 6 — lib/report-theme.js kpiStrip
 
-- [ ] Does the column width calculation distribute the DXA remainder to the last card (so columns always sum to exactly `CW = 9360`)?
-- [ ] Formula check: `baseCardW = Math.floor((CW - gw*(n-1)) / n)`, `remainder = CW - gw*(n-1) - baseCardW*n`, last card gets `baseCardW + remainder`.
-- [ ] Does the delta display use `c.delta != null` (not `c.delta`) to correctly render a delta of `0`?
+- [ ] Does the column width calculation distribute the DXA remainder to the last card (so columns always sum to exactly `CW = 9360`)? (Verified by `tests/js/test_report_theme.js::kpiWidths math` for n=1–12.)
+- [ ] Formula check: `baseCardW = Math.floor((CW - gw*(n-1)) / n)`, `remainder = CW - gw*(n-1) - baseCardW*n`, last card gets `baseCardW + remainder`. The math lives in the exported `kpiWidths(n, gw, totalW)` helper.
+- [ ] Does the delta display use `c.delta != null` (not `c.delta`) to correctly render a delta of `0`? (Verified by `kpiStrip with delta=0 renders '0'`.)
 
 ## Section 7 — lib/report_charts.py
 
@@ -112,7 +113,9 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] Does `loadJson()` call `process.exit(1)` on invalid JSON (not crash with unhandled exception)?
 - [ ] Does `requireFields()` print the full list of missing fields before exiting — not just the first one?
 - [ ] Does `ensureOutDir()` return the absolute path to `out/` (not a relative path)?
-- [ ] Are all three exports present: `{ loadJson, requireFields, ensureOutDir }`?
+- [ ] Are all four exports present: `{ loadJson, requireFields, ensureOutDir, dateSlug }`?
+- [ ] Does `dateSlug()` return `"unknown-date"` for null/undefined/empty input (not throw, not return `"-"`)?
+- [ ] Does `dateSlug()` collapse runs of `-` and trim leading/trailing `-`?
 
 ## Section 13 — reports/customer-health.js
 
@@ -173,6 +176,15 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] Does `setup-desktop.sh` create `~/Desktop/CS Reports/Health Reports/`?
 - [ ] Does `setup-desktop.sh` create `~/Desktop/CS Reports/Executive Summaries/`?
 - [ ] Does the footer message list all six report folders (Intercom, Onboarding, Renewals, QBR, Health Reports, Executive Summaries)?
+
+## Section 19 — lib/report-theme.js publishReport + CI parity
+
+- [ ] Does `publishReport(doc, outFile, opts)` skip CSV when `opts.csvSections` is omitted (no zero-section CSV written)?
+- [ ] Does `publishReport` skip the Desktop copy when `opts.category` or `opts.label` is missing?
+- [ ] Does `publishReport` catch render errors and `process.exit(1)` so callers don't need their own `.catch`?
+- [ ] Do all 17 reports/*.js call `T.publishReport()` exactly once and NOT call `copyToDesktop`/`writeCsv`/`T.render` directly?
+- [ ] Does `biome check` pass (`make lint-js`) — no undeclared variables or unused imports?
+- [ ] Does `.github/workflows/test.yml` run `make lint-js`, `make test-js`, AND `pytest` (Python-only CI is a regression)?
 
 ---
 

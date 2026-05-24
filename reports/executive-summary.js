@@ -3,9 +3,7 @@
 // Usage: node reports/executive-summary.js <path-to-metrics.json>
 // Output: out/Executive_Summary_YYYY-MM-DD.docx
 const T = require("../lib/report-theme");
-const { copyToDesktop } = require("../lib/copy-to-desktop");
-const { writeCsv } = require("../lib/csv-export");
-const { loadJson, requireFields, ensureOutDir } = require("../lib/data-loader");
+const { loadJson, requireFields, ensureOutDir, dateSlug } = require("../lib/data-loader");
 const path = require("path");
 
 const d = loadJson("executive summary metrics");
@@ -15,8 +13,8 @@ const REQUIRED = ["generated", "period", "preparedBy", "kpis", "portfolioMetrics
 requireFields(d, REQUIRED);
 
 const outDir = ensureOutDir();
-const dateSlug = (d.generated || "").replace(/[^0-9]/g, "-").replace(/-+/g, "-").replace(/^-|-$/g, "") || "unknown-date";
-const outFile = path.join(outDir, `Executive_Summary_${dateSlug}.docx`);
+const slug = dateSlug(d.generated);
+const outFile = path.join(outDir, `Executive_Summary_${slug}.docx`);
 
 const children = [];
 
@@ -173,17 +171,15 @@ children.push(T.dataTable({
 }));
 
 const doc = T.buildDocument({ children, headerRight: `Executive Summary — ${d.period}` });
-T.render(doc, outFile)
-  .then(() => {
-    console.log(`✓ ${outFile}`);
-    copyToDesktop(outFile, "Executive Summaries", "Summary");
-    writeCsv(outFile.replace(".docx", ".csv"), [
+T.publishReport(doc, outFile, {
+  category: "Executive Summaries",
+  label: "Summary",
+  csvSections: [
       { title: "Portfolio Overview", headers: ["Metric", "Current", d.priorPeriod || "vs Prior Period"],
         rows: d.portfolioMetrics || [] },
       { title: "Highlights", headers: ["Category", "Highlight", "Critical"],
         rows: (d.highlights || []).map(h => [h.category, h.text, h.critical ? "Yes" : "No"]) },
       { title: "Open Issues", headers: ["Area", "Customer", "Description", "Owner", "ETA", "Critical"],
         rows: openIssues.map(i => [i.area, i.customer, i.description, i.owner, i.eta, i.critical ? "Yes" : "No"]) },
-    ]);
-  })
-  .catch(err => { console.error(`Error writing report: ${err.message}`); process.exit(1); });
+    ],
+});
