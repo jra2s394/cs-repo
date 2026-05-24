@@ -126,11 +126,11 @@ detect_os() {
 
 install_claude_md() {
   info "Installing CLAUDE.md..."
-  local src="${REPO_DIR}/claude.md"
+  local src="${REPO_DIR}/CLAUDE.md"
   local dest="${CLAUDE_DIR}/CLAUDE.md"
 
   if [ ! -f "$src" ]; then
-    error "claude.md not found in repo root. Skipping."
+    error "CLAUDE.md not found in repo root. Skipping."
     SKIPPED=$((SKIPPED + 1))
     return
   fi
