@@ -1,0 +1,24 @@
+node_modules/
+.env
+.env.local
+.DS_Store
+
+# Don't commit generated outputs by default
+data/outputs/*
+!data/outputs/.gitkeep
+
+# Report builder artifacts (generated at runtime)
+assets/
+out/
+
+# Finance data files — never commit customer or billing data
+*.xlsx
+*.csv
+*.pdf
+*.docx
+
+# Claude Code local state
+.claude/projects/
+.claude/cache/
+.claude/settings.local.json
+.mcp.json
