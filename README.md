@@ -32,6 +32,18 @@ Connects to: **Gmail, Google Calendar, Google Drive, Asana, Intercom, Slack, and
 
 ---
 
+## Changing files in this repo
+
+All edits go through a branch → PR → merge flow. Direct commits to `main` are blocked automatically.
+
+1. Tell Claude what to change — it creates a branch, makes the edit, and pushes it
+2. Claude opens a PR for your review
+3. You merge on GitHub (squash and merge)
+
+Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutorial](USER_GUIDE.md#github-tutorial-no-tech-experience-needed)
+
+---
+
 ## Intercom ID reference
 
 Each teammate needs their own ID so Claude pulls your conversations, not a teammate's. See Step 3 in [SETUP.md](SETUP.md) for how to find yours.
