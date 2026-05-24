@@ -83,6 +83,19 @@ Then work through every section below in order. For each item: check it, mark �
 - [ ] Are sections separated by exactly one blank line (no blank before the first section)?
 - [ ] Does `writeCsv` silently swallow file-write errors (non-fatal) — never throws on an unwritable path?
 
+## Section 11 — reports/onboarding-status.js & onboarding commands
+
+- [ ] Does `onboarding-status.js` list all required fields in REQUIRED and `process.exit(1)` if any are missing?
+- [ ] Does the Contact Directory table render `c.phone || "—"` so missing phone numbers show `—` not blank?
+- [ ] Does the Task Status section handle an empty `asanaTasks` array without throwing (callout still renders)?
+- [ ] Does the Timeline section show "Past Due" when `daysToGoLive <= 0`?
+- [ ] Does the Open Items section render urgent items as `warn` callouts and normal items as table rows?
+- [ ] Does `copyToDesktop` use category `"Onboarding"` and label `"Status"` (consistent with other onboarding reports)?
+- [ ] Does `writeCsv` export all four sections: Contacts, Timeline, Tasks, Open Items?
+- [ ] Does `start-onboarding.md` present all four items (Asana, Drive, Shortcut, Slack channel name) and wait for explicit approval before executing any of them?
+- [ ] Does `start-onboarding.md` wait for Slack channel creation confirmation before posting the resource links?
+- [ ] Does `start-onboarding.md` include a graceful fallback for Drive folder creation failure (manual URL prompt)?
+
 ---
 
 After all sections: summarize findings as a table:
