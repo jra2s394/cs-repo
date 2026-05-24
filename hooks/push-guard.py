@@ -34,11 +34,14 @@ blocked = [
     # (?=\s|$) avoids false positives on branch names like "main-feature" or "mainstream"
     (r"git\s+push\s+(origin\s+)?main(?=\s|$)", "git push to main"),
     (r"git\s+push\s+(origin\s+)?master(?=\s|$)", "git push to master"),
-    # Bash-level writes to .env files that bypass file-protector (which only guards Edit/Write tools)
-    (r"[>|]\s*\.env(?!\.example|\.sample|\.template)", "redirect to .env"),
-    (r"cp\s+.*\s+\.env(?!\.example|\.sample|\.template)", "cp to .env"),
-    (r"mv\s+.*\s+\.env(?!\.example|\.sample|\.template)", "mv to .env"),
-    (r"\|\s*tee\s+.*\.env(?!\.example|\.sample|\.template)", "pipe to tee .env"),
+    # Bash-level writes to .env files that bypass file-protector (which only guards Edit/Write tools).
+    # Matches bare .env and directory-prefixed variants (e.g. > config/.env, cp src secrets/.env).
+    # Excludes .envrc (direnv) by requiring that .env is not immediately followed by a letter,
+    # and excludes the safe template suffixes .example / .sample / .template.
+    (r"[>|]\s*(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "redirect to .env"),
+    (r"cp\s+.*\s+(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "cp to .env"),
+    (r"mv\s+.*\s+(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "mv to .env"),
+    (r"\|\s*tee\s+.*(?:\S*/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "pipe to tee .env"),
 ]
 
 for pattern, label in blocked:

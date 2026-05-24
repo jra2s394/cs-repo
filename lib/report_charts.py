@@ -43,6 +43,14 @@ def _apply_rc():
     plt.rcParams.update(_BASE_RC)
 
 
+def _is_dark(hex_color: str) -> bool:
+    """Return True if the hex colour is dark enough to require white label text."""
+    r = int(hex_color[1:3], 16)
+    g = int(hex_color[3:5], 16)
+    b = int(hex_color[5:7], 16)
+    return (0.299 * r + 0.587 * g + 0.114 * b) < 140
+
+
 def bar(labels, values, out_path, colors=None, value_suffix="",
         figsize=(7.0, 3.0), annotations=None, dpi=200):
     """Vertical bar chart, transparent background, value labels on top.
@@ -59,11 +67,24 @@ def bar(labels, values, out_path, colors=None, value_suffix="",
         colors = [PALETTE["teal"]] * len(values)
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     bars = ax.bar(labels, values, color=colors, width=0.62, zorder=3)
-    span = max(values) if values and max(values) > 0 else 1
+
+    if values:
+        hi, lo = max(values), min(values)
+        span = hi if hi > 0 else abs(lo) if lo < 0 else 1
+        y_min = min(0, lo) - span * 0.05
+        y_max = max(0, hi) + span * 0.22
+    else:
+        span, y_min, y_max = 1, 0, 1.22
+
     for b, v in zip(bars, values):
-        ax.text(b.get_x() + b.get_width() / 2, v + span * 0.03,
-                f"{v}{value_suffix}", ha="center", va="bottom",
-                fontsize=10.5, fontweight="bold", color=PALETTE["navy"])
+        if v >= 0:
+            ax.text(b.get_x() + b.get_width() / 2, v + span * 0.03,
+                    f"{v}{value_suffix}", ha="center", va="bottom",
+                    fontsize=10.5, fontweight="bold", color=PALETTE["navy"])
+        else:
+            ax.text(b.get_x() + b.get_width() / 2, v - span * 0.03,
+                    f"{v}{value_suffix}", ha="center", va="top",
+                    fontsize=10.5, fontweight="bold", color=PALETTE["navy"])
     if annotations:
         for idx, note in annotations.items():
             if not isinstance(idx, int) or not (0 <= idx < len(values)):
@@ -71,7 +92,7 @@ def bar(labels, values, out_path, colors=None, value_suffix="",
                 continue
             ax.text(idx, values[idx] + span * 0.11, note, ha="center",
                     fontsize=8.5, style="italic", color=PALETTE["gray_tx"])
-    ax.set_ylim(0, span * 1.22)
+    ax.set_ylim(y_min, y_max)
     ax.set_yticks([])
     ax.spines[["top", "right", "left"]].set_visible(False)
     ax.spines["bottom"].set_color("#CFD4DC")
@@ -93,7 +114,7 @@ def stacked_bar_h(segments, out_path, figsize=(7.4, 1.15), dpi=200):
     left = 0
     for label, val, color in segments:
         ax.barh(0, val, left=left, color=color, height=0.62, zorder=3)
-        txt = "white" if color == PALETTE["teal"] else PALETTE["navy"]
+        txt = "white" if _is_dark(color) else PALETTE["navy"]
         ax.text(left + val / 2, 0, f"{val}%", ha="center", va="center",
                 fontsize=10, fontweight="bold", color=txt)
         ax.text(left + val / 2, -0.62, label, ha="center", va="center",
