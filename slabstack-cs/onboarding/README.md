@@ -11,10 +11,10 @@ Self-serve onboarding materials designed to get new Slabstack customers to value
 | Video | Topic | Script | Recording | Link |
 |-------|-------|--------|-----------|------|
 | 1 | Welcome & Account Setup | `/scripts/01-welcome-account-setup.md` | 🔲 | — |
-| 2 | Creating a Quote | `/scripts/02-creating-a-quote.md` | 🔲 | — |
-| 3 | Managing Projects | `/scripts/03-managing-projects.md` | 🔲 | — |
-| 4 | Customer & Contact Management | `/scripts/04-customer-contact-management.md` | 🔲 | — |
-| 5 | Email & Communication | `/scripts/05-email-communication.md` | 🔲 | — |
+| 2 | Configurations | `/scripts/02-configurations.md` | 🔲 | — |
+| 3 | Activities | `/scripts/03-activities.md` | 🔲 | — |
+| 4 | Creating a Quote | `/scripts/04-creating-a-quote.md` | 🔲 | — |
+| 5 | Managing Projects | `/scripts/05-managing-projects.md` | 🔲 | — |
 
 ---
 
