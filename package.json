@@ -1,6 +1,6 @@
 {
   "name": "cs-repo",
-  "version": "1.0.0",
+  "version": "2.1.0",
   "description": "Slabstack CS operations — report generation",
   "private": true,
   "engines": {

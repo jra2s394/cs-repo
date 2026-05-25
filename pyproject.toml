@@ -15,6 +15,6 @@
 
 [project]
 name = "cs-repo"
-version = "0.0.0"
+version = "2.1.0"
 description = "Slabstack CS operations — internal automation. Not packaged for distribution."
 requires-python = ">=3.10"
