@@ -16,7 +16,8 @@
         "code.claude.com",
         "anthropic.com"
       ]
-    }
+    },
+    "excludedCommands": ["gh *", "git *"]
   },
   "hooks": {
     "PreToolUse": [
