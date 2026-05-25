@@ -1,5 +1,6 @@
 ---
 description: QBR prep for a customer — pulls a quarter's worth of data from all sources and drafts agenda sections for review before the meeting.
+disable-model-invocation: true
 argument-hint: <customer> [quarter]
 ---
 

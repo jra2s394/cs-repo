@@ -1,5 +1,6 @@
 ---
 description: Generate this year's Intercom support intelligence report — YTD snapshot, YoY comparison, all-time totals, and multi-year trend analysis
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/intercom-report-template.md` from this repo before starting.

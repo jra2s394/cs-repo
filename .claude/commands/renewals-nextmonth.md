@@ -1,5 +1,6 @@
 ---
 description: Generate next month's renewal invoice report — pipeline of what Finance needs to bill soon
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/renewals-report-template.md` from this repo before starting.

@@ -1,5 +1,6 @@
 ---
 description: Generate this week's Onboarding CARR report — WoW comparison + active accounts + at-risk flags
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/onboarding-report-template.md` from this repo before starting.

@@ -1,5 +1,6 @@
 ---
 description: Generate this month's Intercom support intelligence report — MoM comparison + QTD and YTD context
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/intercom-report-template.md` from this repo before starting.

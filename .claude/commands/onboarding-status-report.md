@@ -1,5 +1,6 @@
 ---
 description: Generate a customer-facing onboarding status report — email, calendar, Asana, Intercom
+disable-model-invocation: true
 ---
 
 # Onboarding Status Report

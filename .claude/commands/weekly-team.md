@@ -1,5 +1,6 @@
 ---
 description: Weekly CS team summary — roll up what the full team accomplished this week for the manager standup or team Slack channel.
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` from this repo before starting.

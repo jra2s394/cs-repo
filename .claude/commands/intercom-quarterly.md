@@ -1,5 +1,6 @@
 ---
 description: Generate this quarter's Intercom support intelligence report — QoQ comparison + YTD context and trend analysis
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/intercom-report-template.md` from this repo before starting.
