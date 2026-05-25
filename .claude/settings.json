@@ -444,6 +444,42 @@
             "command": "python3 hooks/draft-before-create.py"
           }
         ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-add-subtask",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-create-subtask",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-remove-subtask",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__shortcut__stories-upload-file",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
       }
     ],
     "PostToolUse": [
