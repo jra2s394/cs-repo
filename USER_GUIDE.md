@@ -492,9 +492,9 @@ Read-only — no MCP calls, no file edits.
 Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
 
 Type `/review-code`. Claude will:
-1. Run all 572 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
+1. Run all 649 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
 2. Run both linters (`make lint` — ruff for Python, biome for JS) to confirm no undefined names or unused imports
-3. Work through a fixed 22-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
+3. Work through a fixed 23-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
 
 This gives you the same check every time, not a different result each session. If everything passes, you'll see "572 passed, 0 failed" and a full green table.
@@ -534,7 +534,7 @@ If all pass you'll see `499 passed, 0 failed` (Python), each JS suite prints its
 
 GitHub Actions runs all of `make test` + `make lint` automatically on every pull request. A PR can't sneak a broken change onto `main` without CI catching it first.
 
-For a full structured review (tests + lint + 22-section checklist), use `/review-code` — see above.
+For a full structured review (tests + lint + 23-section checklist), use `/review-code` — see above.
 
 ### What to tell Claude
 

@@ -61,7 +61,7 @@ Every hook, lib helper, chart, and report is covered by automated tests. Two lin
 ```
 make test       # 649 tests (499 Python + 150 JS)
 make lint       # ruff + biome — undefined names, unused imports, etc.
-/review-code    # structured checklist — runs tests first, then 22 fixed sections
+/review-code    # structured checklist — runs tests first, then 23 fixed sections
 ```
 
 See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) for details.
