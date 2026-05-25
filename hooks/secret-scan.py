@@ -21,18 +21,43 @@ import sys
 
 # (label, regex). Patterns favor specificity over recall — false positives
 # are noisy enough to train people to ignore the hook.
+#
+# IMPORTANT: list more-specific patterns BEFORE more-general ones. The OpenAI
+# project key (sk-proj-...) must come before the legacy "sk-..." pattern so
+# the legacy regex doesn't greedily swallow the prefix and mislabel it.
 SECRET_PATTERNS = [
-    ("Shortcut API token",     re.compile(r"sct_[a-z]{2}_[A-Za-z0-9_\-]{20,}")),
-    ("GitHub personal token",  re.compile(r"\bghp_[A-Za-z0-9]{30,}\b")),
-    ("GitHub OAuth token",     re.compile(r"\bgho_[A-Za-z0-9]{30,}\b")),
-    ("GitHub app token",       re.compile(r"\bghs_[A-Za-z0-9]{30,}\b")),
-    ("OpenAI API key",         re.compile(r"\bsk-[A-Za-z0-9]{32,}\b")),
-    ("Anthropic API key",      re.compile(r"\bsk-ant-[A-Za-z0-9_\-]{20,}\b")),
-    ("Slack bot token",        re.compile(r"\bxox[baprs]-[A-Za-z0-9\-]{20,}\b")),
-    ("AWS access key",         re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
-    ("Google API key",         re.compile(r"\bAIza[0-9A-Za-z_\-]{35}\b")),
-    ("RSA private key",        re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----")),
-    ("JWT",                    re.compile(r"\beyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\b")),
+    ("Shortcut API token",        re.compile(r"sct_[a-z]{2}_[A-Za-z0-9_\-]{20,}")),
+    ("GitHub personal token",     re.compile(r"\bghp_[A-Za-z0-9]{30,}\b")),
+    ("GitHub OAuth token",        re.compile(r"\bgho_[A-Za-z0-9]{30,}\b")),
+    ("GitHub app token",          re.compile(r"\bghs_[A-Za-z0-9]{30,}\b")),
+    ("GitHub user token",         re.compile(r"\bghu_[A-Za-z0-9]{30,}\b")),
+    ("GitHub refresh token",      re.compile(r"\bghr_[A-Za-z0-9]{30,}\b")),
+    ("OpenAI project key",        re.compile(r"\bsk-proj-[A-Za-z0-9_\-]{40,}\b")),
+    ("OpenAI API key",            re.compile(r"\bsk-[A-Za-z0-9]{32,}\b")),
+    ("Anthropic API key",         re.compile(r"\bsk-ant-[A-Za-z0-9_\-]{20,}\b")),
+    ("Stripe live secret key",    re.compile(r"\bsk_live_[A-Za-z0-9]{24,}\b")),
+    ("Stripe live publishable",   re.compile(r"\bpk_live_[A-Za-z0-9]{24,}\b")),
+    ("Twilio account SID",        re.compile(r"\bAC[0-9a-f]{32}\b")),
+    ("GCP service account key",   re.compile(r'"private_key"\s*:\s*"-----BEGIN')),
+    # Slack: bot (b), user (p), workspace (a), config (c), refresh (e), oauth (r),
+    # session (s). Pattern stays restrictive on what follows the prefix.
+    ("Slack token",               re.compile(r"\bxox[abcepsr]-[A-Za-z0-9\-]{20,}\b")),
+    ("AWS access key",            re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
+    # Heuristic: only flag a 40-char base64-ish string when the surrounding
+    # text actually names it as an AWS secret. Bare 40-char strings produce
+    # too many false positives.
+    ("AWS secret access key",     re.compile(r"aws[_-]?secret[_-]?(?:access[_-]?)?key[\"'\s:=]+([A-Za-z0-9/+]{40})\b", re.IGNORECASE)),
+    ("Google API key",            re.compile(r"\bAIza[0-9A-Za-z_\-]{35}\b")),
+    ("RSA private key",           re.compile(r"-----BEGIN (?:RSA |OPENSSH |EC )?PRIVATE KEY-----")),
+    ("JWT",                       re.compile(r"\beyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\b")),
+]
+
+# Patterns that print a warning but do NOT block the commit. Used for test-mode
+# keys: their leak is lower-severity but still worth flagging since they often
+# co-locate with the live key in deployment configs.
+WARN_PATTERNS = [
+    ("Stripe test secret key",    re.compile(r"\bsk_test_[A-Za-z0-9]{24,}\b")),
+    ("Stripe test publishable",   re.compile(r"\bpk_test_[A-Za-z0-9]{24,}\b")),
 ]
 
 # Diff lines under these paths are skipped (placeholder examples, test fixtures
@@ -60,8 +85,8 @@ def staged_diff() -> str:
     return result.stdout or ""
 
 
-def scan(diff_text: str):
-    """Yield (label, snippet, path) for each secret found in added lines."""
+def scan(diff_text: str, patterns):
+    """Yield (label, snippet, path) for each pattern hit in added lines."""
     current_path = None
     for line in diff_text.splitlines():
         # Track the file the hunk applies to.
@@ -74,7 +99,7 @@ def scan(diff_text: str):
         if current_path and any(current_path.startswith(p) for p in ALLOW_PATHS):
             continue
         added = line[1:]
-        for label, pattern in SECRET_PATTERNS:
+        for label, pattern in patterns:
             match = pattern.search(added)
             if match:
                 snippet = match.group(0)
@@ -98,13 +123,29 @@ def main() -> int:
     if not diff:
         return 0
 
-    findings = list(scan(diff))
-    if not findings:
+    block_findings = list(scan(diff, SECRET_PATTERNS))
+    warn_findings = list(scan(diff, WARN_PATTERNS))
+
+    if warn_findings and not block_findings:
+        print("WARNING: staged changes contain test-mode credentials.", file=sys.stderr)
+        for label, snippet, path in warn_findings:
+            print(f"  - {label}: {snippet}  ({path})", file=sys.stderr)
+        print(
+            "\nTest keys are lower-severity but still worth scrubbing — they often\n"
+            "land next to live keys in the same config.",
+            file=sys.stderr,
+        )
+        # Warning only: do not block.
+        return 0
+
+    if not block_findings:
         return 0
 
     print("BLOCKED: staged changes look like they contain a secret.", file=sys.stderr)
-    for label, snippet, path in findings:
+    for label, snippet, path in block_findings:
         print(f"  - {label}: {snippet}  ({path})", file=sys.stderr)
+    for label, snippet, path in warn_findings:
+        print(f"  - (warn) {label}: {snippet}  ({path})", file=sys.stderr)
     print(
         "\nRemove the secret, rotate it if it has ever been committed, and try again.\n"
         "If this is a false positive, add the path to ALLOW_PATHS in hooks/secret-scan.py.",
