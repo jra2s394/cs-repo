@@ -18,9 +18,9 @@ test-hooks:
 test-lib:
 	python3 -m pytest tests/lib/ -v
 
-# Run with coverage report
+# Run with coverage report. --cov-fail-under matches CI; see test.yml comment.
 test-cov:
-	python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing
+	python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --cov-fail-under=70
 
 # Install dev dependencies
 install-dev:
