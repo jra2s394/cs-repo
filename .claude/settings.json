@@ -644,6 +644,7 @@
       "mcp__shortcut__stories-delete",
       "mcp__shortcut__epics-delete",
       "mcp__shortcut__iterations-delete"
-    ]
+    ],
+    "disableBypassPermissionsMode": "disable"
   }
 }
