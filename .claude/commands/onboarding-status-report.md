@@ -11,7 +11,7 @@ Generate a branded `.docx` status report for a customer's active onboarding, pul
 ### 1. Collect customer info
 
 Ask for (or confirm from context):
-- **Customer name** (e.g. "Heritage")
+- **Customer name** (e.g. "Acme")
 - **Customer email domain or contact email** — used for Gmail search
 - **Asana project name** — often "{Customer} Onboarding"; confirm if unsure
 
@@ -49,10 +49,10 @@ Assemble all data, then save to `data/outputs/onboarding-status-{customerSlug}-{
 **Required fields:**
 ```json
 {
-  "customer":     "Heritage",
-  "customerSlug": "Heritage",
+  "customer":     "Acme",
+  "customerSlug": "Acme",
   "generated":    "June 2, 2026",
-  "preparedBy":   "Tripp Arnold",
+  "preparedBy":   "[Your Name]",
   "dateRange":    "May 1 – June 2, 2026",
   "kpis": [
     { "label": "Days Active",    "value": "32" },
@@ -61,8 +61,8 @@ Assemble all data, then save to `data/outputs/onboarding-status-{customerSlug}-{
     { "label": "Open Items",     "value": "2",       "delta": null }
   ],
   "contactInfo": [
-    { "name": "Tripp Arnold", "role": "CSM — Slabstack", "email": "tarnold@sysdynetechnologies.com", "phone": "" },
-    { "name": "Jane Smith",   "role": "Project Lead",    "email": "jane@heritage.com",                "phone": "555-1234" }
+    { "name": "[Your Name]",  "role": "CSM — [Product]", "email": "you@yourcompany.com",              "phone": "" },
+    { "name": "[Contact Name]", "role": "Project Lead",  "email": "contact@customer.com",             "phone": "555-1234" }
   ],
   "timeline": {
     "startDate":        "May 1, 2026",
@@ -77,18 +77,18 @@ Assemble all data, then save to `data/outputs/onboarding-status-{customerSlug}-{
     { "name": "Go-Live",           "date": "June 15, 2026", "status": "Upcoming" }
   ],
   "asanaTasks": [
-    { "task": "Configure dispatch integration", "section": "Integration", "assignee": "Zeke",  "dueDate": "May 20, 2026", "completed": true },
-    { "task": "Conduct admin training",          "section": "Training",    "assignee": "Tripp", "dueDate": "June 5, 2026", "completed": false }
+    { "task": "Configure dispatch integration", "section": "Integration", "assignee": "[Teammate]",   "dueDate": "May 20, 2026", "completed": true },
+    { "task": "Conduct admin training",          "section": "Training",    "assignee": "[Your Name]", "dueDate": "June 5, 2026", "completed": false }
   ],
   "recentEmails": [
-    { "date": "June 1",  "subject": "Training session recap", "from": "Tripp Arnold", "direction": "Outbound" },
-    { "date": "May 30",  "subject": "Integration question",   "from": "Jane Smith",   "direction": "Inbound" }
+    { "date": "June 1",  "subject": "Training session recap", "from": "[Your Name]",    "direction": "Outbound" },
+    { "date": "May 30",  "subject": "Integration question",   "from": "[Contact Name]", "direction": "Inbound" }
   ],
   "upcomingMeetings": [
-    { "date": "June 5", "time": "10:00 AM MT", "title": "Admin Training Session", "attendees": "Tripp, Jane, Bob" }
+    { "date": "June 5", "time": "10:00 AM MT", "title": "Admin Training Session", "attendees": "[Your Name], [Contact A], [Contact B]" }
   ],
   "openItems": [
-    { "item": "Confirm go-live date with ops team", "owner": "Jane Smith", "due": "June 3, 2026", "urgent": false }
+    { "item": "Confirm go-live date with ops team", "owner": "[Contact Name]", "due": "June 3, 2026", "urgent": false }
   ],
   "methodology": {
     "sources": ["Gmail", "Google Calendar", "Asana", "Intercom"],

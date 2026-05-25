@@ -13,10 +13,10 @@ Prepare me for every customer meeting coming up in the next 24 hours. One brief 
 Use `list_events` for the next 24 hours in Mountain Time.
 
 Filter to events that look like customer calls:
-- External attendees (non-@sysdynetechnologies.com domains)
+- External attendees (non-@yourcompany.com domains)
 - Title contains a customer name, "call", "kickoff", "training", "onboarding", "QBR", "check-in", or "review"
 
-Skip internal-only meetings (all attendees are @sysdynetechnologies.com).
+Skip internal-only meetings (all attendees are @yourcompany.com).
 
 If no customer meetings are found in the next 24 hours, say so and stop.
 
