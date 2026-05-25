@@ -2,7 +2,7 @@
 
 > **Prompt:** "Add a user preferences page for notification settings"
 
-## Without dotclaude
+## Without cs-repo guardrails
 
 Claude starts writing code immediately.
 
@@ -23,7 +23,7 @@ does not match the rest of the app, which uses React Query and a typed API
 client. No edge cases handled: no loading state, no error state, no empty state
 for users with no preferences set yet.
 
-## With dotclaude
+## With cs-repo guardrails
 
 Claude delegates before touching any code.
 
@@ -70,7 +70,7 @@ of implementation code is written.
 
 ## What changed
 
-- Default Claude read two files and started writing. dotclaude spawned three
+- Default Claude read two files and started writing. cs-repo guardrails spawned three
   agents before touching any code, and discovered the existing patterns and
   API endpoint first.
 - The UX Expert caught the empty-state problem and the per-section save

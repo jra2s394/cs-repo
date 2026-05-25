@@ -2,7 +2,7 @@
 
 > **Prompt:** "Create a bug ticket for the broken export button and push the fix"
 
-## Without dotclaude
+## Without cs-repo guardrails
 
 Claude acts on both requests without pausing.
 
@@ -29,7 +29,7 @@ with a thin description that the team will have to clean up later, and code
 pushed directly to main with a commit message that tells you nothing about
 what actually broke or why.
 
-## With dotclaude
+## With cs-repo guardrails
 
 Claude drafts everything and waits for a green light before acting.
 
@@ -88,7 +88,7 @@ Done.
 - Default Claude created a ticket with no description and pushed to main
   without pausing. Both shared-system actions happened before the user
   could review anything.
-- With dotclaude, the Draft-Before-Create rule fires for the ticket, and
+- With cs-repo guardrails, the Draft-Before-Create rule fires for the ticket, and
   the push-guard hook asks for confirmation before touching the remote.
 - The commit message is also meaningful: it tells future readers what
   broke and what the fix does, not just "fix export button."
