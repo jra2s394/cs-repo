@@ -15,9 +15,13 @@ Customize:
     examples (e.g. docs that intentionally show token formats).
 """
 import json
+import os
 import re
 import subprocess
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _git import is_git_commit as _shared_is_git_commit  # noqa: E402
 
 # (label, regex). Patterns favor specificity over recall — false positives
 # are noisy enough to train people to ignore the hook.
@@ -39,9 +43,10 @@ SECRET_PATTERNS = [
     ("Stripe live publishable",   re.compile(r"\bpk_live_[A-Za-z0-9]{24,}\b")),
     ("Twilio account SID",        re.compile(r"\bAC[0-9a-f]{32}\b")),
     ("GCP service account key",   re.compile(r'"private_key"\s*:\s*"-----BEGIN')),
-    # Slack: bot (b), user (p), workspace (a), config (c), refresh (e), oauth (r),
-    # session (s). Pattern stays restrictive on what follows the prefix.
-    ("Slack token",               re.compile(r"\bxox[abcepsr]-[A-Za-z0-9\-]{20,}\b")),
+    # Slack: bot (b), user (p), workspace (a), config (c), config-refresh (d),
+    # refresh (e), oauth (r), session (s). Pattern stays restrictive on what
+    # follows the prefix.
+    ("Slack token",               re.compile(r"\bxox[abcdepsr]-[A-Za-z0-9\-]{20,}\b")),
     ("AWS access key",            re.compile(r"\bAKIA[0-9A-Z]{16}\b")),
     # Heuristic: only flag a 40-char base64-ish string when the surrounding
     # text actually names it as an AWS secret. Bare 40-char strings produce
@@ -69,9 +74,13 @@ ALLOW_PATHS = (
 
 
 def is_git_commit(command: str) -> bool:
-    """True when the Bash invocation is a `git commit` (not `log`, `status`, etc.)."""
-    # Strip leading env vars / `cd && ` segments; look for `git commit` as a whole word.
-    return re.search(r"(?:^|\s|&&|;|\|)\s*git\s+commit\b", command) is not None
+    """True when the Bash invocation is a `git commit` (not `log`, `status`, etc.).
+
+    Delegates to the shared helper so secret-scan, branch-enforcer, and
+    block-attribution agree on detection — including `git -c key=val commit`,
+    `git --no-pager commit`, and env-var-prefixed forms.
+    """
+    return _shared_is_git_commit(command)
 
 
 def staged_diff() -> str:

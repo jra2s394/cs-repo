@@ -107,6 +107,30 @@ class TestNonCommitCommands:
 # Malformed input
 # ---------------------------------------------------------------------------
 
+class TestGitCommitBypasses:
+    """Attribution must be caught even when the commit invocation uses
+    git's global options. The old `"git commit" in command` substring
+    check missed `git -c key=val commit`, allowing attribution-laced
+    commits to slip past.
+    """
+
+    def test_dash_c_with_attribution(self):
+        assert blocks(
+            'git -c commit.gpgsign=false commit -m "fix\\n\\nCo-Authored-By: Claude"'
+        )
+
+    def test_no_pager_with_attribution(self):
+        assert blocks('git --no-pager commit -m "Generated with Claude"')
+
+    def test_env_var_prefix_with_attribution(self):
+        assert blocks(
+            'GIT_AUTHOR_NAME=x git commit -m "fix\\n\\nCo-Authored-By: Anthropic"'
+        )
+
+    def test_dash_c_clean_message_allowed(self):
+        assert allows('git -c commit.gpgsign=false commit -m "fix: bug"')
+
+
 class TestMalformedInput:
     def test_empty_string(self):
         code, _, _ = run_hook(HOOK, "")

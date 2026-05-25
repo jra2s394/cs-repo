@@ -82,6 +82,48 @@ class TestNonCommitCommandsPassThrough:
         assert code == 0
 
 
+class TestGitCommitBypasses:
+    """Commits invoked with git's global options (`-c`, `--no-pager`, `-C`,
+    env-var prefixes) must still be intercepted when on a protected branch.
+    The naive `"git commit" in command` substring check missed these.
+    """
+
+    def test_dash_c_key_val_blocked_on_main(self, main_branch_repo):
+        code, _, _ = run_hook_in_dir(
+            HOOK, bash_input('git -c commit.gpgsign=false commit -m "x"'),
+            main_branch_repo,
+        )
+        assert code == 2
+
+    def test_no_pager_blocked_on_main(self, main_branch_repo):
+        code, _, _ = run_hook_in_dir(
+            HOOK, bash_input('git --no-pager commit -m "x"'),
+            main_branch_repo,
+        )
+        assert code == 2
+
+    def test_dash_capital_c_path_blocked_on_main(self, main_branch_repo):
+        code, _, _ = run_hook_in_dir(
+            HOOK, bash_input(f'git -C {main_branch_repo} commit -m "x"'),
+            main_branch_repo,
+        )
+        assert code == 2
+
+    def test_env_var_prefix_blocked_on_main(self, main_branch_repo):
+        code, _, _ = run_hook_in_dir(
+            HOOK, bash_input('GIT_AUTHOR_NAME=x git commit -m "x"'),
+            main_branch_repo,
+        )
+        assert code == 2
+
+    def test_dash_c_on_feature_branch_allowed(self, feature_branch_repo):
+        code, _, _ = run_hook_in_dir(
+            HOOK, bash_input('git -c commit.gpgsign=false commit -m "x"'),
+            feature_branch_repo,
+        )
+        assert code == 0
+
+
 class TestMalformedInput:
     def test_empty_string(self, tmp_path):
         code, _, _ = run_hook_in_dir(HOOK, "", tmp_path)
