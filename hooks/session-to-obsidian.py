@@ -39,6 +39,7 @@ SETUP (.claude/settings.json):
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import os
 import sys
@@ -503,10 +504,8 @@ def main():
     # Remove the old export only after the new one landed safely, and only
     # if it's a different file (otherwise we just replaced it atomically).
     if existing and existing != md_path:
-        try:
+        with contextlib.suppress(FileNotFoundError):
             existing.unlink()
-        except FileNotFoundError:
-            pass
 
     raw_id = re.sub(r"[^a-zA-Z0-9_\-]", "_", data["session_id"] or jsonl_path.stem)
     raw_dest = RAW_DIR / f"{raw_id}.jsonl"

@@ -13,8 +13,8 @@ import sys
 import os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _git import is_git_commit  # noqa: E402
-from _stdin import parse_or_exit  # noqa: E402
+from _git import is_git_commit
+from _stdin import parse_or_exit
 
 data = parse_or_exit()
 
