@@ -43,7 +43,8 @@ class TestIsDark:
         assert rc._is_dark("#2E7D32") is True
 
     def test_amber_is_not_dark(self):
-        # PALETTE amber = #D9A441 → luminance ≈ 179 → light
+        # Sample mid-saturation amber (luminance ≈ 179) — should read as light.
+        # Not pinned to PALETTE.amber since that value is now dark by design.
         assert rc._is_dark("#D9A441") is False
 
 

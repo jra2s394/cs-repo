@@ -67,7 +67,6 @@ Before submitting, verify:
 ## Style guide
 
 - Write like a human, not a language model
-- No em dashes
 - Keep docs concise
 - Code blocks should be copy-pasteable
 - Comments in hooks and scripts should explain "why", not "what"
