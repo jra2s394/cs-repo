@@ -43,7 +43,7 @@ Then work through every section below in order. For each item: check it, mark âœ
 - [ ] Does the hook only run on `git commit` (not `git log`, `git diff`, etc.)?
 - [ ] Does it exit 0 (not block) when no staged diff exists?
 - [ ] Does it exit 0 on invalid JSON input (not crash)?
-- [ ] Are all expected token patterns present: Shortcut (`sct_`), GitHub (`ghp_` / `gho_` / `ghs_`), OpenAI (`sk-`), Anthropic (`sk-ant-`), Slack (`xox[baprs]-`), AWS (`AKIA`), Google API (`AIza`), RSA/OPENSSH/EC private key, JWT (3-part dot-separated base64)?
+- [ ] Are all expected token patterns present: Shortcut (`sct_`), GitHub (`ghp_` / `gho_` / `ghs_`), OpenAI (`sk-`), Anthropic (`sk-ant-`), Slack (`xox[abcdepsr]-`), AWS (`AKIA`), Google API (`AIza`), RSA/OPENSSH/EC private key, JWT (3-part dot-separated base64)?
 - [ ] Does the hook print the matched pattern name AND the offending line context (not just "blocked") so the user can find and rotate the leaked token?
 
 ## Section 5 â€” session-to-obsidian.py
