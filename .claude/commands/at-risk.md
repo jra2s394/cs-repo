@@ -2,7 +2,7 @@
 description: Surface all at-risk customers across Asana, Intercom, Shortcut, and Gmail in a single prioritized view — read-only triage.
 ---
 
-Read `CLAUDE.md` from this repo before starting.
+Read `CLAUDE.md` and `prompts/at-risk-template.md` from this repo before starting — the prompt template has the per-system search queries and severity rubric this command relies on.
 
 Identify every customer showing risk signals right now. **Read-only — no tasks are created, no messages are sent, no tickets are opened.** This command surfaces risk; the user decides what to act on.
 
