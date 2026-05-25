@@ -1,5 +1,6 @@
 {
   "autoUpdatesChannel": "stable",
+  "disableSkillShellExecution": true,
   "hooks": {
     "PreToolUse": [
       {
