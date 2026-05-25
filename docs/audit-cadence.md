@@ -107,3 +107,11 @@ These audit rounds produced the cadence above. If you ever wonder "why is this c
 | 44 | `disableSkillShellExecution` unset (skills could run inline shell); Detection record above stopped at round 29 | WebFetch /en/settings + manual scout for cumulative drift |
 | 45 | Zero of 44 commands used `allowed-tools` frontmatter (every command had implicit access to every tool) | WebFetch /en/skills cross-check against `.claude/commands/*.md` frontmatter |
 | 46 | Zero commands used `disable-model-invocation` (Claude could auto-fire manual write commands like `/escalate`); JS had ~1500 LOC tested but zero coverage tracking | WebFetch /en/skills (re-fetched) + scout against c8/coverage tooling absence |
+| 47 | Doc drift across README/CONTRIBUTING/RELEASE_NOTES after 7 rounds of code changes (stale test counts, missing make targets, missing CI checks) | manual scout for doc-vs-reality drift |
+| 48 | 6 hooks duplicated the same stdin-JSON parse boilerplate (4 lines × 6 = 24 lines that had to stay in sync) | internal simplification scout |
+| 49 | `.claude/settings.json` had 52 individual matcher blocks for `draft-before-create` (one per MCP tool) — 470 lines of boilerplate | internal simplification scout (carry-over from 48) |
+| 50 | `ruff.toml::target-version` stuck at `py39` despite project requiring 3.10+ since round 27; rule set was 4 groups when 8 catch real bugs (B905 zip-strict, RUF059 unused-unpacked, SIM105 suppressible-exception, RUF012 mutable-class-default) | manual scout via `ruff check --select=E,F,B,UP,SIM,C4,PIE,RUF` |
+| 51 | 16 manual report commands missing `disable-model-invocation` (round-46 covered the 8 most obvious; reports were the next layer) | round-46 carry-over (CLAUDE.md command tables) |
+| 52 | 4 high-risk customer-facing commands had no `allowed-tools` restriction despite handling untrusted external input | round-45 carry-over (CLAUDE.md customer intelligence table) |
+| 53 | Bash sandbox unenabled (biggest unaddressed security feature) | WebFetch /en/sandboxing + cross-check against `.claude/settings.json` |
+| 54 | Round-53 sandbox enabled but `gh` immediately failed TLS under macOS Seatbelt — exact issue the doc warned about; `excludedCommands: ["gh *", "git *"]` was the documented fix | reproduced in the same session that committed round 53 (concrete repro, not a scout) |
