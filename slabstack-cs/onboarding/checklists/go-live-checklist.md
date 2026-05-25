@@ -75,7 +75,7 @@ Run `/go-live <customer-name>` to pull a live cross-system check.
 
 ## 6. Communication
 
-- [ ] Go-live announcement email drafted for customer (use `/follow-up` template style)
+- [ ] Go-live announcement email drafted for customer
 - [ ] Internal Slack post drafted for #customer-success channel
 - [ ] CSM is available for go-live day (no PTO conflict)
 - [ ] Backup CSM identified if primary is unavailable

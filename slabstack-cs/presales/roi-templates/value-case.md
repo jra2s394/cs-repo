@@ -23,7 +23,7 @@ Describe the current state in the buyer's own words. Use specifics from discover
 
 ### 2. The Cost (numbers)
 
-Lift the totals from the ROI calculator. Three bullets max:
+Pull the totals from the discovery numbers (estimator time, billing errors, lost-deal cost). Three bullets max:
 
 - Estimator time spent on quote/project admin today: **___ hours/month**
 - Billing errors and rework: **$___ /year**

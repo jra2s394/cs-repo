@@ -15,8 +15,7 @@ Materials to support the sales process from first discovery call through signed 
 - `objection-handling/competitive-positioning.md` — How Slabstack compares
 
 ### ROI & Value
-- `roi-templates/roi-calculator.md` — Time and cost savings framework
-- `roi-templates/value-case.md` — Building a business case for the buyer
+- `roi-templates/value-case.md` — Building a business case for the buyer (pulls numbers from discovery)
 
 ---
 

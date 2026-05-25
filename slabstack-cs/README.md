@@ -9,14 +9,13 @@ A complete customer success resource library covering onboarding, pre-sales, and
 ```
 slabstack-cs/
 ├── onboarding/           # Self-serve onboarding resources
-│   ├── videos/           # 5-part video series scripts and links
-│   ├── scripts/          # Word-for-word video scripts
+│   ├── scripts/          # Word-for-word video scripts (videos not yet recorded)
 │   └── checklists/       # Customer onboarding checklists
 │
 ├── presales/             # Pre-sales support materials
 │   ├── decks/            # Discovery and demo frameworks
 │   ├── objection-handling/  # Common objections + responses
-│   └── roi-templates/    # ROI and value calculators
+│   └── roi-templates/    # Value-case framework for the buyer
 │
 ├── integrations/         # Integration-specific documentation
 │   ├── sysdyne/          # Sysdyne integration guide

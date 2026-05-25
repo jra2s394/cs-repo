@@ -22,7 +22,7 @@ Real objections from prospect calls and how to respond. Update this file when yo
 **Response:**
 "Price is fair to push on. Let's back into it from value. You told me a billing error costs you about $X and you have about Y per year. Slabstack pricing comes out to roughly Z per month — so if it prevents one error a quarter, it's already paid for. Does that math line up with your numbers?"
 
-**Next step:** Walk through the ROI calculator together. Don't drop price.
+**Next step:** Walk through their numbers (volume, billing errors, lost-deal cost) live and back into the math together. Don't drop price.
 
 ---
 
