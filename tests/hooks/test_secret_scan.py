@@ -72,7 +72,7 @@ class TestProviderTokens:
         _stage(repo, "slack.env", "SLACK=xoxb-" + "1" * 30)
         code, stderr = _scan(repo)
         assert code == 2
-        assert "Slack bot token" in stderr
+        assert "Slack token" in stderr
 
     def test_aws_access_key_blocked(self, tmp_path):
         repo = _init_repo_on_branch(tmp_path, "feature/x")
@@ -87,6 +87,104 @@ class TestProviderTokens:
         code, stderr = _scan(repo)
         assert code == 2
         assert "RSA private key" in stderr
+
+
+# ---------------------------------------------------------------------------
+# Modern provider tokens (added in scrub-and-harden)
+# ---------------------------------------------------------------------------
+
+class TestModernProviderTokens:
+    def test_openai_project_key_blocked(self, tmp_path):
+        # sk-proj keys use _ and -, which the legacy [A-Za-z0-9] regex misses.
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "secret.env", "OPENAI_API_KEY=sk-proj-" + "A_B-" * 12 + "ABCD")
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "OpenAI project key" in stderr
+
+    def test_stripe_live_secret_key_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "stripe.env", "STRIPE_KEY=sk_live_" + "A" * 30)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "Stripe live secret key" in stderr
+
+    def test_stripe_live_publishable_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "stripe.env", "PUB=pk_live_" + "A" * 30)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "Stripe live publishable" in stderr
+
+    def test_stripe_test_key_warns_does_not_block(self, tmp_path):
+        # Test keys are flagged but allowed through. Exit 0 with warning text.
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "stripe.env", "STRIPE_TEST=sk_test_" + "A" * 30)
+        code, stderr = _scan(repo)
+        assert code == 0
+        assert "Stripe test secret key" in stderr
+        assert "WARNING" in stderr
+
+    def test_twilio_account_sid_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "twilio.env", "TWILIO_ACCOUNT_SID=AC" + "a1" * 16)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "Twilio account SID" in stderr
+
+    def test_gcp_service_account_key_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "sa.json",
+               '{"type":"service_account","private_key": "-----BEGIN PRIVATE KEY-----\\nMIIE..."}')
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "GCP service account key" in stderr
+
+    def test_slack_workspace_token_blocked(self, tmp_path):
+        # xoxa- (workspace) wasn't covered by the original [baprs] character class.
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "slack.env", "SLACK=xoxa-" + "1" * 30)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "Slack token" in stderr
+
+    def test_slack_config_token_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "slack.env", "SLACK=xoxc-" + "1" * 30)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "Slack token" in stderr
+
+    def test_slack_refresh_token_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "slack.env", "SLACK=xoxe-" + "1" * 30)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "Slack token" in stderr
+
+    def test_github_user_token_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "gh.env", "GH=ghu_" + "A" * 36)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "GitHub user token" in stderr
+
+    def test_github_refresh_token_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "gh.env", "GH=ghr_" + "A" * 36)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "GitHub refresh token" in stderr
+
+    def test_aws_secret_access_key_blocked(self, tmp_path):
+        # Heuristic relies on the surrounding name. The 40-char base64 string
+        # alone is too generic — the assignment context disambiguates.
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "aws.env",
+               "AWS_SECRET_ACCESS_KEY=wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY")
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "AWS secret access key" in stderr
 
 
 # ---------------------------------------------------------------------------

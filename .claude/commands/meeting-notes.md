@@ -124,7 +124,7 @@ For #2, #3, #4 — defer to the existing commands (`/follow-up`, `/tasks`, `/sto
 ## Rules
 
 - **Read-only by default.** Saving notes to disk only happens after explicit "yes save".
-- **Never invent a meeting.** If the user says "the [CUSTOMER_A] call" and you can't find it on the calendar, say so and stop — don't proceed from inference.
+- **Never invent a meeting.** If the user says "the Acme call" and you can't find it on the calendar, say so and stop — don't proceed from inference.
 - **Read.ai is authoritative when present.** If Read.ai says X and the calendar suggests Y, go with X and note the discrepancy.
 - **Quote signals verbatim.** Customer signals must be direct quotes (no paraphrasing, no inferring). If you didn't see the exact phrase, don't list it.
 - **Cross-reference, don't duplicate.** If an action item already exists as an Asana task, say so — don't propose creating a duplicate.

@@ -14,7 +14,7 @@ Two modes:
 
 ## Step 0 — Detect mode
 
-If the user passed a customer name (e.g. `/health-score [CUSTOMER_A]`), enter **single-customer mode**. Otherwise enter **portfolio mode**.
+If the user passed a customer name (e.g. `/health-score Acme`), enter **single-customer mode**. Otherwise enter **portfolio mode**.
 
 In single-customer mode, every query below scopes to that one customer instead of the full portfolio. Output is an inline scorecard, not a report — skip Step 4 and the Google Drive upload.
 
@@ -26,9 +26,9 @@ Fetch data simultaneously. Critical gotchas from real-world runs:
 
 ### Asana — filter to YOUR team
 
-The Asana workspace likely spans multiple product teams (e.g., Slabstack, [TEAM_OTHER]). An unfiltered `get_projects` returns projects from every team, polluting the scorecard with accounts you don't own.
+The Asana workspace likely spans multiple product teams. An unfiltered `get_projects` returns projects from every team, polluting the scorecard with accounts you don't own.
 
-- Pass `team` to `get_projects` (or `search_objects`) with your team's GID. The [TEAM_PRIMARY] GID is `[ASANA_TEAM_GID]` — confirm in any of your customer-project URLs. For other teams, grep a known project URL for the team segment.
+- Pass `team` to `get_projects` (or `search_objects`) with your team's GID (`[ASANA_TEAM_GID]`) — find it in any of your customer-project URLs (the team segment in the URL path). Configure this once in your private CLAUDE.md and reuse.
 - Filter to non-archived projects with names matching `Onboarding - *`, `Migration - *`, `Integration - *`, `Pilot - *`.
 
 **Portfolio mode:** all customer-facing projects in your team.
@@ -47,7 +47,7 @@ For portfolio mode, group results client-side by `projects.name`. For single-cus
 
 Two non-obvious limits caught me on first run:
 
-- `search_contacts(email_domain='[customer_a].com', per_page=25)` returned 25 contacts × ~3KB each → exceeded token budget. Use `per_page=25` and paginate via `pages.next.starting_after`. For each contact, you only need `id` to feed into the conversations query — strip the rest.
+- `search_contacts(email_domain='customer.com', per_page=25)` returned 25 contacts × ~3KB each → exceeded token budget. Use `per_page=25` and paginate via `pages.next.starting_after`. For each contact, you only need `id` to feed into the conversations query — strip the rest.
 - `search_conversations(contact_ids=[...])` caps the array at **15 IDs per call**. Split larger contact lists into batches of 15 and run them in parallel. Aggregate results.
 
 **Portfolio mode shortcut:** call `search_conversations(state='open', per_page=150)` once (workspace-wide open count is usually small — at last check, 3). Group by source author's email domain. Faster than per-customer queries if total open volume is low.
