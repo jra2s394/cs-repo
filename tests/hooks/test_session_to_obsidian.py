@@ -220,6 +220,30 @@ class TestFindSessionFile:
         result = sto.find_session_file("abc12345")
         assert result == session_file
 
+    def test_finds_session_at_depth_2_subdir(self, sto, tmp_path, monkeypatch):
+        # Depth-2 fallback: project_dir/subdir/<id>.jsonl. Must still be found.
+        projects = tmp_path / "projects"
+        nested = projects / "-some-path-cs-repo" / "archive"
+        nested.mkdir(parents=True)
+        session_file = nested / "deep1234.jsonl"
+        session_file.write_text('{"type":"user"}\n')
+        monkeypatch.setattr(sto, "CLAUDE_PROJECTS", projects)
+        result = sto.find_session_file("deep1234")
+        assert result == session_file
+
+    def test_does_not_recurse_past_depth_2(self, sto, tmp_path, monkeypatch):
+        # Depth-3 file must NOT be returned. The previous unbounded
+        # `rglob` walked every project subtree, which was O(N files) on
+        # long-lived vaults. We deliberately bound to depth 2.
+        projects = tmp_path / "projects"
+        depth3 = projects / "-some-path-cs-repo" / "archive" / "old"
+        depth3.mkdir(parents=True)
+        session_file = depth3 / "deep3000.jsonl"
+        session_file.write_text('{"type":"user"}\n')
+        monkeypatch.setattr(sto, "CLAUDE_PROJECTS", projects)
+        result = sto.find_session_file("deep3000")
+        assert result is None
+
 
 # ---------------------------------------------------------------------------
 # parse_session
