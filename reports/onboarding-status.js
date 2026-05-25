@@ -55,7 +55,7 @@ children.push(T.dataTable({
   header: ["Name", "Role", "Email", "Phone"],
   align: [T.AlignmentType.LEFT, T.AlignmentType.LEFT,
           T.AlignmentType.LEFT, T.AlignmentType.LEFT],
-  rows: d.contactInfo.map(c => [c.name, c.role, c.email || "—", c.phone || "—"]),
+  rows: (d.contactInfo || []).map(c => [c.name, c.role, c.email || "—", c.phone || "—"]),
 }));
 children.push(T.gap(160));
 
@@ -211,7 +211,7 @@ T.publishReport(doc, outFile, {
   csvSections: [
       { title: "Contacts",
         headers: ["Name", "Role", "Email", "Phone"],
-        rows: d.contactInfo.map(c => [c.name, c.role, c.email || "", c.phone || ""]) },
+        rows: (d.contactInfo || []).map(c => [c.name, c.role, c.email || "", c.phone || ""]) },
       { title: "Timeline",
         headers: ["Milestone", "Date", "Status"],
         rows: timelineRows },

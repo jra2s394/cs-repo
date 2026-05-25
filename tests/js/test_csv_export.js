@@ -29,7 +29,16 @@ function test(name, fn) {
 function tmpFile() {
   return path.join(os.tmpdir(), `csv_test_${Date.now()}_${Math.random().toString(36).slice(2)}.csv`);
 }
+// `write()` returns the file body with BOM stripped and CRLF normalized to LF
+// so the existing semantic assertions stay readable. Tests for the BOM and
+// CRLF themselves use `writeRaw()` below to inspect the on-disk bytes directly.
 function write(sections) {
+  const f = tmpFile();
+  writeCsv(f, sections);
+  const raw = fs.readFileSync(f, "utf8");
+  return raw.replace(/^﻿/, "").replace(/\r\n/g, "\n");
+}
+function writeRaw(sections) {
   const f = tmpFile();
   writeCsv(f, sections);
   return fs.readFileSync(f, "utf8");
@@ -134,14 +143,15 @@ test("no blank line before the first section", () => {
   assert.ok(!out.startsWith("\n"), "first section must not be preceded by a blank line");
 });
 
-test("three sections produce two blank-line separators", () => {
+test("three sections produce two blank-line separators between them", () => {
   const out = write([
     { title: "A", rows: [["1"]] },
     { title: "B", rows: [["2"]] },
     { title: "C", rows: [["3"]] },
   ]);
-  const blanks = out.split("\n").filter(l => l === "").length;
-  assert.strictEqual(blanks, 2, `expected 2 blank lines, got ${blanks}`);
+  // Trim the trailing CRLF (RFC 4180 termination) before counting inter-section blanks.
+  const blanks = out.replace(/\n$/, "").split("\n").filter(l => l === "").length;
+  assert.strictEqual(blanks, 2, `expected 2 blank lines between sections, got ${blanks}`);
 });
 
 test("full section order: title, headers, data rows", () => {
@@ -221,10 +231,41 @@ test("write failure logs to stderr but does not throw", () => {
 test("empty sections array — writes nothing but does not throw", () => {
   const f = tmpFile();
   assert.doesNotThrow(() => writeCsv(f, []));
-  // File should exist with empty content (lines.join("\n") of [] is "")
+  // File should exist with empty content (no body → no BOM either).
   if (fs.existsSync(f)) {
     assert.strictEqual(fs.readFileSync(f, "utf8"), "");
   }
+});
+
+// ── encoding compliance (RFC 4180 + Excel UTF-8 friendliness) ──────────────
+console.log("\nencoding compliance");
+
+test("file starts with UTF-8 BOM (Excel renders accented names correctly)", () => {
+  const raw = writeRaw([{ rows: [["João"]] }]);
+  assert.strictEqual(raw.charCodeAt(0), 0xFEFF,
+    `expected leading BOM, got code point ${raw.charCodeAt(0).toString(16)}`);
+});
+
+test("multi-row CSV uses CRLF line endings (RFC 4180 / Excel-on-Windows)", () => {
+  const raw = writeRaw([{ rows: [["a"], ["b"], ["c"]] }]);
+  // Strip BOM, then every line break must be CRLF (no bare LFs).
+  const body = raw.replace(/^﻿/, "");
+  assert.ok(body.includes("\r\n"), "expected CRLF line endings");
+  // Splitting on CRLF and rejoining with LF should equal splitting on LF —
+  // i.e. there are no bare LFs lurking.
+  const bareLfCount = (body.match(/(?<!\r)\n/g) || []).length;
+  assert.strictEqual(bareLfCount, 0, `found ${bareLfCount} bare LFs (should be 0)`);
+});
+
+test("file ends with trailing CRLF (some parsers drop the last unterminated row)", () => {
+  const raw = writeRaw([{ rows: [["only-row"]] }]);
+  const body = raw.replace(/^﻿/, "");
+  assert.ok(body.endsWith("\r\n"), `expected trailing CRLF, got: ${JSON.stringify(body.slice(-4))}`);
+});
+
+test("empty CSV has no BOM (no point preceding zero bytes)", () => {
+  const raw = writeRaw([]);
+  assert.strictEqual(raw, "", "empty body should write zero bytes, no BOM");
 });
 
 test("missing rows key — treated as empty array, does not throw", () => {

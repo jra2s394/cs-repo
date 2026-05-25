@@ -56,7 +56,7 @@ children.push(T.dataTable({
   columnWidths: [3000, 6360],
   header: ["Metric", "Value"],
   align: [T.AlignmentType.LEFT, T.AlignmentType.LEFT],
-  rows: d.executiveSummary,
+  rows: d.executiveSummary || [],
 }));
 children.push(T.gap(160));
 
@@ -103,11 +103,12 @@ children.push(T.gap(160));
 // Renewal
 children.push(...T.sectionHead("Renewal"));
 const renewalRows = [];
-if (d.renewal.date)       renewalRows.push(["Renewal Date",  d.renewal.date]);
-if (d.renewal.daysOut != null) renewalRows.push(["Days to Renewal", String(d.renewal.daysOut)]);
-if (d.renewal.currentARR) renewalRows.push(["Current ARR",   d.renewal.currentARR]);
-if (d.renewal.risk)       renewalRows.push(["Risk Level",    d.renewal.risk]);
-if (d.renewal.strategy)   renewalRows.push(["Strategy",      d.renewal.strategy]);
+const r = d.renewal || {};
+if (r.date)              renewalRows.push(["Renewal Date",  r.date]);
+if (r.daysOut != null)   renewalRows.push(["Days to Renewal", String(r.daysOut)]);
+if (r.currentARR)        renewalRows.push(["Current ARR",   r.currentARR]);
+if (r.risk)              renewalRows.push(["Risk Level",    r.risk]);
+if (r.strategy)          renewalRows.push(["Strategy",      r.strategy]);
 children.push(T.dataTable({
   columnWidths: [2800, 6560],
   header: ["Item", "Detail"],
@@ -124,7 +125,7 @@ children.push(T.dataTable({
   columnWidths: [5160, 2000, 2200],
   header: ["Section", "Time", "Owner"],
   align: [T.AlignmentType.LEFT, T.AlignmentType.CENTER, T.AlignmentType.CENTER],
-  rows: d.agenda,
+  rows: d.agenda || [],
 }));
 children.push(T.gap(160));
 
@@ -136,7 +137,7 @@ children.push(T.dataTable({
   columnWidths: [4760, 2600, 2000],
   header: ["Action", "Owner", "Due"],
   align: [T.AlignmentType.LEFT, T.AlignmentType.LEFT, T.AlignmentType.CENTER],
-  rows: d.nextSteps.map(s => [s.action, s.owner, s.due]),
+  rows: (d.nextSteps || []).map(s => [s.action, s.owner, s.due]),
 }));
 children.push(T.gap(160));
 

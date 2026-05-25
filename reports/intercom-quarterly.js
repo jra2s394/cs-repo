@@ -134,7 +134,7 @@ T.publishReport(doc, outFile, {
   category: "Intercom",
   label: "Quarterly",
   csvSections: [
-      { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Last Q", "Change", "YoY"], rows: d.summaryTable || [] },
+      { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Last Q", "Change", "YoY"], rows: d.scorecardTable || [] },
       { title: "Monthly Breakdown", headers: ["Month", "New", "Closed", "Resolution", "Avg FRT", "Fin%"], rows: d.monthlyTable || [] },
       { title: "Top Customers", headers: ["Rank", "Domain", "Conversations"], rows: d.topCustomers || [] },
     ],

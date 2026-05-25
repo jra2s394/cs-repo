@@ -181,7 +181,7 @@ T.publishReport(doc, outFile, {
   category: "Onboarding",
   label: "Quarterly",
   csvSections: [
-      { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Last Q", "Change", "YoY"], rows: d.summaryTable || [] },
+      { title: "Summary", headers: ["Metric", d.period, d.priorPeriod || "Last Q", "Change", "YoY"], rows: d.scorecardTable || [] },
       { title: "Monthly Breakdown", headers: ["Month", "Started", "Completed", "CARR Completed", "CARR In-Flight"], rows: d.monthlyTable || [] },
       { title: "Accounts", headers: ["Customer", "Project", "CARR", "Started", "Completed", "Status"], rows: d.accountsTable || [] },
       { title: "At-Risk & Blocked", headers: ["Customer", "Project", "CARR", "Issue", "Urgent"],
