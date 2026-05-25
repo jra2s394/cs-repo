@@ -151,6 +151,37 @@ test("kpiStrip tblGrid length matches cell count (2n - 1)", () => {
   }
 });
 
+// ── dataTable defensive defaults ────────────────────────────────────────────
+console.log("\ndataTable defensive defaults");
+
+test("dataTable with rows: undefined renders an empty body (no throw)", () => {
+  // Regression: reports/intercom-yeartodate.js, onboarding-yearly.js, and
+  // 3 other reports passed `rows: d.optionalField` directly without a
+  // `|| []` guard. When the underlying JSON omitted the field, dataTable
+  // crashed with `Cannot read properties of undefined (reading 'map')`
+  // — and the stack trace pointed at lib/report-theme.js with no hint
+  // about which report or field caused it. The defensive default in
+  // dataTable's signature (`rows = []`) is the library-level fix.
+  const tbl = T.dataTable({
+    columnWidths: [3000, 3000, 3360],
+    header: ["A", "B", "C"],
+    // rows intentionally omitted
+  });
+  assert.ok(tbl, "dataTable returned a Table object");
+  // The header row should still be present; body row count should be 0.
+  const rows = tbl.root.filter(el => el.rootKey === "w:tr");
+  assert.strictEqual(rows.length, 1, "expected only the header row when rows is undefined");
+});
+
+test("dataTable with explicit rows: [] renders an empty body (no throw)", () => {
+  const tbl = T.dataTable({
+    columnWidths: [3000, 3000, 3360],
+    header: ["A", "B", "C"],
+    rows: [],
+  });
+  assert.ok(tbl);
+});
+
 // ── buildDocument smoke test ────────────────────────────────────────────────
 console.log("\nbuildDocument smoke");
 

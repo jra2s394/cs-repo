@@ -67,7 +67,7 @@ if (d.weeklyTable && d.weeklyTable.length > 0) {
     header: ["Week", "Started", "Completed", "CARR Completed", "CARR In-Flight"],
     align: [T.AlignmentType.LEFT, T.AlignmentType.CENTER, T.AlignmentType.CENTER,
             T.AlignmentType.CENTER, T.AlignmentType.CENTER],
-    rows: d.weeklyTable,
+    rows: d.weeklyTable || [],
   }));
   children.push(T.gap(160));
 }
