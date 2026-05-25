@@ -339,3 +339,31 @@ Convert to PDF if LibreOffice is installed (optional):
 - **Prior-period comparison**: WoW/MoM/QoQ deltas require either (a) a prior snapshot on file or (b) date columns to bucket historical data; flag if unavailable
 - **Multi-year**: yearly reports can only show prior years if historical mastersheet data is available
 - **Asana matching**: linking Asana tasks to mastersheet accounts depends on customer names matching — flag any accounts with no Asana tasks found
+
+---
+
+## Standard Protocol Reference
+
+The per-period commands (`/onboarding-weekly`, `/onboarding-monthly`, `/onboarding-quarterly`, `/onboarding-yearly`) all finish with the same build-and-distribute trio. Each command says "run **Standard Build & Distribute** from the template" instead of inlining the same 20 lines four times.
+
+### Standard Build & Distribute
+
+After writing the metrics JSON via the per-period build script (`node reports/onboarding-<period>.js ...`), do the following three steps in order:
+
+**1. PDF conversion** *(skip if LibreOffice not installed — the .docx is the primary deliverable)*:
+```bash
+/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir out/ out/<DocxFilename>.docx
+```
+
+**2. Google Drive upload (optional).** After showing the report, ask: "Want me to upload the data to Google Sheets?" If yes:
+
+1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
+2. Call `mcp__claude_ai_Google_Drive__create_file` with:
+   - `title`: `"Onboarding <Period Type> — <Period Label>"`
+   - `textContent`: the CSV file contents
+   - `contentMimeType`: `"text/csv"`
+3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
+
+**3. Closing prompt.** End the command with the line:
+
+> "Want me to upload the data to Google Sheets, share this in Slack, or tweak anything?"
