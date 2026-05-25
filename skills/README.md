@@ -115,6 +115,5 @@ Common placeholders:
 | `{{YOUR_ORG}}` | Your organization or team name |
 | `{{YOUR_REPO}}` | Your repository name or path |
 | `{{OBSIDIAN_VAULT}}` | Absolute path to your Obsidian vault |
-| `{{STORY_GUIDE}}` | Path to your story writing guide or template |
 
 Skills are designed to work independently. Install the ones that fit your workflow and ignore the rest. There is no required set.

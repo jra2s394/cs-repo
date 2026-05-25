@@ -33,7 +33,7 @@ Query your PM tool's API for the active Engineering iteration and its stories. U
 # List iterations/sprints and find the active one for the Engineering team
 # Replace with your PM tool's equivalent endpoint, e.g.:
 curl -s -H "Content-Type: application/json" -H "{{PM_TOOL}}-Token: $PM_API_TOKEN" \
-  "https://api.your-pm-tool.com/api/v3/iterations"
+  "{{PM_TOOL_API_BASE}}/iterations"
 ```
 
 Filter for the iteration where `status == "started"` and the team matches your Engineering team (configure `{{ENGINEERING_TEAM_ID}}`).
@@ -41,13 +41,13 @@ Filter for the iteration where `status == "started"` and the team matches your E
 Then fetch all stories in that iteration:
 ```bash
 curl -s -H "Content-Type: application/json" -H "{{PM_TOOL}}-Token: $PM_API_TOKEN" \
-  "https://api.your-pm-tool.com/api/v3/iterations/{iteration_id}/stories"
+  "{{PM_TOOL_API_BASE}}/iterations/{iteration_id}/stories"
 ```
 
 Also pre-fetch the members list for owner name resolution in Checks 2 and 3:
 ```bash
 curl -s -H "Content-Type: application/json" -H "{{PM_TOOL}}-Token: $PM_API_TOKEN" \
-  "https://api.your-pm-tool.com/api/v3/members"
+  "{{PM_TOOL_API_BASE}}/members"
 ```
 
 **Note on iterations API:** The list endpoint may return many iterations. Filter client-side for `status == "started"`. If the response is paginated, handle pagination. There should be exactly one active Engineering iteration at any time.

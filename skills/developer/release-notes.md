@@ -80,7 +80,7 @@ Extract ticket ID references from commit messages via regex, then fetch story ti
 ```bash
 # Replace with your PM tool's story fetch endpoint
 curl -s -H "Content-Type: application/json" -H "{{PM_TOOL}}-Token: $PM_API_TOKEN" \
-  "https://api.your-pm-tool.com/api/v3/stories/{id}"
+  "{{PM_TOOL_API_BASE}}/stories/{id}"
 ```
 
 **Error handling:** If the PM tool API returns a non-2xx status or `$PM_API_TOKEN` is not set, warn the user and proceed with story titles from the PR body only (without enrichment).
@@ -93,7 +93,7 @@ For each story extracted, fetch additional context from your PM tool's API to en
 
 ```bash
 curl -s -H "Content-Type: application/json" -H "{{PM_TOOL}}-Token: $PM_API_TOKEN" \
-  "https://api.your-pm-tool.com/api/v3/stories/{id}"
+  "{{PM_TOOL_API_BASE}}/stories/{id}"
 ```
 
 Extract:
