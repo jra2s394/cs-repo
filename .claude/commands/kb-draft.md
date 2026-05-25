@@ -1,5 +1,6 @@
 ---
 description: Draft a knowledge base article for Intercom — pulls from conversation history, drafts for review, publishes only after approval
+allowed-tools: Read Write mcp__claude_ai_Intercom__get_conversation mcp__claude_ai_Intercom__search_conversations mcp__claude_ai_Intercom__search_articles mcp__claude_ai_Intercom__get_article mcp__claude_ai_Intercom__create_article mcp__claude_ai_Intercom__update_article
 ---
 
 Read `CLAUDE.md` from this repo before starting.
