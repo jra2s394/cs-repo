@@ -122,8 +122,18 @@ def scan(diff_text: str, patterns):
             if match:
                 snippet = match.group(0)
                 # Truncate so a long match doesn't dump the whole secret to stderr.
-                if len(snippet) > 24:
-                    snippet = snippet[:8] + "…" + snippet[-4:]
+                # We DO log a fragment intentionally — see scan() output handling
+                # in main(). The user needs enough characters to (a) verify a
+                # false-positive (e.g. recognize a test fixture like AKIA00000…
+                # FAKE) and (b) disambiguate when multiple same-type tokens
+                # appear in one diff. CodeQL alert #1 flagged this as
+                # py/clear-text-logging-sensitive-data; the threat model is
+                # the user's own stderr (they already have the full secret
+                # locally), so the disposition is "won't fix — by design"
+                # with the tightest truncation that preserves the UX above
+                # (round-37). Was 8+4 (12 chars exposed); now 4+2 (6 chars).
+                if len(snippet) > 16:
+                    snippet = snippet[:4] + "…" + snippet[-2:]
                 yield label, snippet, current_path or "(unknown file)"
 
 
