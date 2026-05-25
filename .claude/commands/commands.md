@@ -1,5 +1,6 @@
 ---
 description: List every available slash command, pulled live from .claude/commands/*.md frontmatter — no need to grep CLAUDE.md
+allowed-tools: Read Glob
 ---
 
 Read every `.md` file in `.claude/commands/` and present a complete, grouped inventory of available slash commands. Pull the `description:` line from each file's YAML frontmatter — this is the authoritative source, not CLAUDE.md (which can drift).
