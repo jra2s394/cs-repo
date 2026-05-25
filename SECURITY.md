@@ -4,9 +4,7 @@ This repo is a public CS Ops automation suite. It connects to live work accounts
 
 ## Reporting a vulnerability
 
-**Preferred:** open a private vulnerability report via GitHub's "Report a vulnerability" button under the repo's **Security** tab. This keeps the report private to the maintainer until a fix is ready.
-
-**Alternative:** email [YOUR_EMAIL] with subject `[SECURITY] cs-repo: <short summary>`. Please include:
+Open a private vulnerability report via GitHub's "Report a vulnerability" button under the repo's **Security** tab. This keeps the report private to the maintainer until a fix is ready. Please include:
 - A description of the issue and why you believe it's a security concern
 - Steps to reproduce (if applicable)
 - Affected files or commands

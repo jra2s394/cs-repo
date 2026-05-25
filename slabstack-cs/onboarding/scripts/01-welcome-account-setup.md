@@ -102,9 +102,9 @@ You can click any column header to sort, and use the filter bar at the top to na
 
 If you ever have a question while you're in the app, click the chat bubble in the lower-right corner. That connects you directly to your support team for live help.
 
-`[SHOW: text on screen — success@sysdynetechnologies.com]`
+`[SHOW: text on screen — support@your-company.com]`
 
-You can also reach us by email anytime at **success@sysdynetechnologies.com**. We're here to help.
+You can also reach us by email anytime at **support@your-company.com**. We're here to help.
 
 ---
 

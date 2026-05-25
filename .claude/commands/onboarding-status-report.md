@@ -61,7 +61,7 @@ Assemble all data, then save to `data/outputs/onboarding-status-{customerSlug}-{
     { "label": "Open Items",     "value": "2",       "delta": null }
   ],
   "contactInfo": [
-    { "name": "[YOUR_NAME]", "role": "CSM — Slabstack", "email": "[YOUR_EMAIL]", "phone": "" },
+    { "name": "[Your Name]", "role": "CSM — [Your Company]", "email": "[your-email@company.com]", "phone": "" },
     { "name": "[CONTACT_F]",   "role": "Project Lead",    "email": "contact@customer.com",                "phone": "555-1234" }
   ],
   "timeline": {

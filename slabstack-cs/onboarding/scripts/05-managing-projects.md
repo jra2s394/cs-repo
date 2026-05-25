@@ -138,7 +138,7 @@ Use the filters to narrow by status, location, date, or customer. Sort by any co
 
 That wraps up the Slabstack onboarding series. You've got everything you need to hit the ground running — your account is configured, you can build and send quotes, log activities, and manage projects start to finish.
 
-If you ever need help, click the chat bubble in the lower-right corner, or reach us at **success@sysdynetechnologies.com**.
+If you ever need help, click the chat bubble in the lower-right corner, or reach us at **support@your-company.com**.
 
 Welcome to Slabstack. Let's get to work.
 
