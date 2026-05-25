@@ -497,7 +497,7 @@ Type `/review-code`. Claude will:
 3. Work through a fixed 23-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
 
-This gives you the same check every time, not a different result each session. If everything passes, you'll see "572 passed, 0 failed" and a full green table.
+This gives you the same check every time, not a different result each session. If everything passes, you'll see "571 passed, 0 failed" and a full green table.
 
 > Use `/review-code` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
 

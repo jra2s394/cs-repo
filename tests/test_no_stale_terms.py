@@ -22,8 +22,9 @@ FORBIDDEN = [
     (
         "dotclaude",
         "**/*.md",
-        # Allowed exceptions: none — fully scrubbed in PR #82 (round-15).
-        set(),
+        # Allowed exceptions: RELEASE_NOTES.md (historical changelog
+        # naturally references the rename when summarizing round-15).
+        {"RELEASE_NOTES.md"},
         "Old working name. Repo is cs-repo. Scrubbed in PR #65 (install.sh) "
         "and PR #82 (examples/patterns).",
     ),
