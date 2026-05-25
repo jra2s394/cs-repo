@@ -77,6 +77,33 @@
         ]
       },
       {
+        "matcher": "mcp__claude_ai_Asana__create_project",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__claude_ai_Asana__create_project_confirm",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__claude_ai_Asana__create_project_confirm_populate",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/draft-before-create.py"
+          }
+        ]
+      },
+      {
         "matcher": "mcp__claude_ai_Slack__slack_send_message",
         "hooks": [
           {

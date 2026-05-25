@@ -74,7 +74,7 @@ Delete operations are gated by `permissions.deny` (Section 9b), not by `draft-be
 - [ ] Does `draft-before-create.py` have matchers for all Shortcut non-delete writes: `stories-create`, `stories-update`, `stories-add-subtask`, `stories-create-subtask`, `stories-remove-subtask`, `stories-upload-file`, `epics-create`, `epics-update`, `iterations-create`, `iterations-update`, `documents-create`, `documents-update`?
 - [ ] Does `draft-before-create.py` have matchers for Slack write operations: `slack_send_message`, `slack_send_message_draft`, `slack_schedule_message`?
 - [ ] Does `draft-before-create.py` have matchers for Intercom write operations: `create_article`, `update_article`?
-- [ ] Does `draft-before-create.py` have matchers for Asana non-delete writes: `create_tasks`, `update_tasks`?
+- [ ] Does `draft-before-create.py` have matchers for Asana non-delete writes: `create_tasks`, `update_tasks`, `create_project`, `create_project_confirm`, `create_project_confirm_populate`?
 - [ ] No dead matchers — every entry in `hooks.PreToolUse` should NOT also appear in `permissions.deny` (a denied call never reaches the matcher).
 
 ## Section 9 — General code quality
