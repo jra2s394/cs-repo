@@ -37,7 +37,7 @@ A few questions to personalize your setup:
 1. Your full name:
 2. Your job title (e.g., "Customer Success Manager"):
 3. Your company name (e.g., "Slabstack"):
-4. Your time zone (e.g., "Mountain Time"):
+4. Your time zone — auto-detect first by running `readlink /etc/localtime 2>/dev/null | sed 's|.*/zoneinfo/||'`. If that returns a valid IANA name (e.g. `America/Denver`, `America/Los_Angeles`, `Europe/London`), say: "I detected `<X>` from your system — is that right, or do you want a different one? (Answer with an IANA name like `America/Denver` or `Europe/London` — see <https://en.wikipedia.org/wiki/List_of_tz_database_time_zones> if you're unsure.)" If detection fails (empty output, file missing), ask directly: "What's your time zone? Use the IANA name like `America/Denver`." Always store the IANA name (not the display name like 'Mountain Time') so code that parses it can use `zoneinfo.ZoneInfo(value)` directly.
 5. Your city and state (e.g., "Denver, Colorado"):
 6. Your work email:
 7. One sentence describing your role (e.g., "Managing onboarding and support for concrete producers across North America."):
@@ -97,7 +97,7 @@ Here's what I'll write to ~/.claude/CLAUDE.md. Confirm to proceed:
 Name: [their name]
 Title: [their title]
 Company: [their company]
-Time zone: [their time zone]
+Time zone: [their IANA time zone, e.g. America/Denver]
 Location: [their location]
 Email: [their email]
 Role: [their role description]
@@ -118,7 +118,7 @@ Once confirmed:
    - `[Your Name]` → their name
    - `[Your Title]` → their title
    - `[Your Company]` → their company
-   - `[Your time zone]` → their time zone
+   - `[Your time zone]` → their IANA time zone (e.g. `America/Denver` — keep the IANA form so any future code that does `zoneinfo.ZoneInfo(value)` works directly)
    - `[Your Location]` → their location
    - `[your-email@company.com]` → their email
    - The role description placeholder → their description

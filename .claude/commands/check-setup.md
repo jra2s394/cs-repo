@@ -17,11 +17,12 @@ Look for:
 - [ ] Contains a real name (not the placeholder `Your Full Name` / `[Your Name]`)
 - [ ] Contains a real email (not `your@company.com`)
 - [ ] Contains a real Intercom Admin ID (not `paste-your-number-from-step-3-here` or `YOUR_INTERCOM_ID` — should be a string of digits)
+- [ ] Contains a `Time zone:` line with a valid IANA name (e.g. `America/Denver`, `Europe/London`). Validate by running `python3 -c "from zoneinfo import ZoneInfo; ZoneInfo('<value>')"` — exit 0 = valid, any error = invalid. Reject display-name forms like "Mountain Time" or "PST" since per-command code uses `ZoneInfo()` directly.
 
 Report:
-- 🟢 if all 4 are real values
-- 🟡 if any are still placeholder values
-- 🔴 if the file is missing entirely
+- 🟢 if all 5 are real values AND the IANA TZ parses cleanly
+- 🟡 if any are still placeholder values, OR the `Time zone:` line is missing (fixable by re-running `/setup`)
+- 🔴 if the file is missing entirely, OR the `Time zone:` value is set but doesn't parse as a valid IANA name (will silently break every command that derives "now in user-local time")
 
 ---
 
