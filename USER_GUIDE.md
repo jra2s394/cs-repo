@@ -492,7 +492,7 @@ Read-only — no MCP calls, no file edits.
 Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
 
 Type `/review-code`. Claude will:
-1. Run all 684 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
+1. Run all 728 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
 2. Run both linters (`make lint` — ruff for Python, biome for JS) to confirm no undefined names or unused imports
 3. Work through a fixed 23-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
@@ -524,13 +524,13 @@ Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seco
 Before opening a PR for any code change, run the test suite AND the linters:
 
 ```
-make test    # 684 automated tests (527 Python + 157 JavaScript)
+make test    # 728 automated tests (571 Python + 157 JavaScript)
 make lint    # ruff (Python) + biome (JS) — catches undefined names, unused imports
 ```
 
 The tests cover every hook, every lib helper (csv-export, report-theme, data-loader, copy-to-desktop, report_charts), every report's CLI contract, the publish pipeline, AND every command file's frontmatter (so adding a new slash command without a `description:` fails CI). The linters catch the runtime-bug class that tests can miss — e.g., a missing `require()` in a code path tests don't exercise.
 
-If all pass you'll see `527 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
+If all pass you'll see `571 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
 
 GitHub Actions runs all of `make test` + `make lint` automatically on every pull request. A PR can't sneak a broken change onto `main` without CI catching it first.
 

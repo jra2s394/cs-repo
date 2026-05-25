@@ -1,5 +1,6 @@
 ---
 description: Generate a CSM handoff brief when a customer transitions to a new owner — full context dump from all systems.
+argument-hint: <customer name>
 ---
 
 Read `CLAUDE.md` from this repo before starting.

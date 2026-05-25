@@ -17,6 +17,15 @@ placeholders, no trailing ellipsis). This is enforced by `tests/test_commands_fr
 both `/commands` and CLAUDE.md tables read from this field. After adding a new command, also
 register it in CLAUDE.md's relevant command table and in `USER_GUIDE.md`'s quick-reference table.
 
+Optional frontmatter fields (see <https://code.claude.com/docs/en/skills> for the full list):
+
+- `argument-hint: <customer> [quarter]` — shown in autocomplete to indicate expected args. Use `<...>` for required, `[...]` for optional. The frontmatter test validates the bracket shape when this field is present.
+- `disable-model-invocation: true` — only the user can invoke (Claude can't auto-trigger). Useful for commands with side effects.
+- `allowed-tools: Bash(git status *) Read` — pre-approve specific tools when the command is active.
+- `model: opus` / `effort: high` — per-command model or effort override.
+
+Note: `.claude/commands/*.md` files keep working, but Anthropic's docs now recommend the equivalent `.claude/skills/<name>/SKILL.md` shape for new work — it adds supporting files, dynamic context injection, and auto-loading. Migration is not required.
+
 **Patterns** follow the Problem/Pattern/Implementation/Example structure. Must be based on real
 usage, not theoretical.
 
