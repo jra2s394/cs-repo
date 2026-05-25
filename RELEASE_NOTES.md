@@ -322,10 +322,10 @@ Net: 124 files changed, +17,540. The bootstrap.
 | Slash commands | 18 | 44 | 44 |
 | Hooks | 10 | 11 (added `secret-scan.py`) | 11 |
 | Report generators | 9 | 17 | 17 |
-| Python tests | 0 | 443 | 525 |
-| JS tests | 0 | 129 | 155 |
+| Python tests | 0 | 443 | 571 |
+| JS tests | 0 | 129 | 157 |
 | Linters | 0 | 2 (ruff + biome) | 2 (ruff + biome) |
-| CI checks | 0 | 4 (pytest + ruff + biome + JS) | 4 (pytest + ruff + biome + JS) |
+| CI checks | 0 | 4 (pytest + ruff + biome + JS) | 5 (pytest + ruff + biome + JS + pre-commit) |
 | `/review-code` sections | n/a | 22 | 23 |
 
 The "Today" column drifts with the repo; if it falls behind reality, refresh it from `make test` and `grep -c "^## Section" .claude/commands/review-code.md`.

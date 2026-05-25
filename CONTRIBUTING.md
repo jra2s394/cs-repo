@@ -53,7 +53,8 @@ brew install python@3.12                 # macOS; or apt/dnf install python3.12
 # One-time per clone:
 python3.12 -m venv .venv                 # creates ./.venv/ (already .gitignored)
 .venv/bin/pip install --upgrade pip
-.venv/bin/pip install -r requirements-dev.txt
+.venv/bin/pip install -r requirements-dev.txt pre-commit
+.venv/bin/pre-commit install             # wires the hooks at .pre-commit-config.yaml into git commit
 npm install                              # docx (runtime) + biome (lint)
 
 # Every session: activate first
@@ -63,6 +64,8 @@ source .venv/bin/activate
 make test                                # works once activated
 .venv/bin/python -m pytest               # works without activation
 ```
+
+The `pre-commit install` step is important — without it the `.pre-commit-config.yaml` rules only fire if you manually run `pre-commit run --all-files`. With it, they fire automatically on every `git commit` and block the commit on failure. CI runs the same hooks on every push as a safety net, so an unconfigured local doesn't reach `main` broken.
 
 If you already have Python ≥ 3.10 on `$PATH`, the venv is optional — `make install-dev` + `make test` directly against your system Python works too. CI uses the system-Python path (no venv).
 

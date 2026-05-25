@@ -35,7 +35,7 @@ jobs:
           cache: npm
 
       - name: Install Python dependencies
-        run: pip install -r requirements-dev.txt
+        run: pip install -r requirements-dev.txt pre-commit
 
       - name: Install Node dependencies
         run: npm ci
@@ -56,6 +56,14 @@ jobs:
 
       - name: Lint JS (biome)
         run: make lint-js
+
+      # Pre-commit hooks: trailing whitespace, end-of-file fixer, json/yaml
+      # validity, large-file guard, merge-conflict markers, detect-private-key.
+      # Catches what ruff/biome alone don't. Locally these fire on `git commit`
+      # once a contributor runs `pre-commit install`; CI enforces the same set
+      # regardless of whether they've done that step.
+      - name: Pre-commit hooks
+        run: pre-commit run --all-files
 
       - name: Run JS tests
         run: make test-js
