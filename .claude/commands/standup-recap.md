@@ -69,7 +69,7 @@ Build a single combined view:
 ## Step 4 — Dedup rules
 
 - Normalize whitespace and emoji before comparing lines
-- If two bullets describe the same fact (e.g., "[TEAMMATE_B] Day 1 agenda sent" and "Sent Kurt Day 1 agenda"), keep the earliest mention
+- If two bullets describe the same fact (e.g., "[Teammate] Day 1 agenda sent" and "Sent [Teammate] Day 1 agenda"), keep the earliest mention
 - A "Today" bullet that later appears as a "Yesterday" bullet means the work was attempted — keep the "Yesterday" version (it's the more authoritative status)
 - A "Today" bullet with no matching "Yesterday" follow-up is unverified — flag it 🟡 and call it out
 

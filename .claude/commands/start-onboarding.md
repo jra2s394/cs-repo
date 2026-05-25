@@ -18,12 +18,12 @@ Ask for (or confirm from context):
 
 | Field | Example |
 |---|---|
-| Customer name | [CUSTOMER_F] |
-| Customer slug (short, no spaces) | [CUSTOMER_F] |
+| Customer name | Acme Materials |
+| Customer slug (short, no spaces) | Acme |
 | CARR | $48,000 |
-| CSM owner | [YOUR_NAME] |
+| CSM owner | [Your Name] |
 | Target go-live date | August 1, 2026 |
-| Key contacts (name, role, email, phone) | [CONTACT_E] — VP Ops — contact@customer.com — 555-1234 |
+| Key contacts (name, role, email, phone) | [Contact Name] — VP Ops — contact@acme.com — 555-1234 |
 | Brief project description (1–2 sentences) | Initial onboarding including dispatch integration and mix design import. Standard timeline. |
 
 ---
@@ -42,7 +42,7 @@ Present all four items in a single block before taking any action. Wait for expl
 **Google Drive Folder**
 - Folder name: `{Customer Name}`
 - Location: Customer Success / Onboarding
-  (https://drive.google.com/drive/u/0/folders/[DRIVE_PARENT_FOLDER_ID])
+  (`[DRIVE_PARENT_FOLDER_URL]` — set this in your private CLAUDE.md)
 
 **Shortcut CSEng Story**
 - Title: `CSEng: {Customer Name} Onboarding Setup`
@@ -76,11 +76,11 @@ Present all four items in a single block before taking any action. Wait for expl
 Call `mcp__claude_ai_Google_Drive__create_file` with:
 - `title`: `{Customer Name}`
 - `mimeType`: `application/vnd.google-apps.folder`
-- `parentFolderId`: `[DRIVE_PARENT_FOLDER_ID]`
+- `parentFolderId`: `[DRIVE_PARENT_FOLDER_ID]` (from your private CLAUDE.md)
 
 Note the new folder URL.
 
-**If Drive MCP does not support folder creation** (returns an error or unsupported operation): Tell the user: "Drive folder creation is not supported by the current MCP — please create the folder manually here: https://drive.google.com/drive/u/0/folders/[DRIVE_PARENT_FOLDER_ID] — name it `{Customer Name}`."
+**If Drive MCP does not support folder creation** (returns an error or unsupported operation): Tell the user: "Drive folder creation is not supported by the current MCP — please create the folder manually in your configured parent folder (`[DRIVE_PARENT_FOLDER_URL]`) — name it `{Customer Name}`."
 
 #### c. Create Shortcut CSEng story
 
