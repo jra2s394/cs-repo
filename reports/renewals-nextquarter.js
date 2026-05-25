@@ -20,18 +20,15 @@ const outFile = path.join(outDir, `Renewals_NextQuarter_${yr}-${ql}.docx`);
 const children = [];
 
 // Cover
-children.push(T.titleBanner({
-  eyebrow: "CUSTOMER SUCCESS INTELLIGENCE",
-  title:   `Renewal Pipeline — ${d.period}`,
-  subtitle: [
-    { text: d.dateRange + "  ", color: "C7D0DD" },
-    { text: "· " + d.generated, color: "8FB8BA", bold: true },
-  ],
+children.push(...T.coverBlock({
+  eyebrow:        "CUSTOMER SUCCESS INTELLIGENCE",
+  title:          `Renewal Pipeline — ${d.period}`,
+  dateRange:      d.dateRange,
+  generated:      d.generated,
+  preparedBy:     d.preparedBy,
+  kpis:           d.kpis,
+  classification: "CONFIDENTIAL — FINANCE USE",
 }));
-children.push(T.metaStrip(`Prepared ${d.generated} · ${d.preparedBy}`, "CONFIDENTIAL — FINANCE USE"));
-children.push(T.gap(320));
-children.push(T.kpiStrip(d.kpis));
-children.push(T.gap(100));
 
 // Quarter Summary
 children.push(...T.sectionHead(`${d.period} Renewal Summary`));

@@ -21,18 +21,14 @@ const outFile = path.join(outDir, `QBR_${d.customerSlug}_${quarterSlug}_${slug}.
 const children = [];
 
 // Cover
-children.push(T.titleBanner({
-  eyebrow: "CUSTOMER SUCCESS  ·  QUARTERLY BUSINESS REVIEW",
-  title:   `${d.customer} — ${d.quarter}`,
-  subtitle: [
-    { text: (d.dateRange || d.quarter) + "  ", color: "C7D0DD" },
-    { text: "· " + d.generated, color: "8FB8BA", bold: true },
-  ],
+children.push(...T.coverBlock({
+  eyebrow:    "CUSTOMER SUCCESS  ·  QUARTERLY BUSINESS REVIEW",
+  title:      `${d.customer} — ${d.quarter}`,
+  dateRange:  d.dateRange || d.quarter,
+  generated:  d.generated,
+  preparedBy: d.preparedBy,
+  kpis:       d.kpis,
 }));
-children.push(T.metaStrip(`Prepared ${d.generated} · ${d.preparedBy}`, "CONFIDENTIAL"));
-children.push(T.gap(320));
-children.push(T.kpiStrip(d.kpis));
-children.push(T.gap(100));
 
 // Meeting Details
 children.push(...T.sectionHead("Meeting Details"));

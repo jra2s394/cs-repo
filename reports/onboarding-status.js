@@ -33,18 +33,15 @@ const dateRange = d.dateRange || `${tl.startDate || "—"} – ${tl.targetGoLive
 const children = [];
 
 // Cover
-children.push(T.titleBanner({
-  eyebrow: "CUSTOMER SUCCESS  ·  ONBOARDING STATUS",
-  title:   `Onboarding Status — ${d.customer}`,
-  subtitle: [
-    { text: dateRange + "  ", color: "C7D0DD" },
-    { text: "· " + d.generated, color: "8FB8BA", bold: true },
-  ],
+children.push(...T.coverBlock({
+  eyebrow:        "CUSTOMER SUCCESS  ·  ONBOARDING STATUS",
+  title:          `Onboarding Status — ${d.customer}`,
+  dateRange,
+  generated:      d.generated,
+  preparedBy:     d.preparedBy,
+  kpis:           d.kpis,
+  classification: "CUSTOMER SHARED",
 }));
-children.push(T.metaStrip(`Prepared ${d.generated} · ${d.preparedBy}`, "CUSTOMER SHARED"));
-children.push(T.gap(320));
-children.push(T.kpiStrip(d.kpis));
-children.push(T.gap(100));
 
 // Contact Directory
 // columns: Name | Role | Email | Phone
