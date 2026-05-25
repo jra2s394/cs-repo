@@ -1,12 +1,12 @@
 ---
 name: setup
-description: Interactive setup wizard. Fills all placeholders, configures hooks, removes irrelevant sections, and personalizes your dotclaude installation. Run this after install.sh.
+description: Interactive setup wizard. Fills all placeholders, configures hooks, removes irrelevant sections, and personalizes your cs-repo installation. Run this after install.sh.
 ---
 
 ## Step 0: Prerequisites Check
 
 Check if `~/.claude/CLAUDE.md` exists. If it does not, tell the user:
-"Run `./install.sh all` from the dotclaude repo first, then run `/setup` again."
+"Run `./install.sh all` from the cs-repo first, then run `/setup` again."
 Stop immediately.
 
 If the file exists, scan for remaining `{{` tokens across `~/.claude/CLAUDE.md` and every file matching `~/.claude/skills/**/*.md`. Count the total.
@@ -20,7 +20,7 @@ If zero `{{` tokens are found, say: "Looks like everything is already configured
 Send this message exactly (do not split into multiple messages):
 
 ```
-Let's personalize your dotclaude setup. I need a few details:
+Let's personalize your cs-repo setup. I need a few details:
 
 1. GitHub username:
 2. Organization or team name (e.g., "Acme Corp"):
@@ -138,8 +138,9 @@ Use the Edit tool with `replace_all=true` for each placeholder. Process every fi
 | `{{YOUR_GITHUB_USERNAME}}` | `~/.claude/CLAUDE.md` |
 | `{{YOUR_TEAM}}` | `~/.claude/CLAUDE.md`, all `~/.claude/skills/**/*.md` |
 | `{{PM_TOOL}}` | `~/.claude/CLAUDE.md`, `skills/developer/triage.md`, `skills/developer/monitors.md`, `skills/developer/release-notes.md`, `skills/product-manager/sprint-prep.md`, `skills/product-manager/story.md`, `skills/product-manager/cs-doc.md`, `skills/product-manager/plan-feature.md` |
-| `{{PM_TOOL_API_BASE}}` | `skills/developer/monitors.md`, `skills/product-manager/sprint-prep.md`, `skills/product-manager/cs-doc.md`, `skills/developer/release-notes.md` |
+| `{{PM_TOOL_API_BASE}}` | `skills/developer/monitors.md`, `skills/developer/release-notes.md`, `skills/product-manager/cs-doc.md` |
 | `{{PM_TOOL_AUTH_HEADER}}` | same as `{{PM_TOOL_API_BASE}}` |
+| `{{PRODUCT_REPO}}` | `skills/product-manager/cs-doc.md` |
 | `{{ENGINEERING_TEAM_ID}}` | `skills/developer/monitors.md`, `skills/product-manager/sprint-prep.md` |
 | `{{NOTE_SYSTEM}}` | `~/.claude/CLAUDE.md` |
 | `{{OBSIDIAN_VAULT}}` | `~/.claude/hooks/session-to-obsidian.py` |
