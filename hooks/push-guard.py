@@ -17,8 +17,8 @@ import os
 import re
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _git import is_git_push, push_targets_protected_branch  # noqa: E402
-from _stdin import parse_or_exit  # noqa: E402
+from _git import is_git_push, push_targets_protected_branch
+from _stdin import parse_or_exit
 
 data = parse_or_exit()
 

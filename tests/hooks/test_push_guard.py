@@ -22,7 +22,7 @@ def allows(command: str) -> bool:
 
 
 def blocks(command: str) -> bool:
-    code, _, stderr = run_hook(HOOK, bash_input(command))
+    code, _, _ = run_hook(HOOK, bash_input(command))
     return code == 2
 
 

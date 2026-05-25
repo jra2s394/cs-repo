@@ -14,7 +14,7 @@ import sys
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from _stdin import parse_or_exit  # noqa: E402
+from _stdin import parse_or_exit
 
 data = parse_or_exit()
 

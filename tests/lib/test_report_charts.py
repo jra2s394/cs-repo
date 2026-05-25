@@ -179,7 +179,7 @@ class TestStackedBarH:
 # ---------------------------------------------------------------------------
 
 class TestPalette:
-    EXPECTED_KEYS = ["navy", "teal", "teal_lt", "gray_lt", "gray_tx", "green", "amber"]
+    EXPECTED_KEYS = ("navy", "teal", "teal_lt", "gray_lt", "gray_tx", "green", "amber")
 
     def test_all_palette_keys_present(self):
         for key in self.EXPECTED_KEYS:

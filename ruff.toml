@@ -1,7 +1,10 @@
-# ruff config — minimal, focused on catching real bugs (not style noise).
+# ruff config — focused on catching real bugs (not style noise).
 # Run: `make lint` (or `python3 -m ruff check` directly).
 
-target-version = "py39"
+# Match the project's declared floor (pyproject.toml `requires-python = ">=3.10"`,
+# CI matrix `["3.10", "3.11", "3.12"]`). py39 was stale; ruff was linting as if
+# 3.10+ syntax wasn't available even though the project requires it.
+target-version = "py310"
 
 # Only check these dirs (skip node_modules, .pytest_cache, etc.)
 include = ["hooks/**/*.py", "lib/**/*.py", "tests/**/*.py"]
@@ -12,7 +15,11 @@ include = ["hooks/**/*.py", "lib/**/*.py", "tests/**/*.py"]
 #   F   — pyflakes (undefined names, unused imports, etc.)
 #   B   — flake8-bugbear (likely bugs: mutable defaults, bare except, etc.)
 #   UP  — pyupgrade (catch deprecated syntax)
-select = ["E", "F", "B", "UP"]
+#   SIM — flake8-simplify (catches redundant patterns: try/except/pass, etc.)
+#   C4  — flake8-comprehensions (unnecessary list/set/dict comprehensions)
+#   PIE — flake8-pie (misc anti-patterns: unnecessary pass, dict reordering)
+#   RUF — ruff-specific (RUF100 catches unused-noqa comments, etc.)
+select = ["E", "F", "B", "UP", "SIM", "C4", "PIE", "RUF"]
 
 # Style noise we don't care about
 ignore = [

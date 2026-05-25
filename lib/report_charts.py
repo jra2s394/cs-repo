@@ -15,7 +15,7 @@ Requires:  pip install matplotlib pillow
 import sys
 import matplotlib
 matplotlib.use("Agg")
-import matplotlib.pyplot as plt  # noqa: E402
+import matplotlib.pyplot as plt
 
 # Brand palette — keep in sync with COLORS in report-theme.js.
 # (Charts only currently use navy, teal, gray_tx, and per-segment colours
@@ -68,7 +68,7 @@ def bar(labels, values, out_path, colors=None, value_suffix="",
     _apply_rc()
     if colors is None:
         colors = [PALETTE["teal"]] * len(values)
-    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    _fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     bars = ax.bar(labels, values, color=colors, width=0.62, zorder=3)
 
     if values:
@@ -79,7 +79,7 @@ def bar(labels, values, out_path, colors=None, value_suffix="",
     else:
         span, y_min, y_max = 1, 0, 1.22
 
-    for b, v in zip(bars, values):
+    for b, v in zip(bars, values, strict=True):
         if v >= 0:
             ax.text(b.get_x() + b.get_width() / 2, v + span * 0.03,
                     f"{v}{value_suffix}", ha="center", va="bottom",
@@ -113,7 +113,7 @@ def stacked_bar_h(segments, out_path, figsize=(7.4, 1.15), dpi=200):
     segments : list[(label, value, color)]   — values should sum to 100
     """
     _apply_rc()
-    fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
+    _fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     left = 0
     for label, val, color in segments:
         ax.barh(0, val, left=left, color=color, height=0.62, zorder=3)
