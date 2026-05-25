@@ -9,10 +9,13 @@
 #     1. Rewrite EVERY commit's author/committer email to a single chosen
 #        address (drops the link between any historical work / personal
 #        identities visible in `git log --pretty=fuller`).
-#     2. Replace customer / contact / competitor / identity strings — defined
-#        in REPL_FILE below — in BOTH commit messages AND historical file
-#        contents, so the leaks are gone from `git log` (messages), from
-#        `git log -p` (patches), and from `git show <sha>:<path>` (blobs).
+#     2. Replace customer / contact / competitor / identity strings —
+#        defined in scripts/rewrite-rules.local.txt (gitignored) — in BOTH
+#        commit messages AND historical file contents, so the leaks are
+#        gone from `git log` (messages), `git log -p` (patches), and
+#        `git show <sha>:<path>` (blobs). The rules file lives OUTSIDE
+#        the tree filter-repo processes, so the script survives repeated
+#        runs without its rules self-substituting into no-ops.
 #
 # Read scripts/REWRITE-HISTORY.md before running. This action is destructive:
 # it rewrites every commit SHA, breaks every existing clone, and forces every
@@ -97,87 +100,65 @@ if [[ "$CONFIRM" != "REWRITE" ]]; then
 fi
 
 # ----------------------------------------------------------------------------
-# Build the replacements file.
+# Load the replacement rules from an EXTERNAL file.
 #
-# Format (one rule per line, no comment syntax):
+# The previous version of this script kept the rules in an in-script
+# heredoc — which broke the second invocation, because filter-repo's
+# --replace-text applies the rules to every blob INCLUDING this script.
+# After one run, every `Customer==>[CUSTOMER_A]` rule became
+# `[CUSTOMER_A]==>[CUSTOMER_A]` (a no-op), so a follow-up rewrite did
+# nothing.
+#
+# Fix: read rules from `scripts/rewrite-rules.local.txt`, which is in
+# .gitignore. The local file never enters the tree filter-repo sees,
+# so the rules survive any number of runs.
+#
+# Setup:
+#   cp scripts/rewrite-rules.example.txt scripts/rewrite-rules.local.txt
+#   # then edit scripts/rewrite-rules.local.txt with your real strings
+#
+# Format (one rule per line, ASCII `==>` separator):
 #   <literal-string>==><replacement>
+# Comments (`#`) and blank lines are stripped before passing to
+# filter-repo, which has no comment syntax of its own.
 #
-# git-filter-repo applies these to both commit messages AND file blobs.
-# Lines starting with `#` are NOT comments — filter-repo treats them as
-# literal patterns and (without `==>`) would replace them with ***REMOVED***.
-# So the heredoc below contains only rules + blank separators; all
-# explanation lives in the shell comments above each block.
-#
-# Order matters: filter-repo applies rules top-to-bottom against each blob
-# and commit message. Put the most specific (longest) match before any
-# shorter substring that would also match — otherwise the shorter rule eats
-# the prefix and the longer rule never fires.
+# Order matters: filter-repo applies rules top-to-bottom against each
+# blob and commit message. Put longest / most-specific FIRST.
 # ----------------------------------------------------------------------------
+
+LOCAL_RULES="$REPO_ROOT/scripts/rewrite-rules.local.txt"
+EXAMPLE_RULES="$REPO_ROOT/scripts/rewrite-rules.example.txt"
+
+if [[ ! -f "$LOCAL_RULES" ]]; then
+  cat >&2 <<EOF
+ERROR: substitution rules file not found:
+
+  $LOCAL_RULES
+
+This file is intentionally NOT in git so it survives the rewrite. Copy
+the template and edit in your real strings:
+
+  cp $EXAMPLE_RULES $LOCAL_RULES
+  \$EDITOR $LOCAL_RULES
+
+Then re-run.
+EOF
+  exit 1
+fi
 
 REPL_FILE="$(mktemp -t cs-repo-rewrite-replacements.XXXXXX)"
 trap 'rm -f "$REPL_FILE"' EXIT
 
-# Block 1: protonmail typo. The full-email rule runs first so the substring
-# rule below doesn't half-rewrite it. Catches PR #23's commit body and the
-# PR #39 merge commit's `Co-authored-by:` trailer.
-#
-# Block 2: absolute filesystem paths. Longest-first so the repo-root rule
-# fires before the home-dir catch-all. Catches `[HOME]/...` and
-# `[HOME]/...` (the latter still lives in test_session_to_obsidian.py
-# history before this PR cleans it).
-#
-# Block 3: customers. Case + possessive variants matter because filter-repo
-# matches literal substrings, case-sensitive. PR #30 (94101b1) has
-# "[CUSTOMER_A] deep-dive", "[CUSTOMER_A]'s", and "[customer_a].com" — each needs its
-# own rule.
-#
-# Block 4-7: competitors, contacts, internal team names, identity, external
-# IDs. The team-name rules (`[TEAM_OTHER]`, `[TEAM_PRIMARY]`) are new in
-# round 2 — both appear in PR #30.
+# Strip `#` comments and blank lines (filter-repo would treat `#` as
+# literal text). `==>` separator stays untouched.
+sed -E '/^[[:space:]]*#/d; /^[[:space:]]*$/d' "$LOCAL_RULES" > "$REPL_FILE"
 
-cat > "$REPL_FILE" <<'EOF'
-tripp.arnold@protonmail.com==>tripp.arnold@protonmail.com
-protonmail==>protonmail
+if [[ ! -s "$REPL_FILE" ]]; then
+  echo "ERROR: $LOCAL_RULES contains no rules after stripping comments." >&2
+  exit 1
+fi
 
-[REPO_ROOT]==>[REPO_ROOT]
-[HOME]/==>[HOME]/
-[HOME]/==>[HOME]/
-
-[CUSTOMER_A]'s==>[CUSTOMER_A]'s
-[CUSTOMER_A]==>[CUSTOMER_A]
-[customer_a].com==>[customer_a].com
-[customer_a]==>[customer_a]
-[CUSTOMER_B]==>[CUSTOMER_B]
-[CUSTOMER_C]==>[CUSTOMER_C]
-[CUSTOMER_D]==>[CUSTOMER_D]
-[CUSTOMER_D]==>[CUSTOMER_D]
-[CUSTOMER_D]==>[CUSTOMER_D]
-[CUSTOMER_E]==>[CUSTOMER_E]
-[CUSTOMER_F]==>[CUSTOMER_F]
-[CUSTOMER_F]==>[CUSTOMER_F]
-[CUSTOMER_G]==>[CUSTOMER_G]
-
-[COMPETITOR_X]==>[COMPETITOR_X]
-
-[CONTACT_A]==>[CONTACT_A]
-[CONTACT_B]==>[CONTACT_B]
-[CONTACT_B]==>[CONTACT_B]
-[CONTACT_C]==>[CONTACT_C]
-[CONTACT_D]==>[CONTACT_D]
-[CONTACT_E]==>[CONTACT_E]
-[CONTACT_F]==>[CONTACT_F]
-
-[TEAM_OTHER]==>[TEAM_OTHER]
-[TEAM_PRIMARY]==>[TEAM_PRIMARY]
-
-[YOUR_NAME]==>[YOUR_NAME]
-[YOUR_EMAIL]==>[YOUR_EMAIL]
-contact@customer.com==>contact@customer.com
-contact@customer.com==>contact@customer.com
-
-[ASANA_TEAM_GID]==>[ASANA_TEAM_GID]
-[DRIVE_PARENT_FOLDER_ID]==>[DRIVE_PARENT_FOLDER_ID]
-EOF
+echo "Loaded $(wc -l < "$REPL_FILE" | tr -d ' ') substitution rules from $LOCAL_RULES"
 
 # ----------------------------------------------------------------------------
 # Build the mailmap.
