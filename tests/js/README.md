@@ -64,7 +64,7 @@ If the suite has async tests, end with `setTimeout(() => { ... }, 500)` instead 
 | File | Tests | Covers |
 |---|---|---|
 | `test_csv_export.js` | 32 | `lib/csv-export.js` — escapeCsv, multi-section layout, CSV injection defense, non-fatal write errors |
-| `test_report_theme.js` | 22 | `lib/report-theme.js` — kpiStrip width math (n=1–12), delta=0 regression, buildDocument smoke, publishReport contract |
+| `test_report_theme.js` | 23 | `lib/report-theme.js` — kpiStrip width math (n=1–12), tblGrid-vs-cells regression, delta=0 regression, buildDocument smoke, publishReport contract |
 | `test_data_loader.js` | 23 | `lib/data-loader.js` — loadJson, requireFields, ensureOutDir, dateSlug edge cases |
 | `test_copy_to_desktop.js` | 5 | `lib/copy-to-desktop.js` — silent no-op when Desktop missing, overwrite behavior, never throws |
 | `test_reports_smoke.js` | 68 | `reports/*.js` — 4 checks × 17 reports (no-arg, bad path, missing fields, valid fixture → .docx produced) |

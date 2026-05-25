@@ -131,6 +131,26 @@ test("kpiStrip with delta=null renders empty string (no throw)", () => {
   return Packer.toBuffer(doc).then(buf => assert.ok(buf.length > 0));
 });
 
+test("kpiStrip tblGrid length matches cell count (2n - 1)", () => {
+  // Regression: kpiStrip used to push extra entries onto the widths array
+  // inside the cards.forEach loop, leaving columnWidths longer than the row's
+  // cell count. docx-js's tblGrid would then have N extra entries, mismatching
+  // the actual cells and producing an inconsistent table grid.
+  for (let n = 1; n <= 6; n++) {
+    const cards = Array.from({ length: n }, (_, i) => ({ value: String(i), label: "L", delta: "" }));
+    const tbl = T.kpiStrip(cards);
+    const expected = 2 * n - 1;  // n cards + (n-1) gaps
+    const tblGrid = tbl.root.find(el => el.rootKey === "w:tblGrid");
+    assert.ok(tblGrid, `n=${n}: tblGrid not found in Table.root`);
+    assert.strictEqual(tblGrid.root.length, expected,
+      `n=${n}: tblGrid has ${tblGrid.root.length} cols, expected ${expected}`);
+    const row = tbl.root.find(el => el.rootKey === "w:tr");
+    const cells = row.root.filter(el => el.rootKey === "w:tc");
+    assert.strictEqual(cells.length, expected,
+      `n=${n}: row has ${cells.length} cells, expected ${expected}`);
+  }
+});
+
 // ── buildDocument smoke test ────────────────────────────────────────────────
 console.log("\nbuildDocument smoke");
 
