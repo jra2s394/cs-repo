@@ -187,6 +187,35 @@ test("returns 'unknown-date' on input with no digits", () => {
   assert.strictEqual(dateSlug("not-a-date"), "unknown-date");
 });
 
+// ── natural-language dates (the path that previously dropped the month) ────
+
+test("parses 'Month DD, YYYY' to YYYY-MM-DD", () => {
+  // Regression: previously stripped to "25-2026", losing the month entirely
+  // because "May" → "" under the digit-only strip.
+  const { dateSlug } = require("../../lib/data-loader");
+  assert.strictEqual(dateSlug("May 25, 2026"), "2026-05-25");
+});
+
+test("parses 'Weekday, Month DD, YYYY' to YYYY-MM-DD", () => {
+  const { dateSlug } = require("../../lib/data-loader");
+  assert.strictEqual(dateSlug("Saturday, May 23, 2026"), "2026-05-23");
+});
+
+test("preserves ISO timestamp digit-strip behaviour (lone 'T' isn't a word)", () => {
+  // The {2,}-letter check skips ISO-style strings whose only alpha char is
+  // the date/time separator T. They flow through the digit-strip path,
+  // preserving full timestamp precision in the filename.
+  const { dateSlug } = require("../../lib/data-loader");
+  assert.strictEqual(dateSlug("2026-05-23T14:32:00"), "2026-05-23-14-32-00");
+});
+
+test("falls back to digit-strip when natural-language parse fails", () => {
+  // "Q2 2026" has only a single letter (Q) — under the 2+ threshold, so it
+  // skips Date.parse and digit-strips to "2-2026".
+  const { dateSlug } = require("../../lib/data-loader");
+  assert.strictEqual(dateSlug("Q2 2026"), "2-2026");
+});
+
 // ── summary ────────────────────────────────────────────────────────────────
 console.log("");
 if (failed > 0) {
