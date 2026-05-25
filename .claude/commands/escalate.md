@@ -1,6 +1,7 @@
 ---
 description: Escalate an Intercom conversation to a Shortcut ticket — drafts the ticket for review before creating
 disable-model-invocation: true
+allowed-tools: Read mcp__claude_ai_Intercom__get_conversation mcp__shortcut__stories-search mcp__shortcut__stories-get-by-id mcp__shortcut__stories-create-comment mcp__shortcut__stories-create mcp__shortcut__workflows-list mcp__shortcut__teams-list
 ---
 
 Read `CLAUDE.md` from this repo before starting.

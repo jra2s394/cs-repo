@@ -1,6 +1,7 @@
 ---
 description: After a customer call, draft a follow-up email with action items — pulls from Read.ai report and calendar, drafts for approval before sending.
 disable-model-invocation: true
+allowed-tools: Read mcp__claude_ai_Google_Calendar__list_events mcp__claude_ai_Google_Calendar__get_event mcp__claude_ai_Gmail__search_threads mcp__claude_ai_Gmail__get_thread mcp__claude_ai_Asana__search_tasks mcp__claude_ai_Asana__get_task mcp__shortcut__stories-search mcp__shortcut__stories-get-by-id mcp__claude_ai_Gmail__create_draft mcp__claude_ai_Asana__create_tasks mcp__claude_ai_Asana__update_tasks mcp__shortcut__stories-update
 ---
 
 Read `CLAUDE.md` from this repo before starting.
