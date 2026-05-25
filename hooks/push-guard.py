@@ -14,7 +14,11 @@ Customize:
 """
 import sys
 import json
+import os
 import re
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _git import is_git_push, push_targets_protected_branch  # noqa: E402
 
 try:
     data = json.load(sys.stdin)
@@ -23,35 +27,61 @@ except (json.JSONDecodeError, ValueError):
 
 command = (data.get("tool_input") or {}).get("command", "")
 
+
+def reject(label: str) -> None:
+    print(
+        f"BLOCKED: '{label}' is not allowed. "
+        "Push and merge operations must be performed manually. "
+        "Stage your changes and push from your terminal.",
+        file=sys.stderr,
+    )
+    sys.exit(2)
+
+
+# ---------------------------------------------------------------------------
+# Protected-branch / force push — delegated to _git.py so all the refspec
+# forms (`+main`, `HEAD:main`, `refs/heads/main`, `:main`) are covered, and
+# global git options (`git -c key=val push`, `git --no-pager push`) don't
+# slip past the regex.
+# ---------------------------------------------------------------------------
+if is_git_push(command):
+    if re.search(r"\bpush\b[^\n;|&]*?(?:--force(?![\w-])|--force-with-lease|\s-f\b)", command):
+        reject("git push --force")
+    if push_targets_protected_branch(command):
+        reject("git push to a protected branch (main/master)")
+
+
+# ---------------------------------------------------------------------------
 # Each entry is (regex_pattern, human_readable_label).
 # Add or remove entries here to control what is blocked.
+# ---------------------------------------------------------------------------
 blocked = [
-    (r"git\s+push\s+.*--force", "git push --force"),
-    (r"git\s+push\s+.*-f\b", "git push -f"),
     (r"gh\s+pr\s+merge", "gh pr merge"),
     (r"gh\s+repo\s+edit\s+.*--visibility\s+public", "gh repo edit --visibility public"),
-    # Block direct pushes to protected branches — use a feature branch + PR instead
-    # (?=\s|$) avoids false positives on branch names like "main-feature" or "mainstream"
-    (r"git\s+push\s+(origin\s+)?main(?=\s|$)", "git push to main"),
-    (r"git\s+push\s+(origin\s+)?master(?=\s|$)", "git push to master"),
-    # Bash-level writes to .env files that bypass file-protector (which only guards Edit/Write tools).
-    # Matches bare .env and directory-prefixed variants (e.g. > config/.env, cp src secrets/.env).
-    # Excludes .envrc (direnv) by requiring that .env is not immediately followed by a letter,
-    # and excludes the safe template suffixes .example / .sample / .template.
+
+    # Bash-level writes to .env files that bypass file-protector (which only
+    # guards Edit/Write tools). Matches bare .env and directory-prefixed
+    # variants. Excludes .envrc (direnv) by requiring `.env` is not followed
+    # by a letter, and excludes safe template suffixes (.example/.sample/.template).
     (r"[>|]\s*(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "redirect to .env"),
-    (r"cp\s+.*\s+(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "cp to .env"),
-    (r"mv\s+.*\s+(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "mv to .env"),
-    (r"\|\s*tee\s+.*(?:\S*/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "pipe to tee .env"),
+    (r"\bcp\s+.*\s+(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "cp to .env"),
+    (r"\bmv\s+.*\s+(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "mv to .env"),
+
+    # tee — the option flags between `tee` and the target must be consumed
+    # explicitly (`-a`, `-i`, etc.) so the greedy `.*` doesn't eat the path.
+    (r"\|\s*tee\s+(?:-\S+\s+)*(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "pipe to tee .env"),
+
+    # install(1) — coreutils file installer that can write arbitrary content
+    # to a destination path. Permissive about intermediate tokens because
+    # some options take arguments (e.g. `install -m 600 src dst`).
+    (r"\binstall\s+(?:\S+\s+)*?(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "install to .env"),
+
+    # dd of=.env — dd writing to .env regardless of where `of=` appears.
+    (r"\bdd\s+(?:\S+\s+)*of=(?:\S+/)?\.env(?![a-zA-Z])(?!\.(example|sample|template))", "dd of=.env"),
 ]
 
 for pattern, label in blocked:
     if re.search(pattern, command):
-        print(
-            f"BLOCKED: '{label}' is not allowed. "
-            "Push and merge operations must be performed manually. "
-            "Stage your changes and push from your terminal.",
-            file=sys.stderr,
-        )
-        sys.exit(2)
+        reject(label)
 
 sys.exit(0)

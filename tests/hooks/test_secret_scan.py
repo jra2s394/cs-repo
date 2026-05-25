@@ -162,6 +162,15 @@ class TestModernProviderTokens:
         assert code == 2
         assert "Slack token" in stderr
 
+    def test_slack_config_refresh_xoxd_blocked(self, tmp_path):
+        # xoxd- (config-refresh) was previously missing from the [abcepsr]
+        # character class — confirmed by the hook audit.
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "slack.env", "SLACK=xoxd-" + "1" * 30)
+        code, stderr = _scan(repo)
+        assert code == 2
+        assert "Slack token" in stderr
+
     def test_github_user_token_blocked(self, tmp_path):
         repo = _init_repo_on_branch(tmp_path, "feature/x")
         _stage(repo, "gh.env", "GH=ghu_" + "A" * 36)
@@ -190,6 +199,32 @@ class TestModernProviderTokens:
 # ---------------------------------------------------------------------------
 # Non-commit invocations
 # ---------------------------------------------------------------------------
+
+class TestGitCommitInvocationBypasses:
+    """`git -c key=val commit` and `git --no-pager commit` bypassed the
+    original `is_git_commit` regex, letting secrets land if the agent ran
+    git with global options. The shared `_git.is_git_commit` helper now
+    handles every documented git-invocation form.
+    """
+
+    def test_secret_via_dash_c_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "leak.env", "GH=ghp_" + "A" * 36)
+        code, _ = _scan(repo, command='git -c commit.gpgsign=false commit -m "x"')
+        assert code == 2
+
+    def test_secret_via_no_pager_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "leak.env", "GH=ghp_" + "A" * 36)
+        code, _ = _scan(repo, command='git --no-pager commit -m "x"')
+        assert code == 2
+
+    def test_secret_via_env_prefix_blocked(self, tmp_path):
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        _stage(repo, "leak.env", "GH=ghp_" + "A" * 36)
+        code, _ = _scan(repo, command='GIT_AUTHOR_NAME=x git commit -m "x"')
+        assert code == 2
+
 
 class TestOnlyFiresOnCommit:
     def test_git_log_passes_even_with_secret_staged(self, tmp_path):

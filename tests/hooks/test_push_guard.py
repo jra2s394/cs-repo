@@ -181,6 +181,119 @@ class TestEnvRedirect:
 
 
 # ---------------------------------------------------------------------------
+# Refspec / global-option bypass routes for protected-branch push
+# ---------------------------------------------------------------------------
+
+class TestProtectedBranchPushBypasses:
+    """Every variant of pushing to main that an attacker (or autocomplete)
+    might use should be blocked, not just the literal `git push origin main`.
+    """
+
+    def test_force_prefix_main(self):
+        # `+main` is shorthand for `+refs/heads/main:refs/heads/main` — silent force-push
+        assert blocks("git push origin +main")
+
+    def test_force_prefix_master(self):
+        assert blocks("git push origin +master")
+
+    def test_refs_heads_main(self):
+        assert blocks("git push origin refs/heads/main")
+
+    def test_head_refspec_to_main(self):
+        assert blocks("git push origin HEAD:main")
+
+    def test_branch_to_main_refspec(self):
+        # Pushing FROM a feature branch TO main — destination is what matters
+        assert blocks("git push origin feature:main")
+
+    def test_main_to_main_refspec(self):
+        assert blocks("git push origin main:main")
+
+    def test_delete_main_via_empty_src(self):
+        # `:main` deletes the remote main branch
+        assert blocks("git push origin :main")
+
+    def test_delete_main_via_delete_flag(self):
+        assert blocks("git push --delete origin main")
+
+    def test_global_option_git_c(self):
+        # `git -c key=val push origin main` bypassed the original regex
+        assert blocks("git -c receive.denyCurrentBranch=ignore push origin main")
+
+    def test_global_option_no_pager(self):
+        assert blocks("git --no-pager push origin main")
+
+    def test_global_option_dash_capital_c_path(self):
+        # `-C /path` runs git as if cd'd into /path
+        assert blocks("git -C /tmp/repo push origin main")
+
+    def test_env_var_prefix(self):
+        assert blocks("GIT_AUTHOR_NAME=x git push origin main")
+
+
+class TestProtectedBranchPushFalsePositives:
+    """`main` or `master` appearing elsewhere in the refspec — without being
+    the destination — must not trigger the block.
+    """
+
+    def test_pushing_from_main_to_dev_not_blocked(self):
+        # Source is main, destination is dev. We block pushes TO main, not FROM.
+        assert allows("git push origin main:dev")
+
+    def test_pushing_from_master_to_release_not_blocked(self):
+        assert allows("git push origin master:release-2024")
+
+    def test_branch_path_with_main_segment_not_blocked(self):
+        # Branch literally named feature/main (slash-delimited)
+        assert allows("git push origin feature/main")
+
+    def test_mainstream_branch_not_blocked(self):
+        assert allows("git push origin mainstream")
+
+    def test_main_feature_branch_via_refspec_not_blocked(self):
+        assert allows("git push origin HEAD:main-feature")
+
+
+# ---------------------------------------------------------------------------
+# .env write bypass routes
+# ---------------------------------------------------------------------------
+
+class TestEnvWriteBypasses:
+    def test_tee_dash_a_env(self):
+        # `tee -a` was bypassed by the previous greedy regex
+        assert blocks("cat secrets.txt | tee -a .env")
+
+    def test_tee_dash_a_prefixed_env(self):
+        assert blocks("cat secrets.txt | tee -a config/.env")
+
+    def test_tee_multi_flag_env(self):
+        assert blocks("cat x | tee -ai .env")
+
+    def test_install_to_env(self):
+        # install(1) writes a file to a destination — not previously caught
+        assert blocks("install secrets.txt .env")
+
+    def test_install_with_mode_to_env(self):
+        assert blocks("install -m 600 secrets.txt .env")
+
+    def test_dd_of_env(self):
+        assert blocks("dd if=secrets.txt of=.env")
+
+    def test_dd_of_prefixed_env(self):
+        assert blocks("dd if=secrets.txt of=config/.env bs=1024")
+
+    # Regression: tee/install/dd on .envrc or .env.example must still pass
+    def test_tee_dash_a_envrc_not_blocked(self):
+        assert allows("cat config.sh | tee -a .envrc")
+
+    def test_install_to_env_example_not_blocked(self):
+        assert allows("install template.env .env.example")
+
+    def test_dd_of_envrc_not_blocked(self):
+        assert allows("dd if=src of=.envrc")
+
+
+# ---------------------------------------------------------------------------
 # Unrelated commands — must never be blocked
 # ---------------------------------------------------------------------------
 
