@@ -9,7 +9,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Who I am
 
 [Your Name] — [Your Title] at [Your Company].
-[Your time zone]. Based in [Your Location].
+[Your time zone — IANA name, e.g. `America/Denver`]. Based in [Your Location].
 Email: [your-email@company.com]
 
 My role: [Brief description of your CS ops role and primary responsibilities — e.g., Customer Success Operations, building scalable resources that reduce time-to-value for customers and support the sales and CS teams.]
