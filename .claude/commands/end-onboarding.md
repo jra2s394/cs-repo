@@ -1,5 +1,6 @@
 ---
 description: Complete a customer onboarding — checklist, closure tasks in Asana, handoff brief, and go-live confirmation message.
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` from this repo before starting.

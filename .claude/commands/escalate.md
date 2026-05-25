@@ -1,5 +1,6 @@
 ---
 description: Escalate an Intercom conversation to a Shortcut ticket — drafts the ticket for review before creating
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` from this repo before starting.

@@ -7,12 +7,20 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node tests/js/test_csv_export.js && node tests/js/test_report_theme.js && node tests/js/test_data_loader.js && node tests/js/test_copy_to_desktop.js && node tests/js/test_reports_smoke.js"
+    "test": "node tests/js/test_csv_export.js && node tests/js/test_report_theme.js && node tests/js/test_data_loader.js && node tests/js/test_copy_to_desktop.js && node tests/js/test_reports_smoke.js",
+    "test:cov": "c8 npm test"
+  },
+  "c8": {
+    "include": ["lib/**", "reports/**"],
+    "reporter": ["text", "text-summary"],
+    "check-coverage": true,
+    "lines": 75
   },
   "dependencies": {
     "docx": "9.7.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.4.15"
+    "@biomejs/biome": "^2.4.15",
+    "c8": "^11.0.0"
   }
 }

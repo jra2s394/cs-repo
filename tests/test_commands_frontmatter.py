@@ -236,3 +236,40 @@ def test_allowed_tools_format_when_present(path: Path):
             f"{path.name}: allowed-tools token {tok!r} doesn't look like a "
             "valid tool name (expected `Name`, `Name(spec)`, or `mcp__server__tool`)"
         )
+
+
+# ── disable-model-invocation (optional) ─────────────────────────────────────
+# Added round-46 after re-fetching https://code.claude.com/docs/en/skills.
+# When set to `true`, prevents Claude from auto-loading the skill — use for
+# manual-only commands like /daily, /escalate, /start-onboarding where
+# auto-firing on conversation context would bypass the user's intent.
+# The doc only accepts boolean literals; a string like "true" silently fails.
+
+DISABLE_MODEL_INVOCATION_RE = re.compile(
+    r"^disable-model-invocation:\s*(.+)$", re.MULTILINE
+)
+
+
+def _disable_model_invocation(fm: str):
+    """Return the raw disable-model-invocation value, or None if not present."""
+    m = DISABLE_MODEL_INVOCATION_RE.search(fm)
+    return m.group(1).strip() if m else None
+
+
+@pytest.mark.parametrize("path", COMMAND_FILES, ids=lambda p: p.name)
+def test_disable_model_invocation_format_when_present(path: Path):
+    """If `disable-model-invocation:` is set, it must be a literal YAML boolean.
+
+    Per the skills doc, only `true` or `false` are accepted. Quoted strings
+    ("true", "false") are parsed as strings and silently fail the gate — the
+    skill would still auto-load. This test catches the quoted-string mistake
+    and any other non-boolean value.
+    """
+    value = _disable_model_invocation(_read_frontmatter(path))
+    if value is None:
+        return  # field is optional
+    assert value in ("true", "false"), (
+        f"{path.name}: disable-model-invocation={value!r} must be the literal "
+        "boolean `true` or `false` (unquoted). Quoted strings are parsed as "
+        "strings and silently fail the auto-invocation gate."
+    )

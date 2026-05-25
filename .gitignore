@@ -36,6 +36,10 @@ __pycache__/
 .coverage.*
 htmlcov/
 
+# c8 (JS coverage) — config lives in package.json::c8, which IS committed
+coverage/
+.c8_output/
+
 # Build / virtualenv artifacts
 .venv/
 venv/

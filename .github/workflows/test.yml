@@ -86,5 +86,11 @@ jobs:
       - name: Pre-commit hooks
         run: pre-commit run --all-files
 
-      - name: Run JS tests
-        run: make test-js
+      # JS tests run under c8 for coverage tracking and threshold enforcement.
+      # Baseline is ~82% lines combined (lib/ ~99%, reports/ ~78%); floor is
+      # 75 lines per package.json::c8. Same buffer pattern as Python's
+      # --cov-fail-under: pinned a few points below current so a defensive
+      # branch can land without an immediate test, but catches a deleted
+      # test file or a major regression.
+      - name: Run JS tests (with coverage)
+        run: make test-js-cov
