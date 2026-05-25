@@ -42,7 +42,7 @@ try:
     # Single os.write on an O_APPEND fd is atomic for sub-PIPE_BUF payloads
     # (4 KB on Linux/macOS), so parallel hook invocations can't interleave
     # mid-line. Avoids Python's buffered I/O entirely.
-    entry = f"{timestamp} | {session_id} | {tool_name} | {cwd}\n".encode("utf-8")
+    entry = f"{timestamp} | {session_id} | {tool_name} | {cwd}\n".encode()
     fd = os.open(log_path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
     try:
         os.write(fd, entry)
