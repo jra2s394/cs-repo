@@ -50,9 +50,11 @@ Subtargets if you only need part of it:
 | `make test-js`    | All JS suites |
 | `make lint-py`    | ruff only |
 | `make lint-js`    | biome only |
-| `make test-cov`   | pytest with coverage report |
+| `make test-cov`   | pytest with coverage report (scope: `lib/` only — see note) |
 
 CI runs the same `make` targets, so if it's green locally it'll stay green on PR.
+
+> **Why does `make test-cov` only measure `lib/`?** The hooks under `hooks/` are tested via subprocess (`tests/conftest.py::run_hook`), and `coverage.py` doesn't instrument subprocesses. Behavioral coverage of hooks is high (200+ tests across the 11 hook scripts in `tests/hooks/`); they just don't show up in the line-coverage number. See `.coveragerc` for the explicit omit list. `session-to-obsidian.py` is the exception — it's imported directly via `importlib`, so it appears in the report.
 
 ## Scrub checklist
 
