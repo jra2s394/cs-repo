@@ -126,6 +126,39 @@ class TestLogRotation:
         assert archive.read_text() != "old archive content"
 
 
+class TestHardening:
+    """Tests that pin the post-audit hardening so a regression can't slip
+    back in: atomic rotation, fail-safe size check, and explicit None
+    handling for session_id.
+    """
+
+    def test_rotation_survives_missing_log_file(self, isolated_home):
+        # If the log file is gone between getsize check and our rotation
+        # call (or simply never existed), the hook must not crash. With
+        # plain os.rename this raised FileNotFoundError mid-handler.
+        # Just calling the hook on an empty .claude/ dir exercises the path.
+        code, _, _ = run_audit(
+            {"tool_name": "Read", "session_id": "fresh000", "cwd": "/x"},
+            isolated_home,
+        )
+        assert code == 0
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        # File was created by the append, not the rotation
+        assert log_path.exists()
+
+    def test_explicit_none_session_id_handled(self, isolated_home):
+        # JSON payload with `"session_id": null` previously crashed the
+        # `.get(..., "unknown")[:8]` chain because get returned None, not
+        # the default. Now uses `(... or "unknown")`.
+        code, _, _ = run_audit(
+            {"tool_name": "Read", "session_id": None, "cwd": "/x"},
+            isolated_home,
+        )
+        assert code == 0
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        assert "unknown" in log_path.read_text()
+
+
 class TestNonBlockingOnError:
     def test_invalid_json_exits_zero(self, isolated_home):
         code, _, _ = run_audit("not json", isolated_home)

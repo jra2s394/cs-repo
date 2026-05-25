@@ -130,13 +130,28 @@ def find_existing_export(session_id: str) -> Path | None:
 def find_session_file(session_id: str) -> Path | None:
     if not CLAUDE_PROJECTS.exists():
         return None
+    # Fast path: ~/.claude/projects/<project>/<session_id>.jsonl (depth 1).
     for project_dir in CLAUDE_PROJECTS.iterdir():
         if not project_dir.is_dir():
             continue
         candidate = project_dir / f"{session_id}.jsonl"
         if candidate.exists():
             return candidate
-    matches = list(CLAUDE_PROJECTS.rglob(f"{session_id}.jsonl"))
+    # Bounded fallback: one level deeper (depth 2). The unbounded `rglob`
+    # walks every project tree, which is O(thousands of files) on long-lived
+    # vaults. Two levels covers every Claude-Code project layout in the wild.
+    matches = []
+    for project_dir in CLAUDE_PROJECTS.iterdir():
+        if not project_dir.is_dir():
+            continue
+        try:
+            for sub in project_dir.iterdir():
+                if sub.is_dir():
+                    deeper = sub / f"{session_id}.jsonl"
+                    if deeper.exists():
+                        matches.append(deeper)
+        except (PermissionError, OSError):
+            continue
     if matches:
         return max(matches, key=lambda p: p.stat().st_mtime)
     return None
@@ -466,26 +481,41 @@ def main():
     date_str = datetime.now().strftime("%Y-%m-%d")
 
     existing = find_existing_export(data["session_id"])
-    if existing:
-        try:
-            existing.unlink()
-        except Exception:
-            pass
 
     base_name = f"{date_str} {topic}"
     md_path = SESSIONS_DIR / f"{base_name}.md"
-    if md_path.exists():
-        counter = 1
+    # Collision-suffix counter starts at 1 — the first collision becomes
+    # `(1)`, the second `(2)`, etc. Previously started at 2 (counter
+    # incremented before the first check), which skipped `(1)` entirely.
+    if md_path.exists() and md_path != existing:
+        counter = 0
         while md_path.exists():
             counter += 1
             md_path = SESSIONS_DIR / f"{base_name} ({counter}).md"
 
-    md_path.write_text(md_content, encoding="utf-8")
+    # Atomic write: stage in a sibling .tmp then os.replace. If the write
+    # fails mid-stream, the destination is untouched (we don't unlink the
+    # previous export until the new one is in place).
+    tmp_path = md_path.with_suffix(md_path.suffix + ".tmp")
+    tmp_path.write_text(md_content, encoding="utf-8")
+    os.replace(tmp_path, md_path)
+
+    # Remove the old export only after the new one landed safely, and only
+    # if it's a different file (otherwise we just replaced it atomically).
+    if existing and existing != md_path:
+        try:
+            existing.unlink()
+        except FileNotFoundError:
+            pass
 
     raw_id = re.sub(r"[^a-zA-Z0-9_\-]", "_", data["session_id"] or jsonl_path.stem)
     raw_dest = RAW_DIR / f"{raw_id}.jsonl"
-    if not raw_dest.exists():
-        raw_dest.write_bytes(jsonl_path.read_bytes())
+    # Always refresh the raw JSONL on re-export. Skipping when the file
+    # exists meant a session that grew after its first export never picked
+    # up the additional turns in the archive.
+    raw_tmp = raw_dest.with_suffix(raw_dest.suffix + ".tmp")
+    raw_tmp.write_bytes(jsonl_path.read_bytes())
+    os.replace(raw_tmp, raw_dest)
 
     log("OK", f"exported to {md_path.name} ({len(data['turns'])} turns)", session_id)
     print(json.dumps({"suppressOutput": True}))

@@ -20,7 +20,7 @@ except (json.JSONDecodeError, ValueError):
     sys.exit(0)
 
 tool_name = data.get("tool_name", "unknown")
-session_id = data.get("session_id", "unknown")[:8]
+session_id = (data.get("session_id") or "unknown")[:8]
 cwd = data.get("cwd", "unknown")
 timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
@@ -28,13 +28,26 @@ log_path = os.path.expanduser("~/.claude/tool-audit.log")
 max_bytes = 5 * 1024 * 1024  # 5 MB
 
 try:
-    if os.path.exists(log_path) and os.path.getsize(log_path) > max_bytes:
-        archive = log_path + ".1"
-        if os.path.exists(archive):
-            os.remove(archive)
-        os.rename(log_path, archive)
-    with open(log_path, "a") as f:
-        f.write(f"{timestamp} | {session_id} | {tool_name} | {cwd}\n")
+    # Atomic rotation: os.replace is atomic on POSIX (and Windows under Py 3.3+),
+    # so a concurrent rotator either succeeds first or finds the file already
+    # gone — no TOCTOU race that drops records. The size check stays
+    # advisory: if it races with another rotator the replace may target an
+    # already-rotated file, which is fine.
+    try:
+        if os.path.getsize(log_path) > max_bytes:
+            os.replace(log_path, log_path + ".1")
+    except FileNotFoundError:
+        pass  # already rotated by another process, or never existed
+
+    # Single os.write on an O_APPEND fd is atomic for sub-PIPE_BUF payloads
+    # (4 KB on Linux/macOS), so parallel hook invocations can't interleave
+    # mid-line. Avoids Python's buffered I/O entirely.
+    entry = f"{timestamp} | {session_id} | {tool_name} | {cwd}\n".encode("utf-8")
+    fd = os.open(log_path, os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o644)
+    try:
+        os.write(fd, entry)
+    finally:
+        os.close(fd)
 except Exception:
     pass  # Never block on audit failure
 
