@@ -147,12 +147,12 @@ class TestFormatDuration:
 # ---------------------------------------------------------------------------
 
 class TestDetectProject:
-    def test_detects_cs_repo(self, sto):
-        data = {"cwd": "/Users/tripp/Developer/cs-repo"}
+    def test_detects_cs_repo(self, sto, tmp_path):
+        data = {"cwd": str(tmp_path / "Developer" / "cs-repo")}
         assert sto.detect_project(data) == "CS Repo"
 
-    def test_returns_none_for_unknown_cwd(self, sto):
-        data = {"cwd": "/Users/tripp/some-other-project"}
+    def test_returns_none_for_unknown_cwd(self, sto, tmp_path):
+        data = {"cwd": str(tmp_path / "some-other-project")}
         assert sto.detect_project(data) is None
 
     def test_handles_missing_cwd(self, sto):
@@ -212,7 +212,7 @@ class TestFindSessionFile:
 
     def test_finds_session_by_id(self, sto, tmp_path, monkeypatch):
         projects = tmp_path / "projects"
-        project_dir = projects / "-Users-tripp-cs-repo"
+        project_dir = projects / "-some-path-cs-repo"
         project_dir.mkdir(parents=True)
         session_file = project_dir / "abc12345.jsonl"
         session_file.write_text('{"type":"user"}\n')
@@ -297,7 +297,7 @@ class TestBuildMarkdown:
     def _sample_data(self):
         return {
             "session_id": "abc12345",
-            "cwd": "/Users/tripp/cs-repo",
+            "cwd": "/tmp/cs-repo",
             "git_branch": "feature/test",
             "version": "1.0.0",
             "start_time": "2026-05-24T10:00:00Z",

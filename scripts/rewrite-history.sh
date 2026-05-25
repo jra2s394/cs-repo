@@ -100,20 +100,54 @@ fi
 # ----------------------------------------------------------------------------
 # Build the replacements file.
 #
-# Format (one rule per line):
+# Format (one rule per line, no comment syntax):
 #   <literal-string>==><replacement>
 #
 # git-filter-repo applies these to both commit messages AND file blobs.
-# Lines starting with `#` are not comments — they're treated as literal — so
-# we keep this list compact and well-commented HERE (outside the file).
+# Lines starting with `#` are NOT comments — filter-repo treats them as
+# literal patterns and (without `==>`) would replace them with ***REMOVED***.
+# So the heredoc below contains only rules + blank separators; all
+# explanation lives in the shell comments above each block.
+#
+# Order matters: filter-repo applies rules top-to-bottom against each blob
+# and commit message. Put the most specific (longest) match before any
+# shorter substring that would also match — otherwise the shorter rule eats
+# the prefix and the longer rule never fires.
 # ----------------------------------------------------------------------------
 
 REPL_FILE="$(mktemp -t cs-repo-rewrite-replacements.XXXXXX)"
 trap 'rm -f "$REPL_FILE"' EXIT
 
+# Block 1: prontonmail typo. The full-email rule runs first so the substring
+# rule below doesn't half-rewrite it. Catches PR #23's commit body and the
+# PR #39 merge commit's `Co-authored-by:` trailer.
+#
+# Block 2: absolute filesystem paths. Longest-first so the repo-root rule
+# fires before the home-dir catch-all. Catches `/Users/tripparnold/...` and
+# `/Users/tripp/...` (the latter still lives in test_session_to_obsidian.py
+# history before this PR cleans it).
+#
+# Block 3: customers. Case + possessive variants matter because filter-repo
+# matches literal substrings, case-sensitive. PR #30 (94101b1) has
+# "Cemstone deep-dive", "Cemstone's", and "cemstone.com" — each needs its
+# own rule.
+#
+# Block 4-7: competitors, contacts, internal team names, identity, external
+# IDs. The team-name rules (`CEP CG & IS`, `Slabstack team`) are new in
+# round 2 — both appear in PR #30.
+
 cat > "$REPL_FILE" <<'EOF'
+tripp.arnold@prontonmail.com==>tripp.arnold@protonmail.com
 prontonmail==>protonmail
+
+/Users/tripparnold/Developer/cs-repo==>[REPO_ROOT]
+/Users/tripparnold/==>[HOME]/
+/Users/tripp/==>[HOME]/
+
+Cemstone's==>[CUSTOMER_A]'s
 Cemstone==>[CUSTOMER_A]
+cemstone.com==>[customer_a].com
+cemstone==>[customer_a]
 Colas==>[CUSTOMER_B]
 Heritage==>[CUSTOMER_C]
 Hi-Grade==>[CUSTOMER_D]
@@ -123,7 +157,9 @@ Wayne Davis==>[CUSTOMER_E]
 Centex Materials==>[CUSTOMER_F]
 Centex==>[CUSTOMER_F]
 Terminal Ready Mix==>[CUSTOMER_G]
+
 Command Alkon==>[COMPETITOR_X]
+
 Geoff Hollingshead==>[CONTACT_A]
 Garrett Hollingshead==>[CONTACT_B]
 Hollingshead==>[CONTACT_B]
@@ -131,10 +167,15 @@ Thomas Becken==>[CONTACT_C]
 Jamie Forbes==>[CONTACT_D]
 Remus Key==>[CONTACT_E]
 Jane Smith==>[CONTACT_F]
+
+CEP CG & IS==>[TEAM_OTHER]
+Slabstack team==>[TEAM_PRIMARY]
+
 Tripp Arnold==>[YOUR_NAME]
 tarnold@sysdynetechnologies.com==>[YOUR_EMAIL]
 jane@heritage.com==>contact@customer.com
 remus@centex.com==>contact@customer.com
+
 1204402035133218==>[ASANA_TEAM_GID]
 1FGb57p0iKuJ1RhRGwrRez3q3RIUvF-bI==>[DRIVE_PARENT_FOLDER_ID]
 EOF
@@ -188,7 +229,10 @@ NEXT STEPS — read scripts/REWRITE-HISTORY.md before doing any of these:
 
   1. Inspect the new history locally:
         git log --pretty='%h %an <%ae> %s' | head -40
-        git log -p --all -S 'Cemstone'        # should find nothing
+        git log -p --all -S 'Cemstone'         # should find nothing
+        git log -p --all -S 'CEP CG & IS'      # should find nothing
+        git log -p --all -S 'Slabstack team'   # should find nothing
+        git log -p --all -S '/Users/tripp'     # should find nothing
         git log --all | grep -i prontonmail    # should find nothing
 
   2. git-filter-repo strips the origin remote intentionally. Re-add it:
