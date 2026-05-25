@@ -1,0 +1,7 @@
+# CODEOWNERS — solo repo, single owner.
+#
+# Adds @jra2s394 as a default reviewer on every PR. If/when collaborators
+# join, scope ownership by directory (e.g. `/hooks/ @username` to require
+# review only on the hook surface).
+
+* @jra2s394

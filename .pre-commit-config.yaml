@@ -1,0 +1,38 @@
+# pre-commit hooks — run the same checks Claude Code's hooks enforce, but
+# for non-Claude commits too (web edits via GitHub UI won't run these, but
+# every clone-and-commit path will).
+#
+# Setup:
+#   pip install pre-commit
+#   pre-commit install
+#
+# Manual run:
+#   pre-commit run --all-files
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: '\.md$'  # markdown line breaks rely on trailing spaces
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-json
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.7.4
+    hooks:
+      - id: ruff
+        args: ['--fix']
+
+  - repo: local
+    hooks:
+      - id: biome
+        name: biome check
+        entry: npx --no-install biome check
+        language: system
+        types_or: [javascript, json]
+        pass_filenames: false
