@@ -240,8 +240,8 @@ test("empty sections array — writes nothing but does not throw", () => {
 // ── encoding compliance (RFC 4180 + Excel UTF-8 friendliness) ──────────────
 console.log("\nencoding compliance");
 
-test("file starts with UTF-8 BOM (Excel renders accented names correctly)", () => {
-  const raw = writeRaw([{ rows: [["João"]] }]);
+test("file starts with UTF-8 BOM (Excel renders accented characters correctly)", () => {
+  const raw = writeRaw([{ rows: [["café"]] }]);
   assert.strictEqual(raw.charCodeAt(0), 0xFEFF,
     `expected leading BOM, got code point ${raw.charCodeAt(0).toString(16)}`);
 });
