@@ -24,18 +24,14 @@ const outFile = path.join(outDir, `Intercom_Quarterly_${yr}-${ql}.docx`);
 const children = [];
 
 // Cover
-children.push(T.titleBanner({
-  eyebrow: "CUSTOMER SUCCESS INTELLIGENCE",
-  title:   `${d.period} Quarterly Report`,
-  subtitle: [
-    { text: d.dateRange + "  ", color: "C7D0DD" },
-    { text: "· " + d.generated, color: "8FB8BA", bold: true },
-  ],
+children.push(...T.coverBlock({
+  eyebrow:    "CUSTOMER SUCCESS INTELLIGENCE",
+  title:      `${d.period} Quarterly Report`,
+  dateRange:  d.dateRange,
+  generated:  d.generated,
+  preparedBy: d.preparedBy,
+  kpis:       d.kpis,
 }));
-children.push(T.metaStrip(`Prepared ${d.generated} · ${d.preparedBy}`, "CONFIDENTIAL"));
-children.push(T.gap(320));
-children.push(T.kpiStrip(d.kpis));
-children.push(T.gap(100));
 
 // QoQ Scorecard
 // columns: Metric, This Q, Last Q, Change, YoY

@@ -19,18 +19,15 @@ const outFile = path.join(outDir, `Executive_Summary_${slug}.docx`);
 const children = [];
 
 // Cover
-children.push(T.titleBanner({
-  eyebrow: "CUSTOMER SUCCESS  ·  EXECUTIVE SUMMARY",
-  title:   `Executive Summary — ${d.period}`,
-  subtitle: [
-    { text: d.dateRange ? d.dateRange + "  " : "", color: "C7D0DD" },
-    { text: "· " + d.generated, color: "8FB8BA", bold: true },
-  ],
+children.push(...T.coverBlock({
+  eyebrow:        "CUSTOMER SUCCESS  ·  EXECUTIVE SUMMARY",
+  title:          `Executive Summary — ${d.period}`,
+  dateRange:      d.dateRange,
+  generated:      d.generated,
+  preparedBy:     d.preparedBy,
+  kpis:           d.kpis,
+  classification: "INTERNAL",
 }));
-children.push(T.metaStrip(`Prepared ${d.generated} · ${d.preparedBy}`, "INTERNAL"));
-children.push(T.gap(320));
-children.push(T.kpiStrip(d.kpis));
-children.push(T.gap(100));
 
 // Portfolio Overview
 // columns: Metric | Value | vs Prior Period

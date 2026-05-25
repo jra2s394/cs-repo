@@ -31,18 +31,14 @@ const outFile = path.join(outDir, `Onboarding_Monthly_${yr}-${String(mi + 1).pad
 const children = [];
 
 // Cover
-children.push(T.titleBanner({
-  eyebrow: "CUSTOMER SUCCESS  ·  ONBOARDING INTELLIGENCE",
-  title:   `Monthly Report — ${d.period}`,
-  subtitle: [
-    { text: d.dateRange + "  ", color: "C7D0DD" },
-    { text: "· " + d.generated, color: "8FB8BA", bold: true },
-  ],
+children.push(...T.coverBlock({
+  eyebrow:    "CUSTOMER SUCCESS  ·  ONBOARDING INTELLIGENCE",
+  title:      `Monthly Report — ${d.period}`,
+  dateRange:  d.dateRange,
+  generated:  d.generated,
+  preparedBy: d.preparedBy,
+  kpis:       d.kpis,
 }));
-children.push(T.metaStrip(`Prepared ${d.generated} · ${d.preparedBy}`, "CONFIDENTIAL"));
-children.push(T.gap(320));
-children.push(T.kpiStrip(d.kpis));
-children.push(T.gap(100));
 
 // Executive Summary
 // columns: Metric | This Month | Last Month | Change
