@@ -33,7 +33,9 @@ Hooks run synchronously by default and block execution until they exit, so keep 
 |---|---|---|
 | `audit-log.py` | PostToolUse | Logs every tool call to a local audit file |
 | `block-attribution.py` | PreToolUse (Bash) | Blocks commits containing AI attribution strings |
+| `branch-enforcer.py` | PreToolUse (Bash) | Blocks `git commit` directly on `main`/`master` |
 | `push-guard.py` | PreToolUse (Bash) | Blocks `git push` and `gh pr merge` |
+| `secret-scan.py` | PreToolUse (Bash) | Blocks `git commit` when the staged diff matches a known token pattern |
 | `draft-before-create.py` | PreToolUse (MCP tools) | Forces a permission prompt before creating items in shared systems |
 | `file-protector.py` | PreToolUse (Edit, Write) | Blocks edits to `.env` files, private keys, and credentials |
 | `compact-reinject.py` | PreCompact | Re-injects critical rules just before context compaction |
@@ -236,13 +238,33 @@ sys.exit(0)
 
 ---
 
-### `push-guard.py`
+### `branch-enforcer.py`
 
-**What it does:** Scans any Bash command for `git push` or `gh pr merge` using regex. If found, blocks with exit code 2 and a message directing the user to push manually. Prevents Claude from autonomously publishing to shared repositories.
+**What it does:** On every Bash invocation that is a `git commit`, runs `git rev-parse --abbrev-ref HEAD` and blocks (exit 2) if the current branch is in the protected list. Pairs with GitHub branch protection: this layer catches the mistake locally before it reaches the remote, so you get the error in your terminal instead of in a rejected `git push`.
 
 **Event:** PreToolUse, matcher: `Bash`
 
-**Customize:** The `blocked` list is a list of `(regex_pattern, label)` tuples. Add entries to restrict additional commands (e.g. `gh release create`, `git push --force`), or remove entries if you want to allow certain operations.
+**Customize:** Edit the `protected` list (default `["main", "master"]`). Add `"develop"`, `"production"`, or any other branch you don't want direct commits on. The `subprocess.run` call is wrapped in try/except so a git error never blocks an unrelated tool call.
+
+---
+
+### `push-guard.py`
+
+**What it does:** Scans any Bash command for `git push --force`, pushes to a protected branch (`main`/`master` in any refspec form), `gh pr merge`, `gh repo edit --visibility public`, and Bash-level writes to `.env` files (including path-prefixed and `cp`/`mv`/`tee`/`install`/`dd` variants). Allows `.envrc` (direnv) and safe template suffixes (`.example`/`.sample`/`.template`).
+
+**Event:** PreToolUse, matcher: `Bash`
+
+**Customize:** The `blocked` list is a list of `(regex_pattern, label)` tuples. Add entries to restrict additional commands, or remove entries if you want to allow certain operations. Refspec parsing for protected-branch detection lives in `_git.py::push_targets_protected_branch` so every form (`+main`, `HEAD:main`, `refs/heads/main`, `:main`, etc.) is covered.
+
+---
+
+### `secret-scan.py`
+
+**What it does:** On every Bash invocation that is a `git commit`, runs `git diff --cached --no-color -U0` and scans the added lines for high-confidence secret patterns (Shortcut, GitHub `ghp_`/`gho_`/`ghs_`/`ghu_`/`ghr_`, OpenAI legacy + project keys, Anthropic, Stripe live, Twilio, GCP service account, Slack `xox[abcdepsr]-`, AWS access key + secret, Google API, RSA private key, JWT). Blocks (exit 2) with the matched pattern name + a truncated snippet so you can find and rotate the leaked token. Stripe test keys (`sk_test_`/`pk_test_`) emit a warning but do not block.
+
+**Event:** PreToolUse, matcher: `Bash`
+
+**Customize:** Edit `SECRET_PATTERNS` to add or refine token regexes. Add paths to `ALLOW_PATHS` to skip files known to contain intentional token-looking strings (the hook's own tests, KB docs that describe token formats). The hook only fires on `git commit`, exits 0 when no staged diff exists, and exits 0 on invalid JSON input.
 
 ---
 
