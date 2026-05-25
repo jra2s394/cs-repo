@@ -12,16 +12,13 @@ Customize:
 """
 import subprocess
 import sys
-import json
 import os
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _git import is_git_commit  # noqa: E402
+from _stdin import parse_or_exit  # noqa: E402
 
-try:
-    data = json.load(sys.stdin)
-except (json.JSONDecodeError, ValueError):
-    sys.exit(0)
+data = parse_or_exit()
 
 command = (data.get("tool_input") or {}).get("command", "")
 

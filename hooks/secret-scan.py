@@ -14,7 +14,6 @@ Customize:
   - Add filenames to `ALLOW_PATHS` to skip files known to contain placeholder
     examples (e.g. docs that intentionally show token formats).
 """
-import json
 import os
 import re
 import subprocess
@@ -22,6 +21,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _git import is_git_commit as _shared_is_git_commit  # noqa: E402
+from _stdin import parse_or_exit  # noqa: E402
 
 # (label, regex). Patterns favor specificity over recall — false positives
 # are noisy enough to train people to ignore the hook.
@@ -138,10 +138,7 @@ def scan(diff_text: str, patterns):
 
 
 def main() -> int:
-    try:
-        data = json.load(sys.stdin)
-    except (json.JSONDecodeError, ValueError):
-        return 0
+    data = parse_or_exit()
 
     command = (data.get("tool_input") or {}).get("command", "")
     if not is_git_commit(command):
