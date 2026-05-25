@@ -143,7 +143,7 @@ Once confirmed:
    - `[your-email@company.com]` → their email
    - The role description placeholder → their description
    - `YOUR_INTERCOM_ID` in the Intercom admin IDs table → their ID
-   - `ASANA_TEAM_GID` in the Asana Team GID section → their GID (or leave as `ASANA_TEAM_GID` if they answered "skip" — `/check-setup` will flag this as 🟡 so they can fill it in later)
+   - `ASANA_TEAM_GID` in the Asana Team GID section → their GID, or the literal string `[unset]` if they answered "skip" (matches the confirm preview in Step 3; `/check-setup` flags either `[unset]` or the unsubstituted `ASANA_TEAM_GID` as 🟡 so they can fill it in later)
 3. Write the result to `~/.claude/CLAUDE.md`.
 
 Tell the user: "Written to ~/.claude/CLAUDE.md."
