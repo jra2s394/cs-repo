@@ -91,7 +91,7 @@ Pick three random commits from the last quarter (`git log --since='3 months ago'
 
 ## Detection record
 
-These audit rounds produced the cadence above. If you ever wonder "why is this checklist on this schedule?", the answer is mostly "rounds 24/25/26/29 found one drift per round when run quarterly."
+These audit rounds produced the cadence above. If you ever wonder "why is this checklist on this schedule?", the answer is mostly "rounds 24/25/26/29 and the 40-series each found one drift per round when run quarterly."
 
 | Round | Finding | Source |
 |---|---|---|
@@ -100,3 +100,7 @@ These audit rounds produced the cadence above. If you ever wonder "why is this c
 | 26 | `argument-hint` frontmatter missing from 44 commands | WebFetch /en/skills |
 | 27 | Python 3.10+ requirement undeclared | pip-audit failure |
 | 29 | `disableBypassPermissionsMode` not set; pre-commit `detect-private-key` false-positive | WebFetch /en/permissions + `pre-commit run` |
+| 40 | No Python type checking despite 13 hook files; one real bug (untyped Counter local) | manual scout for static-analysis gaps |
+| 41 | `PostToolUseFailure` hook unwired (failed tool calls vanished from audit log); `autoUpdatesChannel` defaulted to `latest` instead of `stable` | WebFetch /en/hooks + /en/settings |
+| 42 | `--cov-fail-under` unset (coverage could silently decay between rounds) | internal scout — pytest config drift |
+| 43 | `session-to-obsidian.py main()` 90+ lines untested; coverage floor stuck at 70 until orchestration was tested | round-42 carry-over (coverage report on `main`) |
