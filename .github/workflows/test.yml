@@ -6,6 +6,12 @@ on:
   pull_request:
     branches: [main]
 
+# Cancel a superseded run when a new commit lands on the same branch /
+# PR. Keeps the queue moving when you push multiple times in a row.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
@@ -39,8 +45,11 @@ jobs:
           git config --global user.email "ci@test.local"
           git config --global user.name "CI"
 
-      - name: Run Python tests
-        run: python3 -m pytest --tb=short -q
+      # Single pytest run with coverage. Previously CI ran pytest twice
+      # (once for results, once for coverage); --cov is a superset of the
+      # plain run, so collapsing them saves ~30s/run.
+      - name: Run Python tests (with coverage)
+        run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --tb=short -q
 
       - name: Lint Python (ruff)
         run: make lint-py
@@ -50,6 +59,3 @@ jobs:
 
       - name: Run JS tests
         run: make test-js
-
-      - name: Run Python tests with coverage
-        run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing -q
