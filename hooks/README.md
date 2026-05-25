@@ -8,7 +8,7 @@ Each hook is a shell command (typically a Python script) that receives a JSON pa
 
 Hooks can take three actions: **allow** (exit code 0, let the tool call proceed), **block** (exit code 2, cancel the tool call and show an error message from stderr to the user), or **ask** (output a JSON object with `permissionDecision: "ask"`, pause and surface a permission prompt so the user can approve or deny).
 
-Hook types map to lifecycle events: `PreToolUse` fires before a tool executes, `PostToolUse` fires after, `UserPromptSubmit` fires when the user submits a message, `Notification` fires when Claude needs user input, `Stop` fires when a session ends, and `SessionStart` fires when a session starts (with a `compact` matcher to target post-compaction restarts specifically). Hooks are registered in `~/.claude/settings.json` under the `hooks` key, scoped to an event type and optionally filtered by a `matcher` (a regex or tool name pattern).
+Hook types map to lifecycle events: `PreToolUse` fires before a tool executes, `PostToolUse` fires after, `UserPromptSubmit` fires when the user submits a message, `Notification` fires when Claude needs user input, `Stop` fires when a session ends, `SessionStart` fires when a session starts (with an optional `compact` matcher to target post-compaction restarts), and `PreCompact` fires just before Claude Code compacts the conversation context. Hooks are registered in `~/.claude/settings.json` under the `hooks` key, scoped to an event type and optionally filtered by a `matcher` (a regex or tool name pattern).
 
 Hooks run synchronously by default and block execution until they exit, so keep them fast. The `async: true` field in settings.json makes a hook fire-and-forget, useful for Stop hooks that write to disk or call external services.
 
@@ -36,7 +36,7 @@ Hooks run synchronously by default and block execution until they exit, so keep 
 | `push-guard.py` | PreToolUse (Bash) | Blocks `git push` and `gh pr merge` |
 | `draft-before-create.py` | PreToolUse (MCP tools) | Forces a permission prompt before creating items in shared systems |
 | `file-protector.py` | PreToolUse (Edit, Write) | Blocks edits to `.env` files, private keys, and credentials |
-| `compact-reinject.py` | SessionStart (compact) | Re-injects critical rules after context compaction |
+| `compact-reinject.py` | PreCompact | Re-injects critical rules just before context compaction |
 | `pr-template-reminder.py` | UserPromptSubmit | Reminds Claude to read and follow the repo's PR template |
 | `notify.py` | Notification | Sends a desktop notification when Claude needs input |
 | `session-to-obsidian.py` | Stop | Exports the session transcript to an Obsidian vault |
@@ -123,9 +123,9 @@ Register hooks in `~/.claude/settings.json` under the `hooks` key. Each event ty
         ]
       }
     ],
-    "SessionStart": [
+    "PreCompact": [
       {
-        "matcher": "compact",
+        "matcher": "",
         "hooks": [
           {
             "type": "command",
@@ -268,9 +268,9 @@ sys.exit(0)
 
 ### `compact-reinject.py`
 
-**What it does:** Prints a block of critical rules to stdout when a session restarts after context compaction. Claude Code injects this text into the new session's context, so important rules from CLAUDE.md are not silently dropped mid-session.
+**What it does:** Emits an `additionalContext` block of critical rules just before Claude Code compacts the conversation. Claude Code merges this text into the compacted summary so important rules from CLAUDE.md aren't silently dropped when the context window collapses.
 
-**Event:** SessionStart, matcher: `compact`
+**Event:** PreCompact, matcher: `""` (all compactions)
 
 **Customize:** Edit the `print()` block. Replace the example rules with your own most-violated instructions. Keep it to 4-6 rules: the ones you've actually had to correct Claude on. Format as a numbered list with a bold rule name and a plain-English description.
 
@@ -288,11 +288,11 @@ sys.exit(0)
 
 ### `notify.py`
 
-**What it does:** Fires when Claude Code needs user input (the Notification event). Sends a terminal bell character immediately as a fallback, then launches a PowerShell balloon notification via `powershell.exe`. Designed for WSL. The PowerShell call is wrapped in try/except so it fails silently on pure Linux.
+**What it does:** Fires when Claude Code needs user input (the Notification event). Sends a terminal bell character immediately as a universal fallback, then launches a macOS desktop notification via `osascript`. The `osascript` call is wrapped in try/except so it fails silently on non-macOS platforms — you still get the terminal bell.
 
 **Event:** Notification, matcher: `""` (all notifications)
 
-**Customize:** Replace or extend the notification method for your platform. On macOS, use `osascript -e 'display notification ...'`. On Linux with a desktop, use `notify-send`. The terminal bell works everywhere and requires no changes.
+**Customize:** The Linux (`notify-send`) and WSL/Windows (PowerShell `NotifyIcon`) alternatives are kept in the script as commented-out blocks — uncomment the one that matches your platform and comment out the `osascript` call. The terminal bell works everywhere and requires no changes.
 
 ---
 
