@@ -2,6 +2,9 @@
 # Creates: $HOME\Desktop\CS Reports\Intercom\
 #          $HOME\Desktop\CS Reports\Onboarding\
 #          $HOME\Desktop\CS Reports\Renewals\
+#          $HOME\Desktop\CS Reports\QBR\
+#          $HOME\Desktop\CS Reports\Health Reports\
+#          $HOME\Desktop\CS Reports\Executive Summaries\
 # Also creates a shortcut to the cs-repo folder on your Desktop.
 #
 # Run once after cloning. In PowerShell:
@@ -18,7 +21,7 @@ $reports = Join-Path $desktop "CS Reports"
 Write-Host "Setting up CS Reports folder on your Desktop..."
 
 # Create report subfolders
-foreach ($sub in "Intercom", "Onboarding", "Renewals") {
+foreach ($sub in "Intercom", "Onboarding", "Renewals", "QBR", "Health Reports", "Executive Summaries") {
     $dir = Join-Path $reports $sub
     try {
         if (-not (Test-Path $dir)) {
@@ -48,9 +51,12 @@ try {
 
 Write-Host ""
 Write-Host "Done. After running any report command, the latest .docx will auto-copy to:"
-Write-Host "  $reports\Intercom\   (Intercom reports)"
-Write-Host "  $reports\Onboarding\ (Onboarding reports)"
-Write-Host "  $reports\Renewals\   (Renewal invoice reports)"
+Write-Host "  $reports\Intercom\             (Intercom reports)"
+Write-Host "  $reports\Onboarding\           (Onboarding reports)"
+Write-Host "  $reports\Renewals\             (Renewal invoice reports)"
+Write-Host "  $reports\QBR\                  (QBR prep briefs)"
+Write-Host "  $reports\Health Reports\       (Portfolio health scorecards)"
+Write-Host "  $reports\Executive Summaries\  (Executive summary reports)"
 Write-Host ""
 Write-Host "To open Claude Code in this repo, open PowerShell and type:"
 Write-Host "  cd `"$repoDir`""

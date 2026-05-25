@@ -4,6 +4,8 @@
 #          ~/Desktop/CS Reports/Onboarding/
 #          ~/Desktop/CS Reports/Renewals/
 #          ~/Desktop/CS Reports/QBR/
+#          ~/Desktop/CS Reports/Health Reports/
+#          ~/Desktop/CS Reports/Executive Summaries/
 #          ~/Desktop/cs-repo  (symlink to this repo)
 # Run once after cloning: bash scripts/setup-desktop.sh
 

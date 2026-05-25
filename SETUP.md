@@ -110,7 +110,7 @@ Save and close.
 
 ## Step 5 — Desktop folder
 
-This creates a **CS Reports** folder on your Desktop with `Intercom/`, `Onboarding/`, and `Renewals/` subfolders. Every report you generate automatically copies there so you always know where to find it. Also adds a shortcut to the `cs-repo` folder on your Desktop.
+This creates a **CS Reports** folder on your Desktop with one subfolder per report type — `Intercom/`, `Onboarding/`, `Renewals/`, `QBR/`, `Health Reports/`, and `Executive Summaries/`. Every report you generate automatically copies there so you always know where to find it. Also adds a shortcut to the `cs-repo` folder on your Desktop.
 
 **Mac** — in Terminal:
 
