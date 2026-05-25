@@ -208,19 +208,22 @@ History rewrite complete.
 
 NEXT STEPS — read scripts/REWRITE-HISTORY.md before doing any of these:
 
-  1. Inspect the new history locally — check BOTH messages AND patches:
+  1. Inspect the new history locally — check BOTH messages AND patches.
+     Substitute each placeholder with a real string from your local
+     rewrite-rules file before running. Each command should print nothing:
+
         git log --pretty='%h %an <%ae> %s' | head -40
 
-        # Patches (blobs) — should each find nothing:
+        # Patches (blobs):
         git log -p --all -S '[CUSTOMER_A]'
         git log -p --all -S '[TEAM_OTHER]'
         git log -p --all -S '[TEAM_PRIMARY]'
-        git log -p --all -S '/Users/tripp'
+        git log -p --all -S '[YOUR_HOME_PATH_FRAGMENT]'   # e.g. /Users/yourname
 
-        # Commit messages — should each find nothing:
-        git log --all --format=%B | grep -i 'protonmail'
+        # Commit messages:
+        git log --all --format=%B | grep -i '[YOUR_OLD_EMAIL_DOMAIN]'
         git log --all --format=%B | grep -F '[CUSTOMER_A]'
-        git log --all --format=%B | grep -F 'tarnold@sysdyne'
+        git log --all --format=%B | grep -F '[YOUR_OLD_EMAIL_LOCALPART@DOMAIN]'
 
         # Identities — should print exactly ONE line:
         git log --all --pretty='%an <%ae>%n%cn <%ce>' | sort -u
