@@ -100,20 +100,54 @@ fi
 # ----------------------------------------------------------------------------
 # Build the replacements file.
 #
-# Format (one rule per line):
+# Format (one rule per line, no comment syntax):
 #   <literal-string>==><replacement>
 #
 # git-filter-repo applies these to both commit messages AND file blobs.
-# Lines starting with `#` are not comments — they're treated as literal — so
-# we keep this list compact and well-commented HERE (outside the file).
+# Lines starting with `#` are NOT comments — filter-repo treats them as
+# literal patterns and (without `==>`) would replace them with ***REMOVED***.
+# So the heredoc below contains only rules + blank separators; all
+# explanation lives in the shell comments above each block.
+#
+# Order matters: filter-repo applies rules top-to-bottom against each blob
+# and commit message. Put the most specific (longest) match before any
+# shorter substring that would also match — otherwise the shorter rule eats
+# the prefix and the longer rule never fires.
 # ----------------------------------------------------------------------------
 
 REPL_FILE="$(mktemp -t cs-repo-rewrite-replacements.XXXXXX)"
 trap 'rm -f "$REPL_FILE"' EXIT
 
+# Block 1: protonmail typo. The full-email rule runs first so the substring
+# rule below doesn't half-rewrite it. Catches PR #23's commit body and the
+# PR #39 merge commit's `Co-authored-by:` trailer.
+#
+# Block 2: absolute filesystem paths. Longest-first so the repo-root rule
+# fires before the home-dir catch-all. Catches `[HOME]/...` and
+# `[HOME]/...` (the latter still lives in test_session_to_obsidian.py
+# history before this PR cleans it).
+#
+# Block 3: customers. Case + possessive variants matter because filter-repo
+# matches literal substrings, case-sensitive. PR #30 (94101b1) has
+# "[CUSTOMER_A] deep-dive", "[CUSTOMER_A]'s", and "[customer_a].com" — each needs its
+# own rule.
+#
+# Block 4-7: competitors, contacts, internal team names, identity, external
+# IDs. The team-name rules (`[TEAM_OTHER]`, `[TEAM_PRIMARY]`) are new in
+# round 2 — both appear in PR #30.
+
 cat > "$REPL_FILE" <<'EOF'
+tripp.arnold@protonmail.com==>tripp.arnold@protonmail.com
 protonmail==>protonmail
+
+[REPO_ROOT]==>[REPO_ROOT]
+[HOME]/==>[HOME]/
+[HOME]/==>[HOME]/
+
+[CUSTOMER_A]'s==>[CUSTOMER_A]'s
 [CUSTOMER_A]==>[CUSTOMER_A]
+[customer_a].com==>[customer_a].com
+[customer_a]==>[customer_a]
 [CUSTOMER_B]==>[CUSTOMER_B]
 [CUSTOMER_C]==>[CUSTOMER_C]
 [CUSTOMER_D]==>[CUSTOMER_D]
@@ -123,7 +157,9 @@ protonmail==>protonmail
 [CUSTOMER_F]==>[CUSTOMER_F]
 [CUSTOMER_F]==>[CUSTOMER_F]
 [CUSTOMER_G]==>[CUSTOMER_G]
+
 [COMPETITOR_X]==>[COMPETITOR_X]
+
 [CONTACT_A]==>[CONTACT_A]
 [CONTACT_B]==>[CONTACT_B]
 [CONTACT_B]==>[CONTACT_B]
@@ -131,10 +167,15 @@ protonmail==>protonmail
 [CONTACT_D]==>[CONTACT_D]
 [CONTACT_E]==>[CONTACT_E]
 [CONTACT_F]==>[CONTACT_F]
+
+[TEAM_OTHER]==>[TEAM_OTHER]
+[TEAM_PRIMARY]==>[TEAM_PRIMARY]
+
 [YOUR_NAME]==>[YOUR_NAME]
 [YOUR_EMAIL]==>[YOUR_EMAIL]
 contact@customer.com==>contact@customer.com
 contact@customer.com==>contact@customer.com
+
 [ASANA_TEAM_GID]==>[ASANA_TEAM_GID]
 [DRIVE_PARENT_FOLDER_ID]==>[DRIVE_PARENT_FOLDER_ID]
 EOF
@@ -188,7 +229,10 @@ NEXT STEPS — read scripts/REWRITE-HISTORY.md before doing any of these:
 
   1. Inspect the new history locally:
         git log --pretty='%h %an <%ae> %s' | head -40
-        git log -p --all -S '[CUSTOMER_A]'        # should find nothing
+        git log -p --all -S '[CUSTOMER_A]'         # should find nothing
+        git log -p --all -S '[TEAM_OTHER]'      # should find nothing
+        git log -p --all -S '[TEAM_PRIMARY]'   # should find nothing
+        git log -p --all -S '/Users/tripp'     # should find nothing
         git log --all | grep -i protonmail    # should find nothing
 
   2. git-filter-repo strips the origin remote intentionally. Re-add it:

@@ -79,7 +79,7 @@ if you want to add, remove, or rephrase any rule.
 
 ```bash
 cd ~/Developer
-git clone --mirror [REPO_ROOT] cs-repo-backup.git
+git clone --mirror <your-repo-path>/cs-repo cs-repo-backup.git
 ```
 
 This gives you a complete recovery point if the rewrite goes sideways.
@@ -111,7 +111,7 @@ if you want different replacements than the defaults.
 ### 4. Run from a clean working tree
 
 ```bash
-cd [REPO_ROOT]
+cd <your-repo-path>/cs-repo
 git status      # must be clean
 ./scripts/rewrite-history.sh
 # type REWRITE when prompted
