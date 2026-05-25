@@ -38,9 +38,11 @@ This repo ships with multiple defense layers. If you find a way around any of th
 - **`hooks/secret-scan.py`** — blocks `git commit` when staged content matches known token patterns (Shortcut, GitHub `ghp_`/`gho_`/`ghs_`/`ghu_`/`ghr_`, OpenAI legacy + project-keys, Anthropic, Stripe live (sk_live/pk_live), Twilio, GCP service account, Slack `xox[abcepsr]-`, AWS access key + secret, Google API, RSA private key, JWT). Stripe test keys (`sk_test_`/`pk_test_`) emit a warning but do not block.
 - **`hooks/push-guard.py`** — blocks `git push --force`, pushes to `main`/`master`, `gh pr merge`, and Bash-level writes to `.env` files
 - **`hooks/file-protector.py`** — blocks Edit/Write to `.env`, `.env.*`, private keys, credential files, and `.git/` internals
+- **`hooks/branch-enforcer.py`** — blocks `git commit` directly on `main`/`master`; pairs with GitHub branch protection so risky commits fail at the local layer first
 - **`hooks/draft-before-create.py`** — forces a permission prompt before any write to Slack, Asana, Intercom, or Shortcut
 - **`hooks/block-attribution.py`** — blocks AI-attribution strings in commit messages
-- **`.claude/settings.json` `permissions.deny`** — hard-denies destructive MCP calls (deletes for Asana/Shortcut/Calendar) at the harness level
+- **`hooks/audit-log.py`** — appends every tool invocation (Bash, Edit, MCP, etc.) to `~/.claude/tool-audit.log` for forensic review; non-blocking, rotates at 5 MB
+- **`.claude/settings.json` `permissions.deny`** — hard-denies six destructive MCP calls at the harness level: Asana `delete_task` + `create_project_status_update`, Calendar `delete_event`, Shortcut `stories-delete` / `epics-delete` / `iterations-delete`
 - **GitHub branch protection** on `main` (server-side) — enforces PR-only flow, blocks force pushes, requires linear history
 
 ## What's NOT in the repo
