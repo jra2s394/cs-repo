@@ -58,8 +58,16 @@ jobs:
       # Single pytest run with coverage. Previously CI ran pytest twice
       # (once for results, once for coverage); --cov is a superset of the
       # plain run, so collapsing them saves ~30s/run.
+      #
+      # --cov-fail-under=70 locks in the current floor (74% combined across
+      # the line-tested files: lib/report_charts.py at 100% and
+      # hooks/session-to-obsidian.py at ~70%). Subprocess-tested hooks are
+      # omitted per .coveragerc — they're behaviorally tested but coverage.py
+      # can't see them. The 4-point buffer below the current number lets a
+      # small defensive branch land without immediately needing a test, but
+      # catches a deleted test file or a major regression.
       - name: Run Python tests (with coverage)
-        run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --tb=short -q
+        run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --cov-fail-under=70 --tb=short -q
 
       - name: Lint Python (ruff)
         run: make lint-py
