@@ -1,5 +1,6 @@
 ---
 description: Generate today's Intercom support intelligence report — daily snapshot with yesterday comparison
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/intercom-report-template.md` from this repo before starting.

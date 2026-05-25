@@ -1,5 +1,6 @@
 ---
 description: Generate an executive summary report — portfolio-wide view combining onboarding, support, renewals, and health for leadership.
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` from this repo before starting.

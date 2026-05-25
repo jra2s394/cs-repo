@@ -1,5 +1,6 @@
 ---
 description: Generate this month's Onboarding CARR report — MoM comparison + week-by-week breakdown + QTD context
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/onboarding-report-template.md` from this repo before starting.

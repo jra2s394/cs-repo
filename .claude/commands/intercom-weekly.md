@@ -1,5 +1,6 @@
 ---
 description: Generate this week's Intercom support intelligence report — WoW comparison + MTD context
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/intercom-report-template.md` from this repo before starting.

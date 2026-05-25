@@ -1,5 +1,6 @@
 ---
 description: Generate this quarter's Onboarding CARR report — QoQ scorecard + monthly breakdown + YTD context
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/onboarding-report-template.md` from this repo before starting.

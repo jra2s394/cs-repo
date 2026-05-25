@@ -1,5 +1,6 @@
 ---
 description: Generate next quarter's renewal pipeline — three-month invoice forecast for CS and Finance planning
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/renewals-report-template.md` from this repo before starting.

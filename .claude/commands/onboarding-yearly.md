@@ -1,5 +1,6 @@
 ---
 description: Generate this year's Onboarding CARR report — YTD snapshot, YoY comparison, quarter-by-quarter, top accounts, all-time totals
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/onboarding-report-template.md` from this repo before starting.
