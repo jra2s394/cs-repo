@@ -287,6 +287,33 @@ class TestAllowlist:
         code, _ = _scan(repo)
         assert code == 0
 
+    def test_bak_suffix_on_allowlisted_file_still_blocks(self, tmp_path):
+        """Regression: round-22.
+
+        The ALLOW_PATHS membership check previously used `startswith()`,
+        which meant `hooks/secret-scan.py.bak` matched the allow-listed
+        `hooks/secret-scan.py` and silently bypassed scanning. A real
+        `.bak` of the scanner with an embedded token would have slipped
+        through. Membership is now exact-equality; sibling files with a
+        prefix-of-an-allowlisted-path must still be scanned.
+        """
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        (repo / "hooks").mkdir()
+        _stage(repo, "hooks/secret-scan.py.bak",
+               'TOKEN = "sct_rw_real_NjVmMGNmOTQtMWYwYS00NTdkLWFlODU"')
+        code, _ = _scan(repo)
+        assert code == 2, "sibling file (sharing an allowlisted prefix) must still be scanned"
+
+    def test_disabled_suffix_on_allowlisted_test_file_still_blocks(self, tmp_path):
+        """Regression: round-22. Same class as the .bak test, exercised on
+        the tests/ allow entry."""
+        repo = _init_repo_on_branch(tmp_path, "feature/x")
+        (repo / "tests" / "hooks").mkdir(parents=True)
+        _stage(repo, "tests/hooks/test_secret_scan.py.disabled",
+               'TOKEN = "sct_rw_real_NjVmMGNmOTQtMWYwYS00NTdkLWFlODU"')
+        code, _ = _scan(repo)
+        assert code == 2
+
 
 # ---------------------------------------------------------------------------
 # Robustness
