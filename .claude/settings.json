@@ -6,19 +6,24 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/branch-enforcer.py"
+            "command": "python3 hooks/branch-enforcer.py",
+            "statusMessage": "Checking branch protection..."
           },
           {
             "type": "command",
-            "command": "python3 hooks/push-guard.py"
+            "command": "python3 hooks/push-guard.py",
+            "statusMessage": "Checking push commands..."
           },
           {
             "type": "command",
-            "command": "python3 hooks/block-attribution.py"
+            "command": "python3 hooks/block-attribution.py",
+            "statusMessage": "Checking commit attribution..."
           },
           {
             "type": "command",
-            "command": "python3 hooks/secret-scan.py"
+            "command": "python3 hooks/secret-scan.py",
+            "statusMessage": "Scanning staged diff for secrets...",
+            "timeout": 15
           }
         ]
       },
@@ -27,7 +32,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/file-protector.py"
+            "command": "python3 hooks/file-protector.py",
+            "statusMessage": "Checking file protection..."
           }
         ]
       },
@@ -36,7 +42,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/file-protector.py"
+            "command": "python3 hooks/file-protector.py",
+            "statusMessage": "Checking file protection..."
           }
         ]
       },
@@ -45,7 +52,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -54,7 +62,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -63,7 +72,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -72,7 +82,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -81,7 +92,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -90,7 +102,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -99,7 +112,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -108,7 +122,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -117,7 +132,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -126,7 +142,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -135,7 +152,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -144,7 +162,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -153,7 +172,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -162,7 +182,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -171,7 +192,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -180,7 +202,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -189,7 +212,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -198,7 +222,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -207,7 +232,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -216,7 +242,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -225,7 +252,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -234,7 +262,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -243,7 +272,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -252,7 +282,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -261,7 +292,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -270,7 +302,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -279,7 +312,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -288,7 +322,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -297,7 +332,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -306,7 +342,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -315,7 +352,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -324,7 +362,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -333,7 +372,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -342,7 +382,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -351,7 +392,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -360,7 +402,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -369,7 +412,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -378,7 +422,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -387,7 +432,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -396,7 +442,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -405,7 +452,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -414,7 +462,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -423,7 +472,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -432,7 +482,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -441,7 +492,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -450,7 +502,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -459,7 +512,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -468,7 +522,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -477,7 +532,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -486,7 +542,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -495,7 +552,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       },
@@ -504,7 +562,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/draft-before-create.py"
+            "command": "python3 hooks/draft-before-create.py",
+            "statusMessage": "Enforcing Draft-Before-Create..."
           }
         ]
       }
@@ -515,7 +574,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/audit-log.py"
+            "command": "python3 hooks/audit-log.py",
+            "timeout": 5
           }
         ]
       }
@@ -526,7 +586,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/compact-reinject.py"
+            "command": "python3 hooks/compact-reinject.py",
+            "statusMessage": "Re-injecting critical rules into compacted context..."
           }
         ]
       }
@@ -537,7 +598,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/notify.py"
+            "command": "python3 hooks/notify.py",
+            "timeout": 10
           }
         ]
       }
@@ -548,7 +610,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 hooks/pr-template-reminder.py"
+            "command": "python3 hooks/pr-template-reminder.py",
+            "statusMessage": "Checking for PR template..."
           }
         ]
       }
@@ -560,7 +623,9 @@
           {
             "type": "command",
             "command": "python3 hooks/session-to-obsidian.py",
-            "async": true
+            "async": true,
+            "statusMessage": "Exporting session to Obsidian...",
+            "timeout": 30
           }
         ]
       }
