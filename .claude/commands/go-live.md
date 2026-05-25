@@ -1,5 +1,6 @@
 ---
 description: Go-live readiness check for a customer — surfaces open blockers across Asana, Shortcut, Intercom, and email before a launch date.
+argument-hint: <customer name>
 ---
 
 Read `CLAUDE.md` from this repo before starting.

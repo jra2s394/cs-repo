@@ -1,5 +1,6 @@
 ---
 description: Fuzzy customer lookup — find a customer across Asana, Shortcut, Intercom, and Gmail when you don't know the exact spelling
+argument-hint: [partial name | misspelling | domain]
 ---
 
 Read `CLAUDE.md` from this repo before starting.

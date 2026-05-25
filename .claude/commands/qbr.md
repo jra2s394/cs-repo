@@ -1,5 +1,6 @@
 ---
 description: QBR prep for a customer — pulls a quarter's worth of data from all sources and drafts agenda sections for review before the meeting.
+argument-hint: <customer> [quarter]
 ---
 
 Read `CLAUDE.md` from this repo before starting.

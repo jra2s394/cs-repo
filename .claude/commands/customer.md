@@ -1,5 +1,6 @@
 ---
 description: Pull a full customer snapshot — open conversations, recent activity, Asana tasks, emails, and go-live status
+argument-hint: [customer name]
 ---
 
 Read `CLAUDE.md` from this repo before starting.
