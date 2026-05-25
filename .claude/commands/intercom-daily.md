@@ -41,12 +41,8 @@ print("WEEK_START_TS:", int(week_start.timestamp()), " | ", week_start.strftime(
 print("NOW_TS:", int(now.timestamp()))
 ```
 
-### 2 — Pull the week's conversations (one call)
-Use `search_conversations` — it returns the full conversation object (`statistics`, `ai_agent`, `custom_attributes`, `source`, `read`, `waiting_since`) in the list response, so no per-conversation fetch is needed. Make ONE pull from the week start:
-```
-search_conversations(created_at={"operator": ">=", "value": WEEK_START_TS}, per_page=150)
-```
-Paginate with `starting_after` until all conversations are retrieved. Do NOT use the generic `search` tool here — it returns only `id/title/text/url`.
+### 2 — Pull the week's conversations
+Run **Standard Step 2** from the template with `START_TS = WEEK_START_TS`. Paginate fully.
 
 ### 3 — Bucket the results in Python
 Split the single pull from step 2 by each conversation's `created_at`:
@@ -55,15 +51,10 @@ Split the single pull from step 2 by each conversation's `created_at`:
 - **This week (MTD)** = every conversation from the pull
 
 ### 4 — Pull currently OPEN conversations
-```
-search_conversations(state="open", per_page=150)
-```
-This is the live open queue — not date-filtered. Paginate with `starting_after` if >150.
+Run **Standard Step 4** from the template.
 
 ### 5 — Pull KB articles
-```
-list_articles(per_page=150)
-```
+Run **Standard Step 5** from the template.
 
 ### 6 — Compute all metrics via Python/Bash
 Apply the metric formulas from `prompts/intercom-report-template.md`.
@@ -163,25 +154,4 @@ node reports/intercom-daily.js data/outputs/intercom-daily-metrics-[YYYY-MM-DD].
 ```
 Output: `out/Intercom_Daily_[YYYY-MM-DD].docx`
 
-**c) Convert to PDF** *(skip if LibreOffice not installed — the .docx is the primary deliverable)*:
-```bash
-/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir out/ out/Intercom_Daily_[YYYY-MM-DD].docx
-```
-
----
-
-## Google Drive upload (optional)
-
-After showing the report, ask: "Want me to upload the data to Google Sheets?"
-
-If yes:
-1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
-2. Call `mcp__claude_ai_Google_Drive__create_file` with:
-   - `title`: "Intercom Daily — [Period]"
-   - `textContent`: the CSV file contents
-   - `contentMimeType`: "text/csv"
-3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
-
----
-
-End with: "Want me to upload the data to Google Sheets, post this to Slack, or tweak anything?"
+**c) PDF, Drive upload, closing prompt** — run **Standard Build & Distribute** from the template.
