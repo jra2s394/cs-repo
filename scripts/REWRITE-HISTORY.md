@@ -96,19 +96,30 @@ pip install git-filter-repo
 
 Verify with `git filter-repo --help`.
 
-### 3. Edit the script
+### 3. Configure the rewrite
 
-Open `scripts/rewrite-history.sh`. At the top:
+**a) Create your local substitution rules.** The rules file is intentionally
+gitignored so it survives the rewrite (an earlier in-script heredoc broke
+on the second invocation — filter-repo applied the rules to its own source
+text, leaving every rule as a self-referential no-op).
+
+```bash
+cp scripts/rewrite-rules.example.txt scripts/rewrite-rules.local.txt
+$EDITOR scripts/rewrite-rules.local.txt
+```
+
+Fill in the real strings you want scrubbed. Order matters: longest /
+most-specific matches FIRST so they fire before shorter substrings.
+
+**b) Set your canonical identity.** Open `scripts/rewrite-history.sh` and
+set the two empty variables at the top:
 
 ```bash
 CHOSEN_EMAIL=""
 CHOSEN_NAME=""
 ```
 
-Set both. This is the identity every historical commit will be re-authored to.
-
-Optional: scroll to the `REPL_FILE` heredoc and add/remove substitution rules
-if you want different replacements than the defaults.
+Every historical commit will be re-authored to `CHOSEN_NAME <CHOSEN_EMAIL>`.
 
 ### 4. Run from a clean working tree
 
@@ -121,10 +132,12 @@ git status      # must be clean
 
 The script will:
 
+- load the substitution rules from `scripts/rewrite-rules.local.txt`,
 - enumerate every (name, email) pair in history,
 - generate a mailmap that points each one at your chosen identity,
-- assemble the replacement rules,
-- invoke `git filter-repo` with `--mailmap` + `--replace-text`,
+- invoke `git filter-repo` with `--mailmap`, `--replace-text`, and
+  `--replace-message` (so commit messages get scrubbed too, not just
+  file contents),
 - print a "what to do next" block.
 
 ### 5. Verify locally before pushing
