@@ -211,7 +211,7 @@ Configured server-side at `github.com/jra2s394/cs-repo/settings/branches`:
 | Rule | Setting |
 |---|---|
 | Require pull request before merging | ✅ on |
-| Required approvals | 0 (solo repo) |
+| Required approvals | 1 (effectively 0 — `enforce_admins: false`, so the repo owner can self-merge solo work) |
 | Required status checks | ✅ `test` must pass; strict (branch must be up-to-date with `main`) |
 | Allow force pushes | ❌ off |
 | Allow branch deletion | ❌ off |
