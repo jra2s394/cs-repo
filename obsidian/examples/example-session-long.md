@@ -175,4 +175,4 @@ claude_version: 2.1.95
 
 ## Raw Transcript
 
-[Raw JSONL](_raw/c9e17f30-5b82-4d71-a6c4-2f0d8e5a1b93.jsonl)
+Raw JSONL: `_raw/c9e17f30-5b82-4d71-a6c4-2f0d8e5a1b93.jsonl` *(generated alongside this note by `session-to-obsidian.py`; not shipped with the example)*
