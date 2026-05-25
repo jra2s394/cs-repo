@@ -1,6 +1,23 @@
 {
   "autoUpdatesChannel": "stable",
   "disableSkillShellExecution": true,
+  "sandbox": {
+    "enabled": true,
+    "filesystem": {
+      "denyRead": ["~/.ssh", "~/.aws", "~/.gnupg"]
+    },
+    "network": {
+      "allowedDomains": [
+        "api.github.com",
+        "github.com",
+        "registry.npmjs.org",
+        "files.pythonhosted.org",
+        "pypi.org",
+        "code.claude.com",
+        "anthropic.com"
+      ]
+    }
+  },
   "hooks": {
     "PreToolUse": [
       {
