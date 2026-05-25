@@ -104,3 +104,6 @@ These audit rounds produced the cadence above. If you ever wonder "why is this c
 | 41 | `PostToolUseFailure` hook unwired (failed tool calls vanished from audit log); `autoUpdatesChannel` defaulted to `latest` instead of `stable` | WebFetch /en/hooks + /en/settings |
 | 42 | `--cov-fail-under` unset (coverage could silently decay between rounds) | internal scout — pytest config drift |
 | 43 | `session-to-obsidian.py main()` 90+ lines untested; coverage floor stuck at 70 until orchestration was tested | round-42 carry-over (coverage report on `main`) |
+| 44 | `disableSkillShellExecution` unset (skills could run inline shell); Detection record above stopped at round 29 | WebFetch /en/settings + manual scout for cumulative drift |
+| 45 | Zero of 44 commands used `allowed-tools` frontmatter (every command had implicit access to every tool) | WebFetch /en/skills cross-check against `.claude/commands/*.md` frontmatter |
+| 46 | Zero commands used `disable-model-invocation` (Claude could auto-fire manual write commands like `/escalate`); JS had ~1500 LOC tested but zero coverage tracking | WebFetch /en/skills (re-fetched) + scout against c8/coverage tooling absence |

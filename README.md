@@ -56,12 +56,15 @@ Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutori
 
 ## Repo quality
 
-Every hook, lib helper, chart, and report is covered by automated tests. Two linters (ruff for Python, biome for JS) catch undefined identifiers and unused imports before they reach CI. GitHub Actions runs the full test + lint suite on every pull request so broken changes can't land on `main`.
+Every hook, lib helper, chart, and report is covered by automated tests. Two linters (ruff for Python, biome for JS), mypy type-checking, and c8 coverage tracking on the JS side catch issues before they reach CI. GitHub Actions runs the full suite on every pull request so broken changes can't land on `main`.
 
 ```
-make test       # 728 tests (571 Python + 157 JS)
-make lint       # ruff + biome — undefined names, unused imports, etc.
-/review-code    # structured checklist — runs tests first, then 23 fixed sections
+make test         # 837 tests (680 Python + 157 JS)
+make typecheck    # mypy — Python type checking (lenient baseline)
+make test-cov     # pytest with coverage threshold (≥85%)
+make test-js-cov  # JS tests under c8 with coverage threshold (≥75%)
+make lint         # ruff + biome — undefined names, unused imports, etc.
+/review-code      # structured checklist — runs tests first, then 23 fixed sections
 ```
 
 See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) for details.
