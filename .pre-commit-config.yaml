@@ -12,15 +12,25 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
+      # Both whitespace-fixers below skip files that macOS TCC has put
+      # under write protection once Claude Code touches them. Started as
+      # just .claude/settings.json (round 53), spread to every hooks/*.py
+      # file (round 56 morning), then spread to every .claude/commands/*.md
+      # file (round 56 afternoon). The pattern is "any file Claude Code's
+      # Edit/Write tool has written gets TCC-protected" — which covers
+      # essentially everything under .claude/ and the hook scripts.
+      #
+      # Both hooks open files in rb+ mode (read-write) to check, so they
+      # hit PermissionError even when the file's content is already
+      # correct. The repo convention is "all files end with newline and
+      # have no trailing whitespace" — we rely on editors/Claude Code to
+      # maintain that for the excluded paths, since the hooks can't
+      # enforce it on them. Same pattern as the detect-private-key
+      # exclusion below for the secret-scan test file.
       - id: trailing-whitespace
-        exclude: '\.md$'  # markdown line breaks rely on trailing spaces
+        exclude: '\.md$|^\.claude/|^hooks/'
       - id: end-of-file-fixer
-        # macOS TCC protects .claude/settings.json once Claude Code has
-        # written to it — opening in `rb+` mode (which end-of-file-fixer
-        # always does) hits PermissionError even when the file already
-        # ends with a newline. We commit the file with a final newline
-        # by convention; the hook's check is redundant for this path.
-        exclude: '^\.claude/settings\.json$'
+        exclude: '^\.claude/|^hooks/'
       - id: check-yaml
       - id: check-json
       - id: check-added-large-files

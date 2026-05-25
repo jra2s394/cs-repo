@@ -1,5 +1,6 @@
 ---
 description: Morning Gmail triage — categorize overnight email into Respond / FYI / Escalation / Customer Signal, surface action items, and draft replies on request (drafts only, never sends)
+disable-model-invocation: true
 allowed-tools: Read mcp__claude_ai_Gmail__search_threads mcp__claude_ai_Gmail__get_thread mcp__claude_ai_Gmail__create_draft
 ---
 
