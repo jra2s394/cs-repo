@@ -329,7 +329,7 @@ Convert to PDF if LibreOffice is installed (optional):
 - Period filtering: if no date columns exist, report on ALL accounts by current status (note this clearly)
 - If prior-period data isn't available for WoW/MoM/QoQ comparison, use "—" — do not invent it
 - Flag 🔴 any account where status = "Blocked" and CARR > $10k
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 ---
 

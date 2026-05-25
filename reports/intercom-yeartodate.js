@@ -155,7 +155,7 @@ children.push(T.codeBlock([
   `# All-time window: ${d.methodology.period}`,
   "",
   "# Results bucketed in Python by created_at timestamp per year/quarter",
-  "# Mountain Time (America/Denver) for all timestamps",
+  `# ${d.timeZone || "Local time zone"} for all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -167,7 +167,7 @@ children.push(T.dataTable({
     ["Period",        d.methodology.period],
     ["Conversations", String(d.methodology.conversations)],
     ["Pages fetched", String(d.methodology.pages)],
-    ["Time zone",     "Mountain Time (America/Denver)"],
+    ["Time zone",     d.timeZone || "your local time zone"],
     ["Prepared by",   d.preparedBy],
     ["Generated",     d.generated],
   ],

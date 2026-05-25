@@ -81,6 +81,6 @@ Present the summary in this format:
 - Never claim a meeting happened without a calendar event confirming it
 - Never claim a go-live happened without email confirmation
 - If data is missing from any source, say so — don't fill in gaps with assumptions
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 If any MCP tool is unavailable, tell me which one and proceed with what you have.

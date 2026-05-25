@@ -34,7 +34,7 @@ Ask the user:
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")
 now = datetime.now(MT)
 today = now.replace(hour=0, minute=0, second=0, microsecond=0)
 

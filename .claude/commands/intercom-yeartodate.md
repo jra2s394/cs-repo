@@ -26,7 +26,7 @@ Generate the **YEARLY** Intercom report for Slabstack CS Intelligence.
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")  # handles MDT/MST + DST automatically
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")  # ZoneInfo handles DST automatically
 now = datetime.now(MT)
 today = now.replace(hour=0, minute=0, second=0, microsecond=0)
 current_year = today.year
@@ -219,7 +219,7 @@ Save to: `data/outputs/intercom-yearly-YYYY.md` (year only, not date)
 - If Slabstack launched Intercom mid-year in any past year, note the partial data and pro-rate where helpful
 - All-time totals = sum of all paginated results across all time, not estimates
 - Pagination limit note: if all-time total exceeds 1,500 conversations, flag the count and note you paginated through all available data
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 ---
 

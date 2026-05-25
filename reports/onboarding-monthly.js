@@ -168,7 +168,7 @@ children.push(T.codeBlock([
   "",
   "# CARR and account data sourced from finance mastersheet",
   "# Task health sourced from Asana via MCP",
-  "# Mountain Time (America/Denver) for all timestamps",
+  `# ${d.timeZone || "Local time zone"} for all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -181,7 +181,7 @@ children.push(T.dataTable({
     ["Period",           d.methodology.period],
     ["Rows processed",   String(d.methodology.rowsProcessed)],
     ["Asana tasks",      String(d.methodology.asanaTasks || 0)],
-    ["Time zone",        "Mountain Time (America/Denver)"],
+    ["Time zone",        d.timeZone || "your local time zone"],
     ["Prepared by",      d.preparedBy],
     ["Generated",        d.generated],
   ],

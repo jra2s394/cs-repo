@@ -27,7 +27,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import calendar
 
-MT = ZoneInfo("America/Denver")  # handles MDT/MST + DST automatically
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")  # ZoneInfo handles DST automatically
 now = datetime.now(MT)
 today = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -175,7 +175,7 @@ Save to: `data/outputs/intercom-quarterly-YYYY-MM-DD.md`
 - Working day count: use 5 days/week, exclude weekends from "convs per working day" calc
 - For YoY comparison, align the period end to the same day of the quarter (e.g., if today is day 52 of Q2, compare to day 52 of Q2 last year)
 - If same-quarter last year data is unavailable or sparse, note it — don't fabricate the comparison
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 ---
 

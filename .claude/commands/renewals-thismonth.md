@@ -30,7 +30,7 @@ Ask the user: "What's the path to the renewals sheet from Finance?" (e.g., `~/Do
 from datetime import datetime, date
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")
 today = datetime.now(MT).date()
 
 target_year  = today.year

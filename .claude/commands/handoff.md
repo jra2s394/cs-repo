@@ -149,4 +149,4 @@ Once approved:
 - Never create tasks without explicit approval
 - Never update Shortcut story ownership — tell the user what to do in Shortcut
 - Flag any outstanding commitments as 🔴 — these must be resolved or transferred explicitly
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)

@@ -117,7 +117,7 @@ children.push(T.codeBlock([
   "# Renewal data sourced from Gmail (contract emails), Asana (renewal tasks),",
   "# and Finance mastersheet when available. Risk scores are manual or derived",
   "# from days-to-renewal and last contact recency.",
-  "# Mountain Time (America/Denver) for all timestamps",
+  `# ${d.timeZone || "Local time zone"} for all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -129,7 +129,7 @@ children.push(T.dataTable({
     ["High risk",         String(highRisk.length)],
     ["Sources",           (d.methodology.sources || []).join(", ")],
     ["Period",            d.period],
-    ["Time zone",         "Mountain Time (America/Denver)"],
+    ["Time zone",         d.timeZone || "your local time zone"],
     ["Prepared by",       d.preparedBy],
     ["Generated",         d.generated],
   ],

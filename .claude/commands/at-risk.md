@@ -110,5 +110,5 @@ For each 🔴 item, offer one concrete next step the user can take:
 - Every recommendation must be specific: named customer, named action, named next step
 - Do not surface internal 1:1s or non-customer items as at-risk signals
 - If an issue is present in multiple systems, mention it once and note the cross-system signal
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, say which one and continue with what you have

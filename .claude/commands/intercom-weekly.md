@@ -25,7 +25,7 @@ Generate the **WEEKLY** Intercom report for Slabstack CS Intelligence.
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")  # handles MDT/MST + DST automatically
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")  # ZoneInfo handles DST automatically
 now = datetime.now(MT)
 today = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -124,7 +124,7 @@ Save to: `data/outputs/intercom-weekly-YYYY-MM-DD.md` (today's date)
 - Only count conversations where `created_at` falls within the period
 - If today IS Monday, the "this week" period is today only — note this
 - Paginate fully — do not estimate weekly totals from partial data
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 ---
 

@@ -111,5 +111,5 @@ Draft any tasks before creating them. Wait for explicit approval.
 - Never claim training completed without a Read.ai report or email confirmation
 - Never claim a go-live call is scheduled without a calendar event
 - Flag all unclear status as 🔴 — don't guess
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, note it and continue with what you have

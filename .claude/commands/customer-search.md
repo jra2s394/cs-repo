@@ -88,7 +88,7 @@ After listing candidates:
 - Never claim a match without showing the data that supports it
 - If a system is unreachable, name it and continue with what's available — note the gap in the output
 - Confidence labels are part of the contract: do not upgrade a match without the supporting signals
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 ---
 

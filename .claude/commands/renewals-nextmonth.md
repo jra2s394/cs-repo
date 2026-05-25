@@ -31,7 +31,7 @@ from datetime import datetime, date
 from zoneinfo import ZoneInfo
 from calendar import monthrange
 
-MT = ZoneInfo("America/Denver")
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")
 today = datetime.now(MT).date()
 
 # Next month

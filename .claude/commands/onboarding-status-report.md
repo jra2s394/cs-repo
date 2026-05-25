@@ -25,7 +25,7 @@ Ask for (or confirm from context):
 - Flag any thread with no reply in 5+ days as a follow-up needed item.
 
 **Google Calendar** — `list_events`
-- Past 14 days: `startTime` = 14 days ago, `endTime` = today (Mountain Time ISO 8601)
+- Past 14 days: `startTime` = 14 days ago, `endTime` = today (in your local time zone, ISO 8601)
 - Next 30 days: `startTime` = today, `endTime` = 30 days from now
 - Filter to events containing the customer name. Record: date, time (MT), title, attendees.
 
@@ -101,7 +101,7 @@ Assemble all data, then save to `data/outputs/onboarding-status-{customerSlug}-{
 - Never mark a task complete without Asana confirming `completed: true`.
 - Never list a meeting without a calendar event confirming it.
 - Flag 🔴 (urgent: true) any open item older than 5 days, any unconfirmed go-live, or any Intercom conversation open > 5 days.
-- All times in Mountain Time.
+- All times in your local time zone (per `~/.claude/CLAUDE.md`).
 
 ---
 

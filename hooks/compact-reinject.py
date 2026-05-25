@@ -23,7 +23,7 @@ output = {
             "   Never claim a go-live or milestone without explicit inbox confirmation.\n"
             "   If status is unclear, flag 🔴 'status unclear — needs confirmation.'\n\n"
             "3. MOUNTAIN TIME:\n"
-            "   Use ZoneInfo('America/Denver') — never hardcode -6 or -7 UTC offset.\n\n"
+            "   Use ZoneInfo('<your IANA TZ from ~/.claude/CLAUDE.md>') — never hardcode a UTC offset.\n\n"
             "4. INTERCOM API CONSTRAINTS:\n"
             "   - search_conversations() requires at least one filter parameter.\n"
             "     EXCEPTION: /intercom-yeartodate uses an unbounded pull (no date filter)\n"

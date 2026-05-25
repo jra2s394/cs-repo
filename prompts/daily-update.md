@@ -72,7 +72,7 @@ End the message with: "Want me to drop this in Slack as a draft, or tweak anythi
 ## Rules (from CLAUDE.md, repeated for emphasis)
 
 - Keep it terse — this posts straight to Slack. No "How are you feeling", no @your-slack-handle section.
-- Section headers are italic (`*Yesterday:*`); bullets use `•`; times in Mountain Time.
+- Section headers are italic (`*Yesterday:*`); bullets use `•`; times in your local time zone (the IANA name set in `~/.claude/CLAUDE.md`).
 - No win goes in without a calendar event, sent email, Asana completion, or Intercom close
 - Read.ai report outcomes replace inferred wins — don't duplicate both
 - Action items come from Read.ai reports — fold them into *Today*; don't invent them

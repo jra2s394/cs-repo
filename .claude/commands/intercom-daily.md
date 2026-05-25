@@ -21,13 +21,13 @@ Generate the **DAILY** Intercom report for Slabstack CS Intelligence.
 ## Step-by-step instructions
 
 ### 1 — Calculate timestamps
-Run this in Bash to get exact Unix timestamps and date strings. `ZoneInfo("America/Denver")` handles the MDT/MST switch automatically — never hardcode the UTC offset.
+Run this in Bash to get exact Unix timestamps and date strings. `ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md>")` (e.g. `America/Denver`) handles DST automatically — never hardcode the UTC offset.
 
 ```python
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")  # handles MDT/MST + DST automatically
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")  # ZoneInfo handles DST automatically
 now = datetime.now(MT)
 today_start = now.replace(hour=0, minute=0, second=0, microsecond=0)
 yesterday_start = today_start - timedelta(days=1)
@@ -102,7 +102,7 @@ Save to: `data/outputs/intercom-daily-YYYY-MM-DD.md`
 - Only include conversations where `created_at >= today_start_ts` for "today" stats
 - Do not count yesterday's conversations as today's wins
 - If Intercom returns 0 conversations for today, say so — do not estimate
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 ---
 

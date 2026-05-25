@@ -12,7 +12,7 @@ This is a **read-only file aggregation**. No live MCP calls. No drafts. Just wal
 
 ## Step 1 — Find the week's daily files
 
-Compute the current work week in Mountain Time:
+Compute the current work week in your local time zone (per `~/.claude/CLAUDE.md`):
 - Monday of this week through Friday of this week (`<= today`)
 - Glob `data/outputs/daily-YYYY-MM-DD.md` matching those dates
 
@@ -90,5 +90,5 @@ Show it inline, then say:
 - **No MCP calls** — this command only reads local files. The whole point is to *avoid* re-pulling data the daily files already captured.
 - If a daily file is missing for a day, say so explicitly — don't infer or fill in.
 - Never modify the source daily files. Recap is a derivative artifact.
-- All dates in Mountain Time.
+- All dates in your local time zone (per `~/.claude/CLAUDE.md`).
 - If `data/outputs/` doesn't exist or has zero daily-*.md files for this week, say so and stop.
