@@ -41,8 +41,13 @@ This repo ships with multiple defense layers. If you find a way around any of th
 - **`hooks/branch-enforcer.py`** — blocks `git commit` directly on `main`/`master`; pairs with GitHub branch protection so risky commits fail at the local layer first
 - **`hooks/draft-before-create.py`** — forces a permission prompt before any write to Slack, Asana, Intercom, Shortcut, Gmail, Google Calendar, or Google Drive (destructive deletes are gated separately by `permissions.deny`)
 - **`hooks/block-attribution.py`** — blocks AI-attribution strings in commit messages
-- **`hooks/audit-log.py`** — appends every tool invocation (Bash, Edit, MCP, etc.) to `~/.claude/tool-audit.log` for forensic review; non-blocking, rotates at 5 MB
+- **`hooks/audit-log.py`** — appends every tool invocation (Bash, Edit, MCP, etc.) to `~/.claude/tool-audit.log` for forensic review; non-blocking, rotates at 5 MB. Distinguishes successful calls (`OK`) from failed ones (`FAIL`) via the `PostToolUseFailure` event, so a hook-bypass attempt that errors out still leaves a trace.
 - **`.claude/settings.json` `permissions.deny`** — hard-denies six destructive MCP calls at the harness level: Asana `delete_task` + `create_project_status_update`, Calendar `delete_event`, Shortcut `stories-delete` / `epics-delete` / `iterations-delete`
+- **`.claude/settings.json` `disableBypassPermissionsMode: "disable"`** — prevents `bypassPermissions` mode from being activated, even from the CLI. Closes the "I'll just YOLO mode this" escape hatch.
+- **`.claude/settings.json` `disableSkillShellExecution: true`** — blocks inline shell execution from any skill (`` !\`...\` `` and ` \`\`\`! ` markdown forms). Removes a class of skill-hijack attacks.
+- **`.claude/settings.json` `sandbox`** — OS-level Bash sandbox using macOS Seatbelt (or bubblewrap on Linux/WSL2). Denies reads to `~/.ssh`, `~/.aws`, `~/.gnupg` so a compromised command can't exfiltrate credentials; network access is allowlist-only for known-good endpoints. `gh` and `git` are excluded from the sandbox (Go-based CLIs don't trust the macOS keychain under Seatbelt — documented limitation).
+- **Command frontmatter `allowed-tools`** — 7 commands (`/inbox-triage`, `/escalate`, `/follow-up`, `/kb-draft`, `/commands`, `/standup-recap`, `/prs`) are restricted at the runtime to only the work-app tools they actually need. A prompt-injected command can't reach a tool that isn't in its list.
+- **Command frontmatter `disable-model-invocation: true`** — 28 manual-only commands (every standup, every report, every write-action command) can't be auto-fired by Claude based on conversation context. The user must explicitly type the slash command.
 - **GitHub branch protection** on `main` (server-side) — enforces PR-only flow, blocks force pushes, requires linear history
 
 ## What's NOT in the repo

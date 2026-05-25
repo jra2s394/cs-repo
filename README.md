@@ -73,7 +73,7 @@ See [USER_GUIDE.md § Testing and quality](USER_GUIDE.md#testing-and-quality) fo
 
 ## Reporting a security issue
 
-Found a vulnerability or a leaked token? See **[SECURITY.md](SECURITY.md)** for the reporting process, what's in scope, and the existing defense layers (`secret-scan`, `push-guard`, `file-protector`, `draft-before-create`, branch protection, etc.).
+Found a vulnerability or a leaked token? See **[SECURITY.md](SECURITY.md)** for the reporting process, what's in scope, and the existing defense layers (`secret-scan`, `push-guard`, `file-protector`, `draft-before-create`, Bash sandbox with credential-dir deny-read, per-command tool restrictions, manual-only commands, branch protection, etc.).
 
 ---
 
