@@ -70,7 +70,7 @@ Pulled live via `gh api repos/jra2s394/cs-repo/branches/main/protection` (and th
 |---|---|---|
 | Require pull request before merging | `required_pull_request_reviews` (sub-endpoint) | ✅ on |
 | Required approving reviews | `required_approving_review_count` | 1 |
-| Status checks must pass | `required_status_checks.contexts` | `["test"]` |
+| Status checks must pass | `required_status_checks.contexts` | `["test (3.10)", "test (3.11)", "test (3.12)"]` |
 | Strict status checks (branch up-to-date with base) | `required_status_checks.strict` | ✅ true |
 | Allow force pushes | `allow_force_pushes.enabled` | ❌ false |
 | Allow branch deletion | `allow_deletions.enabled` | ❌ false |
@@ -82,6 +82,8 @@ Pulled live via `gh api repos/jra2s394/cs-repo/branches/main/protection` (and th
 | Rulesets (modern alternative) | `/rulesets` | none defined (`[]`) |
 
 This matches the table in [CLAUDE.md § GitHub branch protection rules](../CLAUDE.md), which is the user-facing reference.
+
+> **Required-check / CI-matrix coupling gotcha** — the required-status-check names in branch protection must match the **expanded matrix job names** that GitHub Actions produces, not the workflow's job key. When `.github/workflows/test.yml` uses `strategy.matrix.python-version: ["3.10", "3.11", "3.12"]`, GitHub publishes the per-job statuses as `test (3.10)`, `test (3.11)`, `test (3.12)` — there is no plain `test` status anymore. If branch protection still requires a `test` check, the PR will appear mergeable even though the required check never ran. Round-35 (this round) caught this after round-32 introduced the matrix without updating branch protection; the fix was a single `gh api PATCH` to `required_status_checks.contexts`.
 
 ## Other GitHub-side state
 
