@@ -30,13 +30,15 @@ scrub (`chore/scrub-and-harden`) cannot remove on its own:
 
 | Class | What it does |
 |---|---|
-| Author/committer emails | Every commit's author and committer identity is rewritten to a single `(CHOSEN_NAME, CHOSEN_EMAIL)` you choose in the script. |
-| Commit messages | Literal substring rewrites: `protonmail` → `protonmail`, plus every customer/contact name replaced with a `[PLACEHOLDER]` token. |
-| File blobs | Same literal substring rewrites applied across every historical version of every tracked file. The leaks vanish from `git log -p` and `git show`. |
+| Author/committer emails | Every commit's author and committer identity is rewritten to a single `(CHOSEN_NAME, CHOSEN_EMAIL)` you choose in the script. Implemented via `git filter-repo --mailmap`. |
+| Commit messages | Literal substring rewrites — every customer/contact/identity string in the heredoc replaced with its `[PLACEHOLDER]` token. Implemented via `git filter-repo --replace-message`. |
+| File blobs | Same heredoc rules applied across every historical version of every tracked file. The leaks vanish from `git log -p` and `git show`. Implemented via `git filter-repo --replace-text`. |
 
 The substitutions are applied as **literal strings, case-sensitive** by
 git-filter-repo. The list lives in the heredoc inside the script — edit it
-if you want to add, remove, or rephrase any rule.
+if you want to add, remove, or rephrase any rule. The same heredoc file is
+passed to both `--replace-text` and `--replace-message` so messages and
+blobs stay in sync.
 
 ---
 

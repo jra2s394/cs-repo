@@ -7,13 +7,12 @@
 #   repo. Specifically:
 #
 #     1. Rewrite EVERY commit's author/committer email to a single chosen
-#        address (drops the link between the user's personal protonmail and
-#        their work email).
-#     2. Find/replace `protonmail` -> `protonmail` in commit messages (typo
-#        fix for the PR #23 commit body and any other occurrences).
-#     3. Replace customer/competitor strings in BOTH commit messages and
-#        historical file contents so the leaks are gone from `git log -p` and
-#        from `git show <sha>:<path>` too.
+#        address (drops the link between any historical work / personal
+#        identities visible in `git log --pretty=fuller`).
+#     2. Replace customer / contact / competitor / identity strings — defined
+#        in REPL_FILE below — in BOTH commit messages AND historical file
+#        contents, so the leaks are gone from `git log` (messages), from
+#        `git log -p` (patches), and from `git show <sha>:<path>` (blobs).
 #
 # Read scripts/REWRITE-HISTORY.md before running. This action is destructive:
 # it rewrites every commit SHA, breaks every existing clone, and forces every
@@ -219,7 +218,8 @@ done < <(git log --all --format='%cN%x09%cE' | sort -u)
 git filter-repo \
   --force \
   --mailmap "$MAILMAP_FILE" \
-  --replace-text "$REPL_FILE"
+  --replace-text "$REPL_FILE" \
+  --replace-message "$REPL_FILE"
 
 cat <<EOF
 
@@ -227,13 +227,22 @@ History rewrite complete.
 
 NEXT STEPS — read scripts/REWRITE-HISTORY.md before doing any of these:
 
-  1. Inspect the new history locally:
+  1. Inspect the new history locally — check BOTH messages AND patches:
         git log --pretty='%h %an <%ae> %s' | head -40
-        git log -p --all -S '[CUSTOMER_A]'         # should find nothing
-        git log -p --all -S '[TEAM_OTHER]'      # should find nothing
-        git log -p --all -S '[TEAM_PRIMARY]'   # should find nothing
-        git log -p --all -S '/Users/tripp'     # should find nothing
-        git log --all | grep -i protonmail    # should find nothing
+
+        # Patches (blobs) — should each find nothing:
+        git log -p --all -S 'Cemstone'
+        git log -p --all -S 'CEP CG & IS'
+        git log -p --all -S 'Slabstack team'
+        git log -p --all -S '/Users/tripp'
+
+        # Commit messages — should each find nothing:
+        git log --all --format=%B | grep -i 'prontonmail'
+        git log --all --format=%B | grep -F 'Cemstone'
+        git log --all --format=%B | grep -F 'tarnold@sysdyne'
+
+        # Identities — should print exactly ONE line:
+        git log --all --pretty='%an <%ae>%n%cn <%ce>' | sort -u
 
   2. git-filter-repo strips the origin remote intentionally. Re-add it:
         git remote add origin <your-remote-url>
