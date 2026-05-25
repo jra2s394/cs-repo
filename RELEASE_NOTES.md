@@ -2,7 +2,7 @@
 
 Chronological per-PR history of the bootstrap period. Each entry maps to a single merged PR. Entries are grouped by date and tagged by theme so you can scan for a class of change (e.g. `[command]`, `[safety]`, `[testing]`).
 
-> **Scope:** PR #4 through PR #32 (2026-05-23 to 2026-05-24, the first ~30 PRs that defined the repo). Newer history is **not** mirrored here — for everything after PR #32, see `git log --oneline main` or the GitHub PR list. The "Numbers at a glance" table below is a frozen snapshot at PR #29; a "Today" column tracks the current totals so the deltas stay legible.
+> **Scope:** PR #4 through PR #105 (2026-05-23 to 2026-05-25). Two phases of history live in this file: the v2.0 bootstrap (PR #4-#32, detailed entries below) and the v2.1 audit storm (PR #75-#105, summarized in the next section as rounds 10–35 with one-line + PR-link per round). Everything in between can be reached via `git log --oneline main` or the GitHub PR list. The "Numbers at a glance" table further down was a snapshot at PR #29; a "Today" column tracks the current totals so deltas stay legible.
 
 **Tags:**
 - `[command]` — new or modified slash command in `.claude/commands/`
@@ -16,6 +16,68 @@ Chronological per-PR history of the bootstrap period. Each entry maps to a singl
 - `[docs]` — README/SETUP/USER_GUIDE/CONTRIBUTING/CLAUDE.md
 - `[fix]` — bug fix
 - `[infra]` — Makefile, package.json, requirements, scripts
+
+---
+
+## 2026-05-25 — v2.1: post-audit baseline (rounds 10–35, PR #75–#105)
+
+After v2.0 the repo entered a 22-round audit storm. Each round was scoped to one finding or one cohesive cleanup, shipped as a single PR, reviewed against the PR template, and merged before the next started. The pattern produced 105 PRs in roughly two weeks. By the end: 7 real bugs fixed, 11 doc-accuracy drifts corrected, 8 future-proofing test families added (44 parametrized + 31 one-off cases), every hook wired into pre-commit + CI matrix, full GitHub community profile, formal data-handling appendix in SECURITY.md, managed-settings deployment template, retention enforcement script, and the entire repo generalized away from Mountain Time hardcoding so it forks cleanly for any time zone.
+
+The round-by-round table below indexes the work for fast navigation. For full per-PR context, follow the `#NNN` link — every PR body documents its detection method, fix, test plan, and what was deliberately not changed.
+
+| Round | PR | Tag | What landed |
+|---:|---:|---|---|
+| (pre-10) | #75 | `[fix]` | `kpiStrip` column-width corruption — `tblGrid` length mismatched cell count |
+| (pre-10) | #76 | `[fix]` | `dateSlug()` silently dropped the month on natural-language dates (`May 25, 2026` → `25-2026`) |
+| 10 | #77 | `[docs]` | Hook-doc accuracy drift in 3 places: Slack regex char class, `push-guard` missing `gh repo edit --visibility public`, `draft-before-create` coverage incorrectly bounded |
+| 11 | #78 | `[fix]` | Windows desktop installer (`setup-desktop.ps1`) was creating only 3 of 6 report folders → silent no-op of `copyToDesktop` for QBR/Health/Executive reports |
+| 12 | #79 | `[fix]` `[docs]` | `customer-search.md` + `check-setup.md` called Intercom `search_companies` which doesn't exist; `tasks.md` frontmatter promised completion behavior the body explicitly forbids |
+| 13 | #80 | `[safety]` | 4 Shortcut subtask write ops (`stories-add-subtask`, `-create-subtask`, `-remove-subtask`, `-upload-file`) were bypassing `draft-before-create` |
+| 14 | #81 | `[safety]` | 3 Asana project-create write ops (`create_project`, `_confirm`, `_confirm_populate`) were bypassing `draft-before-create` — including the one `/start-onboarding` uses |
+| 15 | #82 | `[docs]` | Scrubbed 10 stale `dotclaude` brand references in `patterns/` + `examples/` that PR #65 missed |
+| 16 | #83 | `[testing]` | 3 cross-file consistency test families — setup-desktop `.sh`/`.ps1` folder parity, `copyToDesktop` category coverage, every `reports/*.js columnWidths: [...]` sums to 9360 DXA |
+| 17 | #84 | `[testing]` `[docs]` | `hooks/README.md` was missing entries for `branch-enforcer.py` and `secret-scan.py`; added them + a parity test that fails CI if either drifts again, plus a forbidden-terms test |
+| 18 | #85 | `[docs]` | `RELEASE_NOTES.md` was lying about coverage ("every change merged to main" stopped at PR #32) — added Scope note + Today column to the Numbers table |
+| 19 | #86 | `[testing]` `[docs]` | `make test-cov` was reporting 46% — hooks subprocess-tested don't trip `coverage.py`. Added `.coveragerc` that scopes to lib/. Plus new `docs/github-repo-audit.md` snapshotting GitHub-side state via `gh api` (surfaced: Dependabot security updates off, CodeQL not configured) |
+| 20 | #87 | `[docs]` | `CLAUDE.md` branch-protection table said "Required approvals: 0" but API said 1; documented the live state + the `required_pull_request_reviews` sub-endpoint quirk |
+| 21 | #88 | `[fix]` `[testing]` | `T.dataTable({ rows: d.optionalField })` crashed at 8 sites when the optional field was missing. Two-layer fix: defaulted `rows = []` in `lib/report-theme.js` + per-site `|| []` guards + 2 regression tests. Caught by a parallel Explore-agent audit |
+| 22 | #89 | `[safety]` | `hooks/secret-scan.py::ALLOW_PATHS` used `startswith()` — would have allow-listed `hooks/secret-scan.py.bak` and bypassed the entire scanner |
+| 23 | #90 | `[infra]` `[docs]` | `delete_branch_on_merge` was off — 27 merged feature branches accumulated. Enabled the setting, deleted all 27 (verified each via its PR's `merged_at`). Plus WebFetch-verified every hook event name we use against the live Anthropic docs |
+| 24 | #91 | `[docs]` | `CLAUDE.md` MCP-config note described the wrong shape (`type`/`url`/`name`) — actual `.mcp.json` is stdio with `command`/`args`/`env`. WebFetch'd the canonical doc, rewrote |
+| 25 | #92 | `[safety]` | `hooks/README.md` documented `statusMessage` + `timeout` on every hook as the canonical example; actual `.claude/settings.json` had neither on any of 53 entries. Added them all |
+| 26 | #93 | `[testing]` `[docs]` | WebFetch'd the slash-commands doc, found `argument-hint` frontmatter we never set. Added to 6 high-value commands + parametrized format test across all 44 commands (+44 tests) |
+| 27 | #94 | `[fix]` `[docs]` | `pip-audit` revealed `requirements-dev.txt` pinned versions (`pytest≥9.0.3`, `pillow≥12.2.0`) that needed Python ≥3.10 — wouldn't install on the macOS-default 3.9. Added `pyproject.toml` with `requires-python = ">=3.10"` + SETUP/CONTRIBUTING guidance |
+| 28 | #95 | `[docs]` | Documented the project-local venv pattern in CONTRIBUTING after wiring it on this machine end-to-end (cleared 7 local CVEs) |
+| 29 | #96 | `[safety]` | Pre-commit `detect-private-key` first-run flagged `tests/hooks/test_secret_scan.py`'s deliberate PEM fixtures (excluded). Plus added `permissions.disableBypassPermissionsMode: "disable"` to settings.json after WebFetch surfaced it |
+| 30 | #97 | `[infra]` `[docs]` | Pre-commit was configured but never installed as a git hook. Wired locally + added CI step. Stale-doc cleanup in same round |
+| 31 | #98 | `[content]` | All 5 slabstack-cs content findings from round-21 resolved (videos/ dir, support email confirmation, ROI calculator removed, `/follow-up` ref dropped from go-live checklist) |
+| 32 | #99 | `[infra]` `[docs]` | Team-readiness Tier 1: CI matrix Python 3.10/3.11/3.12 + `.github/CODE_OF_CONDUCT.md` + `.github/SECURITY.md` pointer + CODEOWNERS scaffolded for team expansion + GH repo description + 7 topics live |
+| 33 | #100 | `[docs]` `[infra]` | Team-readiness Tier 2: `examples/managed-settings.example.json` + `MANAGED_SETTINGS.md` deploy guide + `scripts/cleanup-data-outputs.sh` retention enforcement + SECURITY.md data-handling appendix + `docs/audit-cadence.md` formalizing quarterly/monthly/event-triggered review |
+| (chore) | #101 | `[infra]` | Bumped `package.json` / `pyproject.toml` / `package-lock.json` version strings to `2.1.0` to match the v2.1 tag |
+| 34 | #102 | `[command]` | `/daily` invoked on Monday now stops and suggests `/weekstart` instead of running the wrong format. Caught by the round-33 dogfood smoke test |
+| 35a | #103 | `[command]` `[safety]` | `/setup` auto-detects IANA TZ via `readlink /etc/localtime`, writes structured `Time zone:` field to `~/.claude/CLAUDE.md`. `/check-setup` validates it parses via `ZoneInfo()` |
+| 35c | #104 | `[docs]` | Branch-protection `required_status_checks.contexts` updated `["test"] → ["test (3.10)", "test (3.11)", "test (3.12)"]` (CI matrix from round-32 had renamed the check names but branch protection wasn't updated — PRs since round-32 had been merging without the gate actually firing) |
+| 35b | #105 | `[refactor]` `[docs]` | 52-file scrub of hardcoded `Mountain Time` / `America/Denver` → per-user IANA field. Repo now forks cleanly for any time zone |
+
+### Numbers at a glance
+
+| Metric | At v2.0 | At v2.1 |
+|---|---|---|
+| Slash commands | 44 | 44 (stable) |
+| Hooks | 11 | 11 (stable) |
+| Report generators | 17 | 17 (stable) |
+| Python tests | 443 | 571 (+128) |
+| JS tests | 129 | 157 (+28) |
+| Pre-commit hook checks | 0 | 9 |
+| CI steps | 4 | 6 (matrix x3 + ruff + biome + pre-commit + JS) |
+| Required status checks | 1 stale | 3 (one per matrix entry) |
+| Branch protection rules | 5 | 5 (one accuracy fix) |
+| Known code bugs | 7 | **0** |
+| Known doc-accuracy drifts | many | **0** |
+| GitHub community health | ~50% | ~95% |
+| Hardcoded `Mountain Time` / `America/Denver` references | 84 | 0 (intentional doc examples retained) |
+| `pip-audit` against pinned deps | failed on Python 3.9 | clean |
+| `npm audit` | clean | clean |
 
 ---
 
