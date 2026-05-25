@@ -145,3 +145,94 @@ def test_argument_hint_format_when_present(path: Path):
         f"{path.name}: argument-hint={hint!r} doesn't use [...] or <...> "
         "bracket notation — Claude Code's autocomplete expects a placeholder shape"
     )
+
+
+# ── allowed-tools (optional) ────────────────────────────────────────────────
+# Added round-45 after WebFetch'd the Claude Code skills doc surfaced this
+# frontmatter field. When present, it restricts which tools the command may
+# call (per https://code.claude.com/docs/en/skills). Format is space-separated
+# tool names with optional specifiers — same shape as permissions.allow:
+#   allowed-tools: Read Write Glob
+#   allowed-tools: Bash(git add *) Bash(git commit *)
+#   allowed-tools: mcp__shortcut__stories-search mcp__shortcut__stories-get-by-id
+
+ALLOWED_TOOLS_RE = re.compile(r"^allowed-tools:\s*(.+)$", re.MULTILINE)
+# A valid tool token is one of:
+#   - A built-in name like Read, Write, Edit, Bash, Glob, Grep, LS, WebFetch
+#   - A scoped form like Bash(git add *) or Read(./.env)
+#   - An MCP tool like mcp__server__toolname
+# We don't try to validate the inner specifier — that's the docs' problem —
+# but we do require the token to start with a letter and have no whitespace
+# outside parens.
+TOOL_TOKEN_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*(?:\([^)]*\))?$")
+
+
+def _allowed_tools(fm: str):
+    """Return the allowed-tools string, or None if not present."""
+    m = ALLOWED_TOOLS_RE.search(fm)
+    if not m:
+        return None
+    value = m.group(1).strip()
+    if (value.startswith('"') and value.endswith('"')) or \
+       (value.startswith("'") and value.endswith("'")):
+        value = value[1:-1]
+    return value
+
+
+def _split_tools(value: str):
+    """Split an allowed-tools value into tokens, preserving parenthesised specifiers.
+
+    Naive split-on-whitespace would break `Bash(git add *)` apart at the spaces
+    inside the parens. Walk the string tracking paren depth instead.
+    """
+    tokens = []
+    current = []
+    depth = 0
+    for ch in value:
+        if ch == "(":
+            depth += 1
+            current.append(ch)
+        elif ch == ")":
+            depth -= 1
+            current.append(ch)
+        elif ch.isspace() and depth == 0:
+            if current:
+                tokens.append("".join(current))
+                current = []
+        else:
+            current.append(ch)
+    if current:
+        tokens.append("".join(current))
+    return tokens
+
+
+@pytest.mark.parametrize("path", COMMAND_FILES, ids=lambda p: p.name)
+def test_allowed_tools_format_when_present(path: Path):
+    """If `allowed-tools:` is set, it must be a single line of valid tool tokens.
+
+    Locking down which tools a command may use is real security hardening:
+    a prompt-injected command can't reach a tool not in its allowed-tools
+    list. But a malformed value (typos, line breaks, empty tokens) silently
+    fails open — the doc isn't strict about syntax. This test catches the
+    common shape errors so a copy-paste mistake doesn't quietly disable the
+    restriction.
+    """
+    value = _allowed_tools(_read_frontmatter(path))
+    if value is None:
+        return  # field is optional
+    assert value, f"{path.name}: allowed-tools is present but empty"
+    assert "\n" not in value, (
+        f"{path.name}: allowed-tools spans multiple lines — collapse to one line "
+        "of space-separated tokens (per the Claude Code skills doc)"
+    )
+    tokens = _split_tools(value)
+    assert tokens, (
+        f"{path.name}: allowed-tools={value!r} parsed to zero tokens"
+    )
+    for tok in tokens:
+        # MCP tool names contain underscores and double-underscores, which
+        # the regex covers via the base [A-Za-z][A-Za-z0-9_]* class.
+        assert TOOL_TOKEN_RE.match(tok), (
+            f"{path.name}: allowed-tools token {tok!r} doesn't look like a "
+            "valid tool name (expected `Name`, `Name(spec)`, or `mcp__server__tool`)"
+        )

@@ -1,5 +1,6 @@
 ---
 description: Show all Shortcut stories from the CSEng team that are pending engineering review or approval — grouped by urgency and how long they've been waiting.
+allowed-tools: Read mcp__shortcut__stories-search mcp__shortcut__stories-get-by-id mcp__shortcut__workflows-list mcp__shortcut__teams-get-by-id
 ---
 
 Read `CLAUDE.md` from this repo before starting.

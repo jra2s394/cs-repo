@@ -1,5 +1,6 @@
 ---
 description: Aggregate the week's daily-*.md files into a recap that feeds /eow — saves regenerating Mon–Thu wins from scratch on Friday
+allowed-tools: Read Write Glob
 ---
 
 Read `CLAUDE.md` from this repo before starting.
