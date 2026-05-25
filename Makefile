@@ -1,4 +1,4 @@
-.PHONY: test test-hooks test-lib test-js test-cov lint lint-py lint-js typecheck install-dev check-deps
+.PHONY: test test-hooks test-lib test-js test-js-cov test-cov lint lint-py lint-js typecheck install-dev check-deps
 
 # Verify pytest is installed; if not, point the user at install-dev.
 check-deps:
@@ -33,6 +33,10 @@ test-js:
 	node tests/js/test_data_loader.js
 	node tests/js/test_copy_to_desktop.js
 	node tests/js/test_reports_smoke.js
+
+# Run JS tests under c8 with coverage report + threshold (see package.json `c8` block).
+test-js-cov:
+	npx --no-install c8 npm test
 
 # Lint: ruff on Python + biome on JS
 lint:

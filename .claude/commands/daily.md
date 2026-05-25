@@ -1,5 +1,6 @@
 ---
 description: Generate today's daily Slack update
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/daily-update.md` from this repo.

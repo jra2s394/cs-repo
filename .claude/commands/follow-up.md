@@ -1,5 +1,6 @@
 ---
 description: After a customer call, draft a follow-up email with action items — pulls from Read.ai report and calendar, drafts for approval before sending.
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` from this repo before starting.

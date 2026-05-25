@@ -1,5 +1,6 @@
 ---
 description: Generate Wednesday midweek Slack update
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/midweek-update.md` from this repo.

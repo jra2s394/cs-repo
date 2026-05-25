@@ -1,5 +1,6 @@
 ---
 description: Generate Friday end-of-week Slack update
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/eow-update.md` from this repo.

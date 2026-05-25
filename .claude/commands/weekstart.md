@@ -1,5 +1,6 @@
 ---
 description: Generate Monday week-start Slack update
+disable-model-invocation: true
 ---
 
 Read `CLAUDE.md` and `prompts/week-start-update.md` from this repo.

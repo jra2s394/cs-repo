@@ -1,5 +1,6 @@
 ---
 description: Kick off a new customer onboarding — Asana project, Drive folder, Shortcut CSEng story, Slack channel
+disable-model-invocation: true
 ---
 
 # Start Onboarding
