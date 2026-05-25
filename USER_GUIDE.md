@@ -91,7 +91,7 @@ The hooks above catch mistakes at the moment they happen. The repo also has thre
 
 **Tool restrictions.** Seven commands are locked down to only the work-app tools they actually need. If something tried to hijack `/inbox-triage` into running a shell command or touching Shortcut, it couldn't — the command literally doesn't have permission. Same for `/escalate`, `/follow-up`, `/kb-draft`, and the three read-only commands (`/commands`, `/standup-recap`, `/prs`).
 
-**Bash sandbox.** When Claude runs shell commands on your machine, they're isolated by macOS Seatbelt (or bubblewrap on Linux). The sandbox denies reads to `~/.ssh`, `~/.aws`, and `~/.gnupg` so a compromised command can't exfiltrate your credentials. Network access is allowlist-only for known-good endpoints (GitHub, npm, PyPI, Anthropic docs).
+**Bash sandbox.** When Claude runs shell commands on your machine, they're isolated by macOS Seatbelt (built-in, nothing to install) or by bubblewrap on Linux / WSL2. The sandbox denies reads to `~/.ssh`, `~/.aws`, and `~/.gnupg` so a compromised command can't exfiltrate your credentials. Network access is allowlist-only for known-good endpoints (GitHub, npm, PyPI, Anthropic docs). On Linux, if you ever see a startup warning that the sandbox couldn't initialize, install the two dependencies: `sudo apt install bubblewrap socat` (Ubuntu/Debian) or `sudo dnf install bubblewrap socat` (Fedora). Until they're installed, Claude warns and runs unsandboxed — nothing breaks, but you lose the OS-level isolation.
 
 You don't need to configure any of this — it's already set up in `.claude/settings.json` and applies automatically every session.
 
