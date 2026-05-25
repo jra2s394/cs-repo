@@ -81,6 +81,56 @@ for (const r of REPORTS) {
 }
 fs.unlinkSync(emptyJson);
 
+// ── positive end-to-end: full happy-path render ───────────────────────────
+// Each report runs against a minimal valid metrics JSON and must produce a
+// .docx on disk. Catches regressions like "renamed a field" / "removed a
+// table that the renderer still calls .map on" that the failure-path
+// smoke tests miss by design.
+//
+// File detection is mtime-based, not set-diff: reports often overwrite
+// an existing file at the same path (filename derives from period, which
+// reuses across test runs), so checking "did a new filename appear" gives
+// false negatives on the second run.
+const FIXTURES = require("./fixtures/report-fixtures");
+const OUT_DIR = path.resolve(__dirname, "../../out");
+const producedFiles = new Set();
+
+console.log("\nvalid JSON → exit 0 + .docx produced");
+for (const r of REPORTS) {
+  test(r, () => {
+    const fixture = FIXTURES[r];
+    assert.ok(fixture, `no fixture defined for ${r} in tests/js/fixtures/report-fixtures.js`);
+    const testStart = Date.now();
+    const fixturePath = tmpJson(fixture);
+    const res = run(r, fixturePath);
+    fs.unlinkSync(fixturePath);
+    assert.strictEqual(res.status, 0,
+      `expected exit 0, got ${res.status}.\nstderr: ${res.stderr}\nstdout: ${res.stdout}`);
+    // At least one .docx in out/ must have an mtime at or after this test
+    // started (handles same-filename overwrites between runs).
+    assert.ok(fs.existsSync(OUT_DIR), `${OUT_DIR} not created by report`);
+    const recentDocx = fs.readdirSync(OUT_DIR)
+      .filter(f => f.endsWith(".docx"))
+      .filter(f => fs.statSync(path.join(OUT_DIR, f)).mtimeMs >= testStart);
+    assert.ok(recentDocx.length > 0,
+      `expected at least one .docx with mtime >= test start in ${OUT_DIR}`);
+    for (const f of recentDocx) {
+      const fullPath = path.join(OUT_DIR, f);
+      assert.ok(fs.statSync(fullPath).size > 0, `${f} is empty`);
+      producedFiles.add(fullPath);
+      // Track the matching CSV too if the report wrote one.
+      const csv = fullPath.replace(/\.docx$/, ".csv");
+      if (fs.existsSync(csv)) producedFiles.add(csv);
+    }
+  });
+}
+
+// Cleanup any out/ files this test produced so the working tree stays clean
+// (out/ is gitignored but we don't want to litter local developer machines).
+for (const f of producedFiles) {
+  try { fs.unlinkSync(f); } catch (_) { /* already gone */ }
+}
+
 console.log("");
 if (failed > 0) {
   console.error(`${passed} passed, ${failed} failed`);
