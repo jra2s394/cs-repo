@@ -15,6 +15,12 @@ repos:
       - id: trailing-whitespace
         exclude: '\.md$'  # markdown line breaks rely on trailing spaces
       - id: end-of-file-fixer
+        # macOS TCC protects .claude/settings.json once Claude Code has
+        # written to it — opening in `rb+` mode (which end-of-file-fixer
+        # always does) hits PermissionError even when the file already
+        # ends with a newline. We commit the file with a final newline
+        # by convention; the hook's check is redundant for this path.
+        exclude: '^\.claude/settings\.json$'
       - id: check-yaml
       - id: check-json
       - id: check-added-large-files
