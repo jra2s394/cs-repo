@@ -104,7 +104,7 @@ children.push(T.codeBlock([
   `# Conversations in window: ${d.methodology.conversations}`,
   `# Window: ${d.methodology.period}`,
   "",
-  "# Mountain Time (America/Denver) for all timestamps",
+  `# ${d.timeZone || "Local time zone"} for all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -116,7 +116,7 @@ children.push(T.dataTable({
     ["Period",        d.methodology.period],
     ["Conversations", String(d.methodology.conversations)],
     ["Pages fetched", String(d.methodology.pages)],
-    ["Time zone",     "Mountain Time (America/Denver)"],
+    ["Time zone",     d.timeZone || "your local time zone"],
     ["Prepared by",   d.preparedBy],
     ["Generated",     d.generated],
   ],

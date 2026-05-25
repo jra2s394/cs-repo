@@ -144,5 +144,5 @@ If yes:
 - Never invent renewal dates or ARR figures — flag as "confirm with Finance" if unknown
 - All 🔴 renewals must have a named recommended action
 - Never create Asana tasks, send emails, or add Shortcut stories without explicit approval
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If Finance data is missing, note it and proceed with what's available from Gmail/Asana

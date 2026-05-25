@@ -12,7 +12,7 @@ Generate a weekly CS team summary. Pulls activity across all connected systems, 
 
 ## Step 1 — Get the week
 
-Defaults to the current week (Mon–today in Mountain Time). Ask if a different week is needed.
+Defaults to the current week (Mon–today in your local time zone). Ask if a different week is needed.
 
 ---
 
@@ -89,5 +89,5 @@ If yes:
 - Only report facts traceable to a tool — no inferred wins
 - If a teammate has no Intercom admin ID in CLAUDE.md, skip Intercom for them (note the gap)
 - Never post to Slack without explicit approval and channel confirmation
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, note it and surface what you have

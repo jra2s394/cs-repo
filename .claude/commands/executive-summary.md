@@ -169,5 +169,5 @@ If yes:
 - Every win must be sourced (calendar, email, Asana, Shortcut)
 - Never claim ARR or financial figures without Finance data to back them up
 - Flag unknown data with "confirm with [system]"
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, note it and continue with what you have

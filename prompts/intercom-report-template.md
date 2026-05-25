@@ -21,15 +21,15 @@ These reports exist to give you and executive stakeholders an **accurate, data-s
 ## Data Collection Protocol
 
 ### Step 1 — Calculate Unix timestamps
-Use Python (via Bash) to compute the exact Mountain Time midnight boundaries for the current and prior periods. Output both as Unix timestamps and human-readable strings. `ZoneInfo("America/Denver")` handles the MDT/MST switch automatically — never hardcode the UTC offset.
+Use Python (via Bash) to compute the exact local-time-zone midnight boundaries for the current and prior periods. Output both as Unix timestamps and human-readable strings. `ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md>")` (e.g. `America/Denver`) handles DST automatically — never hardcode the UTC offset.
 
 ```python
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")  # handles MDT/MST + DST automatically
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")  # ZoneInfo handles DST automatically
 
-# Example: compute start of today in Mountain Time
+# Example: compute start of today in the local time zone
 today_start = datetime.now(MT).replace(hour=0, minute=0, second=0, microsecond=0)
 today_start_ts = int(today_start.timestamp())
 ```

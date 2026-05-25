@@ -128,4 +128,4 @@ Ask: "Want me to save this to `data/outputs/end-onboarding-[customer-slug]-[date
 - Never send the go-live email without explicit approval
 - Never create Asana tasks without explicit approval
 - If any required closure items are missing (no go-live confirmation, open blockers), flag 🔴 and wait for direction
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)

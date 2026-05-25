@@ -84,5 +84,5 @@ Draft any tasks or updates before creating them.
 - Never send without explicit approval
 - Read.ai report outcomes are authoritative — don't contradict them
 - If no Read.ai report exists, the draft must be flagged accordingly
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, note it and continue

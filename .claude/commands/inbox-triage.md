@@ -109,7 +109,7 @@ If approved:
 - For 🟡 customer signals, never invent a signal — quote the trigger phrase (e.g. "mentioned competitor '[COMPETITOR_X]' in body")
 - For 🟣 escalations, never auto-create the Shortcut ticket; always suggest the command and let the user run it
 - The 🟢 FYI bucket is summarized in aggregate, not listed individually — listing 30 FYI items defeats the point of triage
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If Gmail MCP is unavailable, say so and stop
 
 ---

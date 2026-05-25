@@ -125,7 +125,7 @@ children.push(T.codeBlock([
   `# Data window: ${d.methodology.period}`,
   "",
   "# All metrics computed in Python from raw Intercom API responses",
-  "# Mountain Time (America/Denver) applied to all timestamps",
+  `# ${d.timeZone || "Local time zone"} applied to all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -137,7 +137,7 @@ children.push(T.dataTable({
     ["Period",        d.methodology.period],
     ["Conversations", String(d.methodology.conversations)],
     ["Pages fetched", String(d.methodology.pages)],
-    ["Time zone",     "Mountain Time (America/Denver)"],
+    ["Time zone",     d.timeZone || "your local time zone"],
     ["Prepared by",   d.preparedBy],
     ["Generated",     d.generated],
   ],

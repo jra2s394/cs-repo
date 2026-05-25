@@ -230,6 +230,6 @@ If yes:
 - Every 🔴 account gets a named recommended action
 - Flag missing data accounts as 🔴 (data gap is a risk)
 - Customer signals (expansion language, churn language, competitor mentions) must be direct quotes from email/Intercom/Read.ai — never paraphrase, never invent
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, note it and continue with what you have
 - Single-customer mode is inline only — never build a `.docx` for one account (use `/qbr` for that flow)

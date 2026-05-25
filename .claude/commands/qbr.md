@@ -235,5 +235,5 @@ If yes:
 - Never claim a meeting happened without a calendar event
 - Flag anything unclear with 🔴
 - Renewal ARR and contract details must come from Finance data or email — don't estimate
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, note it and continue

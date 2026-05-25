@@ -80,7 +80,7 @@ Delete operations are gated by `permissions.deny` (Section 9b), not by `draft-be
 ## Section 9 — General code quality
 
 - [ ] No bare `except:` clauses that swallow all exceptions silently (use `except Exception:` at minimum).
-- [ ] No hardcoded UTC offsets for Mountain Time — use `ZoneInfo("America/Denver")` or the MCP calendar tool.
+- [ ] No hardcoded UTC offsets — always use `ZoneInfo("<TZ from ~/.claude/CLAUDE.md>")` or the MCP calendar tool. No hardcoded IANA names like `America/Denver` outside the example in `/setup` (round-35 generalized this away from "Mountain Time").
 - [ ] No dead code (commented-out blocks that are not documentation of an alternative).
 - [ ] No print statements left in production paths of report scripts.
 

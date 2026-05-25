@@ -151,7 +151,7 @@ children.push(T.codeBlock([
   "# Data sourced from Gmail, Google Calendar, Asana, Intercom, and Shortcut.",
   "# Portfolio metrics are aggregated from live tool data plus Finance inputs",
   "# when provided. All wins are sourced — no estimated outcomes.",
-  "# Mountain Time (America/Denver) for all timestamps",
+  `# ${d.timeZone || "Local time zone"} for all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -161,7 +161,7 @@ children.push(T.dataTable({
   rows: [
     ["Sources",     (d.methodology.sources || []).join(", ")],
     ["Period",      d.period],
-    ["Time zone",   "Mountain Time (America/Denver)"],
+    ["Time zone",   d.timeZone || "your local time zone"],
     ["Prepared by", d.preparedBy],
     ["Generated",   d.generated],
   ],

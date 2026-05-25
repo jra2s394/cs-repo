@@ -277,7 +277,7 @@ I have been burned by hallucinated wins. Follow these strictly:
 2. **Never claim a go-live, milestone, or deliverable happened without explicit inbox confirmation** (sent email from me, accepted invite, or customer reply).
 3. **If a status is unclear, flag it 🔴** with "status unclear — needs confirmation". Do not paper over silence with optimistic language.
 4. **Cross-reference prior updates** so carryover stays consistent.
-5. **All times in Mountain Time** unless specifically noted otherwise.
+5. **All times in your local time zone** (the IANA name set in `~/.claude/CLAUDE.md` per `/setup`) unless specifically noted otherwise.
 6. **Use the indicator system:**
    - 🔴 critical / blocker / unclear
    - 🟡 watch item / in progress

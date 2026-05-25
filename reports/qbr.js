@@ -148,7 +148,7 @@ children.push(T.codeBlock([
   `# Period: ${d.methodology.period}`,
   `# Sources: ${(d.methodology.sources || []).join(", ")}`,
   "",
-  "# Mountain Time (America/Denver) for all timestamps",
+  `# ${d.timeZone || "Local time zone"} for all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -160,7 +160,7 @@ children.push(T.dataTable({
     ["Quarter",     d.quarter],
     ["Period",      d.methodology.period],
     ["Data sources",(d.methodology.sources || []).join(", ")],
-    ["Time zone",   "Mountain Time (America/Denver)"],
+    ["Time zone",   d.timeZone || "your local time zone"],
     ["Prepared by", d.preparedBy],
     ["Generated",   d.generated],
   ],

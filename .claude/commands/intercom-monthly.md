@@ -26,7 +26,7 @@ Generate the **MONTHLY** Intercom report for Slabstack CS Intelligence.
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")  # handles MDT/MST + DST automatically
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")  # ZoneInfo handles DST automatically
 now = datetime.now(MT)
 today = now.replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -150,7 +150,7 @@ Save to: `data/outputs/intercom-monthly-YYYY-MM-DD.md`
 - When computing MoM delta, use the same metric formula for both months
 - For "new customers," cross-reference against prior months — this requires judgment if you can't pull all historical data
 - If YTD pagination hits 750-conversation limit, note it clearly and extrapolate
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 
 ---
 

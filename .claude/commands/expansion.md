@@ -107,4 +107,4 @@ For each 🟢 Ready account, offer:
 - Every signal must be sourced (email snippet, Intercom thread, meeting note)
 - Do not invent expansion signals — if data is sparse, say "limited signals found"
 - Never claim ARR amounts unless Finance data confirms them
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)

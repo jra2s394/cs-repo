@@ -10,7 +10,7 @@ Prepare me for every customer meeting coming up in the next 24 hours. One brief 
 
 ## Step 1 — Pull today's and tomorrow's calendar
 
-Use `list_events` for the next 24 hours in Mountain Time.
+Use `list_events` for the next 24 hours in your local time zone (the IANA name set in `~/.claude/CLAUDE.md`).
 
 Filter to events that look like customer calls. To distinguish internal from external attendees, read the `INTERNAL_EMAIL_DOMAIN` environment variable (e.g. `acme.com`). If it is unset, ask the user for their company's email domain and proceed.
 
@@ -77,5 +77,5 @@ Watch:
 - If a source returns nothing for a customer, say "none found" — don't skip the section
 - Never claim a prior meeting happened without a calendar event confirming it
 - Read.ai reports override inferred meeting outcomes
-- All times in Mountain Time
+- All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If any MCP tool is unavailable, note it and continue with what you have

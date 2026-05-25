@@ -127,7 +127,7 @@ children.push(T.codeBlock([
   "",
   "# Health scores sourced from Asana task health, Intercom open issues,",
   "# days since last contact (Gmail/Calendar), and Shortcut open stories.",
-  "# Mountain Time (America/Denver) for all timestamps",
+  `# ${d.timeZone || "Local time zone"} for all timestamps`,
 ]));
 children.push(T.gap(120));
 children.push(T.dataTable({
@@ -138,7 +138,7 @@ children.push(T.dataTable({
     ["Accounts tracked",    String((d.accounts || []).length)],
     ["Sources",             (d.methodology.sources || []).join(", ")],
     ["Period",              d.period],
-    ["Time zone",           "Mountain Time (America/Denver)"],
+    ["Time zone",           d.timeZone || "your local time zone"],
     ["Prepared by",         d.preparedBy],
     ["Generated",           d.generated],
   ],

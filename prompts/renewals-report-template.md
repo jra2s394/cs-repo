@@ -12,7 +12,7 @@ import openpyxl, csv, os, sys
 from datetime import datetime, date, timedelta
 from zoneinfo import ZoneInfo
 
-MT = ZoneInfo("America/Denver")
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")
 today = datetime.now(MT).date()
 
 path = "<user-provided path>"

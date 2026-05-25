@@ -33,7 +33,7 @@ from datetime import datetime, date
 from zoneinfo import ZoneInfo
 from calendar import monthrange
 
-MT = ZoneInfo("America/Denver")
+LOCAL_TZ = ZoneInfo("<your IANA TZ from ~/.claude/CLAUDE.md, e.g. America/Denver>")
 today = datetime.now(MT).date()
 
 this_q = (today.month - 1) // 3   # 0=Q1, 1=Q2, 2=Q3, 3=Q4
