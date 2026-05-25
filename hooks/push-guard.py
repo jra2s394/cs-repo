@@ -13,17 +13,14 @@ Customize:
   - Adjust the error message to reference your team's push policy.
 """
 import sys
-import json
 import os
 import re
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from _git import is_git_push, push_targets_protected_branch  # noqa: E402
+from _stdin import parse_or_exit  # noqa: E402
 
-try:
-    data = json.load(sys.stdin)
-except (json.JSONDecodeError, ValueError):
-    sys.exit(0)
+data = parse_or_exit()
 
 command = (data.get("tool_input") or {}).get("command", "")
 

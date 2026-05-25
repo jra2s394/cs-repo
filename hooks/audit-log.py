@@ -11,13 +11,12 @@ Customize:
 """
 import os
 import sys
-import json
 from datetime import datetime
 
-try:
-    data = json.load(sys.stdin)
-except (json.JSONDecodeError, ValueError):
-    sys.exit(0)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _stdin import parse_or_exit  # noqa: E402
+
+data = parse_or_exit()
 
 tool_name = data.get("tool_name", "unknown")
 session_id = (data.get("session_id") or "unknown")[:8]

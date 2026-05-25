@@ -13,12 +13,11 @@ Customize:
 """
 import os
 import sys
-import json
 
-try:
-    data = json.load(sys.stdin)
-except (json.JSONDecodeError, ValueError):
-    sys.exit(0)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _stdin import parse_or_exit  # noqa: E402
+
+data = parse_or_exit()
 
 file_path = (data.get("tool_input") or {}).get("file_path", "")
 basename = os.path.basename(file_path)
