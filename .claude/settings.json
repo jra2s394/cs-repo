@@ -507,7 +507,6 @@
     "allow": [
       "Bash(shellcheck *)",
       "mcp__claude_ai_Slack__slack_search_channels",
-      "mcp__b3337fbd-b704-42f2-b1a3-953a3847cbb4__search",
       "mcp__claude_ai_Slack__slack_search_public_and_private"
     ],
     "deny": [
