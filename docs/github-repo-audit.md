@@ -87,6 +87,47 @@ This matches the table in [CLAUDE.md § GitHub branch protection rules](../CLAUD
 
 - **Releases:** 0 (no tagged releases — repo treats `main` as continuous deployment for internal use)
 - **Actions cache:** ~2.5 GB / 10 GB used across 49 caches (room to grow; well under the limit)
+- **Open feature branches:** 0 after round-23 cleanup (was 27 before)
+
+## Merge / branch settings
+
+| Setting | API key | State | Notes |
+|---|---|---|---|
+| Delete branch on merge | `delete_branch_on_merge` | ✅ **true** (flipped 2026-05-25, round-23) | Was `false` from repo bootstrap — 27 merged feature branches accumulated through round-22 and were cleaned up in the same round |
+| Allow squash merge | `allow_squash_merge` | true | Required — the standard merge mode |
+| Allow merge commit | `allow_merge_commit` | true | Cosmetic only — `required_linear_history: true` (branch protection) rejects merge commits at PR-merge time, so this just leaves the UI option visible. Defensible to flip to `false` to remove the dead-option UI inconsistency |
+| Allow rebase merge | `allow_rebase_merge` | true | Compatible with linear history; alternate path to squash |
+| Allow auto-merge | `allow_auto_merge` | true | Useful for routine Dependabot bumps |
+
+To verify after future settings drift:
+
+```bash
+gh api repos/jra2s394/cs-repo --jq '{delete_branch_on_merge, allow_squash_merge, allow_merge_commit, allow_rebase_merge, allow_auto_merge}'
+gh api 'repos/jra2s394/cs-repo/branches' --jq '.[].name' | grep -v '^main$' | wc -l
+```
+
+The branches command should print `0` on a clean state. Cleanup pattern if drift happens:
+
+```bash
+gh api 'repos/jra2s394/cs-repo/branches' --jq '.[].name' | grep -v '^main$' | while read b; do
+  gh api -X DELETE "repos/jra2s394/cs-repo/git/refs/heads/${b}"
+done
+```
+
+## Hook event names (verified via WebFetch)
+
+Round-23 cross-checked the hook event types used in `.claude/settings.json` against the current Anthropic docs (<https://code.claude.com/docs/en/hooks>). All 6 used events are current and active:
+
+| Event we use | Current per docs | Notes |
+|---|---|---|
+| `PreToolUse` | ✓ | |
+| `PostToolUse` | ✓ | |
+| `PreCompact` | ✓ | Not deprecated despite the existence of `PostCompact` |
+| `UserPromptSubmit` | ✓ | |
+| `Notification` | ✓ | |
+| `Stop` | ✓ | Not deprecated despite the existence of `SessionEnd` (the two are separate events) |
+
+Available events we don't use yet (extension opportunities, not bugs): `SessionStart`, `SessionEnd`, `PostToolUseFailure`, `PostCompact`, `WorktreeCreate`, `WorktreeRemove`, `CwdChanged`, `FileChanged`, `TaskCreated`, `TaskCompleted`, `SubagentStart`, `SubagentStop`.
 - **Language mix (per GitHub):** JavaScript 184 KB, Python 151 KB, Shell 25 KB, PowerShell 2.5 KB, Makefile 1.2 KB
 
 ## What this doc does NOT cover
