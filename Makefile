@@ -1,4 +1,4 @@
-.PHONY: test test-hooks test-lib test-js test-cov lint lint-py lint-js install-dev check-deps
+.PHONY: test test-hooks test-lib test-js test-cov lint lint-py lint-js typecheck install-dev check-deps
 
 # Verify pytest is installed; if not, point the user at install-dev.
 check-deps:
@@ -46,3 +46,7 @@ lint-py:
 # Run biome on all JS (lib/, reports/, tests/js/)
 lint-js:
 	npx --no-install biome check
+
+# Type-check Python (hooks/ + lib/) with mypy. Lenient baseline — see pyproject.toml.
+typecheck:
+	python3 -m mypy

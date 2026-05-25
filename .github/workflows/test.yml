@@ -64,6 +64,9 @@ jobs:
       - name: Lint Python (ruff)
         run: make lint-py
 
+      - name: Type-check Python (mypy)
+        run: make typecheck
+
       - name: Lint JS (biome)
         run: make lint-js
 

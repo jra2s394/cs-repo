@@ -18,3 +18,17 @@ name = "cs-repo"
 version = "2.1.0"
 description = "Slabstack CS operations — internal automation. Not packaged for distribution."
 requires-python = ">=3.10"
+
+# mypy: lenient baseline. Goal is to catch real bugs (wrong arg types, missing
+# attrs, None-deref) without requiring full annotation coverage on hooks/lib.
+# Tighten over time by flipping disallow_untyped_defs on per-module.
+[tool.mypy]
+python_version = "3.10"
+files = ["hooks", "lib"]
+exclude = "(^|/)__pycache__/|^lib/.*\\.js$"
+ignore_missing_imports = true
+follow_imports = "silent"
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+check_untyped_defs = true
