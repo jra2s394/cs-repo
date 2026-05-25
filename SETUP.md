@@ -13,6 +13,7 @@ When you're done, see **[USER_GUIDE.md](USER_GUIDE.md)** for how to use everythi
 - [ ] A **Claude.ai account** (Pro or Team plan) — [claude.ai](https://claude.ai)
 - [ ] The **Claude Code app** — [claude.ai/code](https://claude.ai/code)
 - [ ] Access to this repo — if you're reading this, you're good
+- [ ] **Python 3.10 or newer** — required by `requirements-dev.txt`. macOS ships Python 3.9, which is too old. Check with `python3 --version`; if you see 3.9, install 3.10+ via [python.org](https://python.org/downloads/) or `brew install python@3.12`.
 
 ---
 
@@ -35,6 +36,8 @@ Text will scroll by — that's normal. Wait for the cursor to come back.
 > **Error on the first line?** You need to install git first. Ask your manager — takes 2 minutes.
 
 > **`pip3` not found?** Python isn't installed. Type `python3 --version` to check. If you get an error, ask your manager — the report generation tools need it.
+
+> **`Could not find a version that satisfies the requirement pytest>=9.0.3`?** Your Python is too old. macOS ships Python 3.9 by default; `requirements-dev.txt` needs 3.10 or newer. Install a newer Python via [python.org](https://python.org/downloads/) (recommended for non-developers) or `brew install python@3.12`, then re-run the `pip3 install` line.
 
 ---
 

@@ -1,0 +1,20 @@
+# Minimal pyproject.toml — declares the project's Python version floor so
+# `pip install -r requirements-dev.txt` fails fast on too-old interpreters
+# (instead of bottoming out in "Could not find a version that satisfies...").
+#
+# The version floor mirrors what the pinned dev dependencies actually require:
+#   pytest      >= 9.0.3   → Python 3.10+
+#   pillow      >= 12.2.0  → Python 3.10+
+#   matplotlib  >= 3.10.9  → Python 3.10+
+#
+# CI runs on Python 3.11 (see .github/workflows/test.yml). macOS ships
+# Python 3.9 by default; teammates must install a newer one. See SETUP.md.
+#
+# This file is intentionally minimal — the repo isn't packaged for PyPI.
+# `ruff.toml` and `pytest.ini` stay as the source of truth for their tools.
+
+[project]
+name = "cs-repo"
+version = "0.0.0"
+description = "Slabstack CS operations — internal automation. Not packaged for distribution."
+requires-python = ">=3.10"

@@ -42,6 +42,8 @@ usage, not theoretical.
 
 ## Local test + lint workflow
 
+**Requirements:** Python ≥ 3.10 and Node ≥ 18. The pins in `requirements-dev.txt` (pytest ≥ 9.0.3, pillow ≥ 12.2.0, matplotlib ≥ 3.10.9) all require Python 3.10+; pip will fail with `Could not find a version that satisfies the requirement` on Python 3.9 (which is what macOS ships by default). CI uses Python 3.11. The minimum is also enforced in `pyproject.toml` via `requires-python`.
+
 ```bash
 make install-dev   # one-time: installs pytest, ruff, matplotlib, pillow
 npm install        # one-time: installs docx (runtime) and biome (lint)
