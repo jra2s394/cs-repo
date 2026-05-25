@@ -1,7 +1,24 @@
-# CODEOWNERS — solo repo, single owner.
+# CODEOWNERS — solo repo today, scaffolded for team expansion.
 #
-# Adds @jra2s394 as a default reviewer on every PR. If/when collaborators
-# join, scope ownership by directory (e.g. `/hooks/ @username` to require
-# review only on the hook surface).
+# Pattern below sets @jra2s394 as default on every PR (current state) AND
+# also pins ownership of the high-blast-radius surfaces. When a teammate
+# joins, you only need to (a) add their handle to the catch-all line and
+# (b) leave the sensitive-path lines pointing at you — that guarantees the
+# surfaces below always require maintainer review even when other teammates
+# can self-approve everything else.
 
+# Default owner — applies to every file unless overridden below.
 * @jra2s394
+
+# High blast radius — settings, hooks, CI, security policy, repo-wide config.
+# Changes here can silently weaken the safeguards the rest of the repo
+# depends on, so they should always require the maintainer's review.
+/.claude/settings.json       @jra2s394
+/.claude/settings.local.json @jra2s394
+/hooks/                      @jra2s394
+/.github/workflows/          @jra2s394
+/SECURITY.md                 @jra2s394
+/.github/SECURITY.md         @jra2s394
+/CLAUDE.md                   @jra2s394
+/pyproject.toml              @jra2s394
+/.pre-commit-config.yaml     @jra2s394
