@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh -- interactive installer for the dotclaude repo
+# install.sh -- interactive installer for the cs-repo
 # Symlinks hooks, copies skills/templates, and sets up CLAUDE.md.
 #
 # Platform: macOS and Linux only. Requires bash, ln -s, and a POSIX shell.
@@ -50,7 +50,7 @@ print_banner() {
   printf '%s\n' ' ██   ██ ██    ██    ██    ██      ██      ██   ██  ██  ██  ██   ██ ██'
   printf '%s\n' ' ██████   ██████     ██     ██████ ██████  ██   ██  ██████  ██████   ██████'
   printf '%s\n' ''
-  printf '%s\n' '  dotclaude installer'
+  printf '%s\n' '  cs-repo installer'
   printf '%s\n' "${RESET}"
 }
 
