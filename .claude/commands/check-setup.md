@@ -12,6 +12,8 @@ Run a battery of read-only checks and produce a green/yellow/red report on wheth
 
 The personal CLAUDE.md at `~/.claude/CLAUDE.md` is the per-teammate config. The project `CLAUDE.md` is shared (don't modify it from `/check-setup`).
 
+> **Legacy prose format**: pre-`/setup`-wizard personal files use prose form (`Jane Smith — Customer Success Manager at Acme.`) rather than field-key lines (`Name: Jane Smith`). The checks below grep for the field-key form because that's what `/setup` writes. If the file has no `Name:` line at all but has a `## Who I am` heading, treat it as legacy prose format: report a single 🟡 with the note "legacy prose format detected — setup likely works (data is in tables/prose) but won't validate cleanly until you re-run `/setup`". Do not flag each individual field as missing in that case — it floods the report with false negatives.
+
 Look for:
 - [ ] File exists at `~/.claude/CLAUDE.md`
 - [ ] Contains a real name (not the placeholder `Your Full Name` / `[Your Name]`)
