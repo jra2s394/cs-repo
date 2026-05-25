@@ -17,15 +17,18 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 
-# Brand palette — keep in sync with COLORS in report-theme.js
+# Brand palette — keep in sync with COLORS in report-theme.js.
+# (Charts only currently use navy, teal, gray_tx, and per-segment colours
+# passed in by callers; the rest are here for parity so adding a new chart
+# type doesn't need a second palette lookup.)
 PALETTE = {
     "navy":    "#1B2A4A",
     "teal":    "#007B7F",
     "teal_lt": "#5BB0B2",
-    "gray_lt": "#E4E7EC",
-    "gray_tx": "#5A6472",
+    "gray_lt": "#F1F3F6",
+    "gray_tx": "#59626F",
     "green":   "#2E7D32",
-    "amber":   "#D9A441",
+    "amber":   "#9C6B14",
 }
 
 _BASE_RC = {
