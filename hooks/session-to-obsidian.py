@@ -169,8 +169,8 @@ def find_session_by_cwd(cwd: str) -> Path | None:
 
 def parse_session(jsonl_path: Path) -> dict:
     turns = []
-    tools_used = Counter()
-    files_touched = set()
+    tools_used: Counter[str] = Counter()
+    files_touched: set[str] = set()
     session_id = None
     cwd = None
     git_branch = None
