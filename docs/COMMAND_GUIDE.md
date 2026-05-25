@@ -99,7 +99,7 @@ Three places, all required:
 2. **`USER_GUIDE.md`** — add to the quick-reference table at the top so end users can find it.
 3. **`/setup` Step 6** — if the command is role-specific (CSM-only, Director-only, etc.), add to the relevant role's command list in `.claude/commands/setup.md`.
 
-The `/commands` slash command auto-discovers every file in `.claude/commands/`, so it doesn't need updating — but CLAUDE.md tables are maintained by hand. There is no parity test yet, so if you skip step 1, CI passes but the command is invisible to anyone reading the CLAUDE.md inventory. Don't skip it.
+The `/commands` slash command auto-discovers every file in `.claude/commands/`, so it doesn't need updating — but CLAUDE.md tables are maintained by hand. `tests/test_commands_readme_parity.py` fails CI if you skip step 1: it checks every command file appears as a `/<name>` backtick in CLAUDE.md, and every `/<name>` ref in CLAUDE.md resolves to a real file (or to a one-line-`why`-documented entry in `ALLOWED_NON_FILE_REFS`).
 
 ---
 
