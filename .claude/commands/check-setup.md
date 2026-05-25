@@ -18,10 +18,11 @@ Look for:
 - [ ] Contains a real email (not `your@company.com`)
 - [ ] Contains a real Intercom Admin ID (not `paste-your-number-from-step-3-here` or `YOUR_INTERCOM_ID` — should be a string of digits)
 - [ ] Contains a `Time zone:` line with a valid IANA name (e.g. `America/Denver`, `Europe/London`). Validate by running `python3 -c "from zoneinfo import ZoneInfo; ZoneInfo('<value>')"` — exit 0 = valid, any error = invalid. Reject display-name forms like "Mountain Time" or "PST" since per-command code uses `ZoneInfo()` directly.
+- [ ] Contains an `Asana Team GID:` line. **Optional** — value can be a digit string (set), `[unset]` (deliberately skipped during `/setup`), or `ASANA_TEAM_GID` (placeholder never filled in). Report 🟢 if set, 🟡 if `[unset]` or `ASANA_TEAM_GID`, never 🔴 — commands fall back to workspace-wide queries if missing.
 
 Report:
-- 🟢 if all 5 are real values AND the IANA TZ parses cleanly
-- 🟡 if any are still placeholder values, OR the `Time zone:` line is missing (fixable by re-running `/setup`)
+- 🟢 if all required fields are real values AND the IANA TZ parses cleanly (Asana Team GID may be 🟡 without dropping the overall score)
+- 🟡 if any required field is still placeholder, OR the `Time zone:` line is missing, OR Asana Team GID is unset (fixable by re-running `/setup`)
 - 🔴 if the file is missing entirely, OR the `Time zone:` value is set but doesn't parse as a valid IANA name (will silently break every command that derives "now in user-local time")
 
 ---
@@ -97,6 +98,8 @@ These are 🟡 (not 🔴) if missing — a teammate who only uses commands doesn
   - Name: <real / placeholder>
   - Email: <real / placeholder>
   - Intercom Admin ID: <real / placeholder / cross-check status>
+  - Time zone: <IANA name parses / missing / invalid>
+  - Asana Team GID: <set / unset (optional — see SETUP.md Step 4)>
 
 ### MCP integrations (7)
 - 🟢 Gmail — responding as <your-email>

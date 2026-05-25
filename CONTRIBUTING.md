@@ -3,6 +3,8 @@
 This is a community project. Contributions are welcome: new hooks, skills, patterns, convention doc
 templates, bug fixes, and documentation improvements.
 
+**Before you start:** read [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for the command-execution flow, then [docs/COMMAND_GUIDE.md](docs/COMMAND_GUIDE.md) if you're adding a new slash command. For runtime failures while developing, [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) is the recovery guide.
+
 ## What makes a good contribution
 
 **Hooks** should solve a real problem you've hit. Include inline comments explaining what the hook

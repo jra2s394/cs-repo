@@ -105,9 +105,12 @@ You need a small file on your computer with your name, email, and Intercom ID. I
 Name: Your Full Name
 Email: your@company.com
 Intercom Admin ID: paste-your-number-from-step-3-here
+Asana Team GID: paste-your-asana-team-id-here   (optional — see below)
 ```
 
 Save and close.
+
+> **Asana Team GID is optional but recommended.** Commands like `/health-score`, `/tasks`, and `/at-risk` use it to filter to your team's projects only. To find it: log in to [Asana](https://app.asana.com), open any customer project, copy the long number between `/teams/` and the next `/` in the URL. Without it, those commands fall back to workspace-wide queries — slower and noisier, but still functional.
 
 ---
 
@@ -193,7 +196,7 @@ Steps 2–5 are per person — you still need to do them yourself even if a team
 - Run `make lint` to also catch lint errors (undefined names, unused imports) that tests might miss
 - Fix the issue on a feature branch, not directly on `main`
 
-**Still stuck?** Ask your CS lead.
+**Still stuck?** Check [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) — symptom-grouped recovery guide for runtime issues. If your symptom isn't there, ask your CS lead with the diagnostic info that doc requests.
 
 ---
 
