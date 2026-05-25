@@ -27,7 +27,7 @@ Run `search_threads` with the computed window. For each thread, classify into ex
 ### 🔴 Respond today
 Threads where I am the most recent expected reply. Heuristics:
 - Customer sent a question, I haven't replied
-- Internal teammate explicitly asked me ("Tripp, can you...")
+- Internal teammate explicitly asked me ("[your name], can you...")
 - Action item explicitly assigned to me in a Read.ai follow-up email
 - Reply needed to unblock a meeting on today's calendar
 
@@ -106,7 +106,7 @@ If approved:
 
 - **Never send email without explicit approval per draft** (matches `/follow-up`)
 - Never categorize a thread you couldn't actually read — if the body is too long or truncated, say so and put it in Respond Today by default (safer to over-prioritize)
-- For 🟡 customer signals, never invent a signal — quote the trigger phrase (e.g. "mentioned competitor 'Command Alkon' in body")
+- For 🟡 customer signals, never invent a signal — quote the trigger phrase (e.g. "mentioned competitor '[COMPETITOR_X]' in body")
 - For 🟣 escalations, never auto-create the Shortcut ticket; always suggest the command and let the user run it
 - The 🟢 FYI bucket is summarized in aggregate, not listed individually — listing 30 FYI items defeats the point of triage
 - All times in Mountain Time
@@ -124,21 +124,21 @@ If approved:
 **Pulled 47 threads.**
 
 ### 🔴 Respond today (3)
-1. Joe @ Terminal Ready Mix · "Re: drive time averages" — asking how to compute avg drive-to-plant for the cubic-yards spreadsheet. Last reply: Anthony Sat 5/24 morning
+1. [CONTACT_NAME] @ [CUSTOMER_A] · "Re: drive time averages" — asking how to compute avg drive-to-plant for the cubic-yards spreadsheet. Last reply: [TEAMMATE_1] Sat 5/24 morning
    → Draft a quick reply explaining the dispatch calc.
-2. Aymeric · "Re: Kurt Day 1 agenda" — wants confirmation Intercom invite is sent before Tue 5/26
+2. [MANAGER_NAME] · "Re: [TEAMMATE_2] Day 1 agenda" — wants confirmation Intercom invite is sent before Tue 5/26
    → Confirm yes (already sent Fri).
-3. Geoff Hollingshead · "Hi-Grade integration sync" — proposes Tue 1pm MT for a follow-up
+3. [CONTACT_NAME] · "[CUSTOMER_B] integration sync" — proposes Tue 1pm MT for a follow-up
    → Accept or counter-propose.
 
 ### 🟣 Escalate (1)
-1. Wayne Davis · "Slabstack quote field showing wrong total" — bug, screenshot attached
+1. [CUSTOMER_C] · "[PRODUCT] quote field showing wrong total" — bug, screenshot attached
    → Suggested: `/escalate <thread-url>` to file a Shortcut ticket for the quote-engine team
 
 ### 🟡 Customer signal (2)
-1. Cemstone (Thomas Becken) — expansion signal: "we're spinning up a 4th plant in St Paul Q3" (body, 2nd paragraph)
-   → Worth opening `/customer Cemstone` and noting in `/expansion`
-2. Colas (Jamie Forbes) — competitor mention: "evaluating Command Alkon for the East coast contracts"
+1. [CUSTOMER_D] ([CONTACT_NAME]) — expansion signal: "we're spinning up a 4th plant in [CITY] Q3" (body, 2nd paragraph)
+   → Worth opening `/customer [CUSTOMER_D]` and noting in `/expansion`
+2. [CUSTOMER_E] ([CONTACT_NAME]) — competitor mention: "evaluating [COMPETITOR_X] for the East coast contracts"
    → Worth flagging in `/at-risk` triage
 
 ### 🟢 FYI (41)
@@ -150,9 +150,9 @@ If approved:
 ---
 
 **Top picks for the next hour:**
-1. Reply to Joe's drive-time question (unblocks Anthony's onboarding work)
-2. File the Wayne Davis bug as a Shortcut ticket
-3. Note the Cemstone expansion signal before it gets buried
+1. Reply to [CONTACT_NAME]'s drive-time question (unblocks [TEAMMATE_1]'s onboarding work)
+2. File the [CUSTOMER_C] bug as a Shortcut ticket
+3. Note the [CUSTOMER_D] expansion signal before it gets buried
 
 Want me to draft replies for any of the 🔴 items?
 ```

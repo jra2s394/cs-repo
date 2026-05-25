@@ -66,7 +66,7 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 | `/follow-up` | Draft follow-up email after a call (Read.ai → draft → approval → send) |
 | `/go-live` | Go-live readiness check — blockers across Asana, Shortcut, Intercom, Gmail |
 | `/at-risk` | Surface all at-risk customers across all systems — read-only triage |
-| `/health-score` | Portfolio health scorecard, or single-customer snapshot if you pass a name (`/health-score Cemstone`) — green/yellow/red across Asana, Intercom, Shortcut |
+| `/health-score` | Portfolio health scorecard, or single-customer snapshot if you pass a name (`/health-score Acme`) — green/yellow/red across Asana, Intercom, Shortcut |
 | `/expansion` | Identify expansion and upsell opportunities from live signals |
 | `/qbr` | QBR prep — full quarter data pull, wins sourced, agenda drafted |
 | `/escalate` | Escalate an Intercom conversation to a Shortcut ticket (draft → approval → create) |
@@ -140,7 +140,7 @@ These hooks run automatically. Know what they block:
 | `branch-enforcer.py` | Blocks `git commit` directly on `main` or `master` — must be on a feature branch |
 | `push-guard.py` | Blocks `git push --force` / `-f`, direct pushes to `main`/`master`, `gh pr merge`, and Bash-level writes to `.env` files (bare and directory-prefixed, e.g. `> config/.env`); allows `.envrc` (direnv) |
 | `block-attribution.py` | Blocks commits containing AI attribution strings (`Co-Authored-By: Claude`, etc.) |
-| `secret-scan.py` | Blocks `git commit` when staged content matches a known token pattern (Shortcut, GitHub, OpenAI, Anthropic, Slack, AWS, Google API, RSA private key, JWT) |
+| `secret-scan.py` | Blocks `git commit` when staged content matches a known token pattern (Shortcut, GitHub, OpenAI legacy + project keys, Anthropic, Stripe live, Twilio, GCP service account, Slack `xox[abcepsr]-`, AWS access key + secret, Google API, RSA private key, JWT). Stripe test keys warn but do not block. |
 | `draft-before-create.py` | Forces a permission prompt before creating or mutating items in Slack, Asana, Intercom, Shortcut — covers all write/delete/update operations including Shortcut stories, epics, iterations, documents, and task mutations |
 | `file-protector.py` | Blocks edits to `.env` and `.env.*` files (but not `.envrc`), private keys, and named credential files via Edit/Write tools |
 | `pr-template-reminder.py` | Reminds you to use the PR template when running `gh pr create` without `--body-file` |

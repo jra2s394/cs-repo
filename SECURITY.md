@@ -6,7 +6,7 @@ This repo is a public CS Ops automation suite. It connects to live work accounts
 
 **Preferred:** open a private vulnerability report via GitHub's "Report a vulnerability" button under the repo's **Security** tab. This keeps the report private to the maintainer until a fix is ready.
 
-**Alternative:** email tarnold@sysdynetechnologies.com with subject `[SECURITY] cs-repo: <short summary>`. Please include:
+**Alternative:** email the maintainer (see the repo profile for the current contact address) with subject `[SECURITY] cs-repo: <short summary>`. Please include:
 - A description of the issue and why you believe it's a security concern
 - Steps to reproduce (if applicable)
 - Affected files or commands
@@ -35,7 +35,7 @@ We aim to acknowledge reports within 3 business days and to ship a fix or mitiga
 
 This repo ships with multiple defense layers. If you find a way around any of them, that's in scope:
 
-- **`hooks/secret-scan.py`** — blocks `git commit` when staged content matches known token patterns (Shortcut, GitHub, OpenAI, Anthropic, Slack, AWS, Google API, RSA private key, JWT)
+- **`hooks/secret-scan.py`** — blocks `git commit` when staged content matches known token patterns (Shortcut, GitHub `ghp_`/`gho_`/`ghs_`/`ghu_`/`ghr_`, OpenAI legacy + project-keys, Anthropic, Stripe live (sk_live/pk_live), Twilio, GCP service account, Slack `xox[abcepsr]-`, AWS access key + secret, Google API, RSA private key, JWT). Stripe test keys (`sk_test_`/`pk_test_`) emit a warning but do not block.
 - **`hooks/push-guard.py`** — blocks `git push --force`, pushes to `main`/`master`, `gh pr merge`, and Bash-level writes to `.env` files
 - **`hooks/file-protector.py`** — blocks Edit/Write to `.env`, `.env.*`, private keys, credential files, and `.git/` internals
 - **`hooks/draft-before-create.py`** — forces a permission prompt before any write to Slack, Asana, Intercom, or Shortcut

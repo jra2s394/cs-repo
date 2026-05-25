@@ -32,7 +32,7 @@ Generate the Friday end-of-week post for Slabstack in your house format.
    Pull 30-50 threads.
 
 5. **Gmail — targeted searches for any uncertain items:**
-   If Heritage go-live status unclear: `(Heritage OR Lou OR sundry) after:<Mon>`
+   If a go-live status is unclear: `(<customer> OR <contact name> OR <project keyword>) after:<Mon>`
    If an integration milestone unclear: search the customer name
    **This is REQUIRED before claiming any milestone happened.**
 

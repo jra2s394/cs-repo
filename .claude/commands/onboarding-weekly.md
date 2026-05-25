@@ -114,7 +114,7 @@ Include ALL in-flight + completed-this-week accounts. Sort: Blocked first, then 
 
 ```python
 # Example row:
-# ["Wayne Davis", "Slabstack Core", "$18.5k", status_cell("Blocked"), "47 days"]
+# ["[Customer A]", "[Product] Core", "$18.5k", status_cell("Blocked"), "47 days"]
 # status_cell() from template Step 5 — adds color styling
 ```
 

@@ -251,7 +251,7 @@ Get a green/yellow/red view of every active account in one screen — or focus o
 
 **Portfolio mode** (`/health-score` with no argument): Claude pulls live data from Asana, Intercom, Shortcut, Gmail, and Calendar for every active account and scores each one against four dimensions (last contact recency, overdue tasks, open Intercom conversations, Shortcut blockers). Shows a sorted scorecard (🔴 first, then 🟡, with 🟢 collapsed), flags every 🔴 with a specific recommended action, and surfaces upcoming renewals. After reviewing the draft, Claude builds a branded `.docx` and auto-copies to `Desktop/CS Reports/Health Reports/`.
 
-**Single-customer mode** (`/health-score Cemstone` or any other customer name): same rubric, one account. Output is an inline snapshot (no `.docx` is generated — for a full customer report use `/qbr` instead). Includes per-project Asana detail, verbatim customer signals (expansion/churn/competitor mentions quoted directly from email or Read.ai — never paraphrased), and recommended actions ranked by urgency. Use this before a customer call, before a renewal conversation, or any time you want a quick "is this account healthy?" check.
+**Single-customer mode** (`/health-score Acme` or any other customer name): same rubric, one account. Output is an inline snapshot (no `.docx` is generated — for a full customer report use `/qbr` instead). Includes per-project Asana detail, verbatim customer signals (expansion/churn/competitor mentions quoted directly from email or Read.ai — never paraphrased), and recommended actions ranked by urgency. Use this before a customer call, before a renewal conversation, or any time you want a quick "is this account healthy?" check.
 
 Both modes filter Asana to your team's GID automatically so you don't get noise from sibling product teams' projects. If you hit a "result too large" error during contact-domain searches, the command knows to batch (Intercom caps contact_ids at 15 per query) — you'll see it batch-and-aggregate transparently.
 
@@ -287,7 +287,7 @@ Type `/renewal-health`. Claude searches Gmail, Asana, and Intercom for renewal s
 
 Get a one-screen briefing before a call or when you need to get up to speed fast.
 
-Type `/customer` (or `/customer Cemstone`). Claude pulls from Intercom, Gmail, Calendar, Asana, and Shortcut in parallel and shows you: current status, open conversations, recent emails and meetings, upcoming calls, open Asana tasks, open Shortcut stories, and anything flagged 🔴. Read.ai meeting reports are used as the authoritative meeting source when available.
+Type `/customer` (or `/customer Acme`). Claude pulls from Intercom, Gmail, Calendar, Asana, and Shortcut in parallel and shows you: current status, open conversations, recent emails and meetings, upcoming calls, open Asana tasks, open Shortcut stories, and anything flagged 🔴. Read.ai meeting reports are used as the authoritative meeting source when available.
 
 ---
 
@@ -310,7 +310,7 @@ Ends with "top picks for the next hour" so you know where to start. If you want,
 
 Fuzzy lookup across Asana, Shortcut, Intercom, and Gmail. Use this before `/customer`, `/qbr`, etc. when you've only got a partial name, a misspelling, or a contact's first name.
 
-Type `/customer-search hollingshead` (or `/customer-search hi grade`, `/customer-search hi-grade.com`). Claude searches all four systems in parallel, clusters the matches into candidate customers using domain and substring signals, and ranks each candidate with a 🟢/🟡/🔴 confidence label. If exactly one high-confidence match exists, Claude offers to run `/customer` on it. Read-only — nothing is created or modified.
+Type `/customer-search smith` (or `/customer-search acme co`, `/customer-search acme.com`). Claude searches all four systems in parallel, clusters the matches into candidate customers using domain and substring signals, and ranks each candidate with a 🟢/🟡/🔴 confidence label. If exactly one high-confidence match exists, Claude offers to run `/customer` on it. Read-only — nothing is created or modified.
 
 ---
 
@@ -334,7 +334,7 @@ Type `/follow-up` → Claude finds the most recent completed meeting → searche
 
 Counterpart to `/follow-up` for the case where you just want notes — not an email. Use when you want to file a structured summary for your records, paste into Asana/Shortcut, or hand off to a teammate.
 
-Type `/meeting-notes` (or `/meeting-notes Cemstone`). Claude finds the meeting, pulls Read.ai + calendar + Gmail + Asana + Shortcut in parallel, and presents: a 2–3 sentence summary, decisions, an action-items table (each action cross-referenced against existing Asana tasks and Shortcut stories so you don't duplicate work), customer signals quoted verbatim from the Read.ai transcript, and a parking-lot section for open questions.
+Type `/meeting-notes` (or `/meeting-notes Acme`). Claude finds the meeting, pulls Read.ai + calendar + Gmail + Asana + Shortcut in parallel, and presents: a 2–3 sentence summary, decisions, an action-items table (each action cross-referenced against existing Asana tasks and Shortcut stories so you don't duplicate work), customer signals quoted verbatim from the Read.ai transcript, and a parking-lot section for open questions.
 
 Strictly read-only — no email drafts, no task creation, no story updates. After the notes, Claude asks if you want to save them to `slabstack-cs/meeting-notes/` (the only action this command will take, and only after explicit "yes save"). For follow-up actions, Claude points you at `/follow-up`, `/tasks`, `/story-CSEng`, or `/escalate` so you stay in control.
 
@@ -446,7 +446,7 @@ Nothing is created or changed — this is a read-only status check.
 
 Shows your open Asana tasks grouped by urgency: overdue, due today, due this week, upcoming.
 
-Tell Claude what to do in plain language: "mark the Cemstone task complete," "add a task for Colas go-live next Friday," "move the Heritage item to next week." Claude confirms before making any change.
+Tell Claude what to do in plain language: "mark the Acme task complete," "add a task for Bravo go-live next Friday," "move the Charlie item to next week." Claude confirms before making any change.
 
 ---
 

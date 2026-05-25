@@ -14,7 +14,7 @@ This is read-only. Never create, update, or comment on anything.
 
 Ask: "What customer? Give me anything — partial name, misspelling, contact name, domain — I'll find it."
 
-Accept anything: `"hi-grade"`, `"hi grade"`, `"higrade"`, `"hollingshead"`, `"hi-grade.com"`, etc.
+Accept anything: `"acme"`, `"acme co"`, `"acmeco"`, `"smith"`, `"acme.com"`, etc.
 
 ---
 
@@ -47,7 +47,7 @@ Run these in parallel — don't block one on another.
 Group results into **candidate customers**. A candidate is a single account — even if the spelling varies across systems. Use these signals to merge:
 
 - Same email domain → same candidate
-- Substring match in company name (e.g. "Hi-Grade", "Hi Grade", "Higrade Concrete") → same candidate
+- Substring match in company name (e.g. "Acme-Co", "Acme Co", "AcmeCo Concrete") → same candidate
 - Same Intercom company referenced from multiple systems → same candidate
 
 For each candidate, show:
@@ -93,16 +93,16 @@ After listing candidates:
 ## Example
 
 ```
-> /customer-search hollingshead
+> /customer-search smith
 
-### Hi-Grade Concrete   (confidence: 🟢 high)
-- **Domains:** hi-grade.com
-- **Aliases:** "Hi-Grade", "Hi Grade Concrete", "Higrade"
+### Acme Concrete   (confidence: 🟢 high)
+- **Domains:** acme.com
+- **Aliases:** "Acme", "Acme Concrete Co", "AcmeCo"
 - **Intercom:** company id 12345 · 4 contacts · last contact 2026-05-22
-- **Asana:** "Hi-Grade Onboarding" · 3 open tasks
+- **Asana:** "Acme Onboarding" · 3 open tasks
 - **Shortcut:** 1 open story (sc-4521)
-- **Gmail:** 14 threads in last 90 days · Geoff Hollingshead, Garrett Hollingshead
-- **Next action:** `/customer "Hi-Grade Concrete"`
+- **Gmail:** 14 threads in last 90 days · [CONTACT_A], [CONTACT_B]
+- **Next action:** `/customer "Acme Concrete"`
 
 That's the only match. Want me to run /customer on it?
 ```
