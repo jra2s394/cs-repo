@@ -1,4 +1,5 @@
 {
+  "autoUpdatesChannel": "stable",
   "hooks": {
     "PreToolUse": [
       {
@@ -569,6 +570,18 @@
       }
     ],
     "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/audit-log.py",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUseFailure": [
       {
         "matcher": "",
         "hooks": [

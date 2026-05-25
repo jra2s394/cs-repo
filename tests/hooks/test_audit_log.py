@@ -82,9 +82,9 @@ class TestBasicLogging:
         )
         log_path = isolated_home / ".claude" / "tool-audit.log"
         line = log_path.read_text().strip().split("\n")[0]
-        # Format: "YYYY-MM-DD HH:MM:SS | sessid | tool_name | cwd"
+        # Format: "YYYY-MM-DD HH:MM:SS | sessid | OK/FAIL | tool_name | cwd"
         parts = line.split(" | ")
-        assert len(parts) == 4
+        assert len(parts) == 5
 
     def test_multiple_calls_append(self, isolated_home):
         for tool in ("Read", "Bash", "Edit"):
@@ -95,6 +95,52 @@ class TestBasicLogging:
         log_path = isolated_home / ".claude" / "tool-audit.log"
         lines = [ln for ln in log_path.read_text().strip().split("\n") if ln]
         assert len(lines) == 3
+
+
+class TestStatusColumn:
+    """The status column distinguishes successful tool calls (PostToolUse) from
+    failures (PostToolUseFailure), so failed calls don't vanish from the audit
+    trail. Anything not ending in 'Failure' is treated as OK.
+    """
+
+    def test_post_tool_use_logs_ok(self, isolated_home):
+        run_audit(
+            {
+                "tool_name": "Bash",
+                "session_id": "abc12345",
+                "cwd": "/project",
+                "hook_event_name": "PostToolUse",
+            },
+            isolated_home,
+        )
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        parts = log_path.read_text().strip().split(" | ")
+        assert parts[2] == "OK"
+
+    def test_post_tool_use_failure_logs_fail(self, isolated_home):
+        run_audit(
+            {
+                "tool_name": "Bash",
+                "session_id": "abc12345",
+                "cwd": "/project",
+                "hook_event_name": "PostToolUseFailure",
+            },
+            isolated_home,
+        )
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        parts = log_path.read_text().strip().split(" | ")
+        assert parts[2] == "FAIL"
+
+    def test_missing_event_name_defaults_to_ok(self, isolated_home):
+        # Existing payload shape (no hook_event_name) must still log as OK,
+        # since the historical PostToolUse hook never included the field.
+        run_audit(
+            {"tool_name": "Read", "session_id": "abc12345", "cwd": "/project"},
+            isolated_home,
+        )
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        parts = log_path.read_text().strip().split(" | ")
+        assert parts[2] == "OK"
 
 
 class TestLogRotation:
