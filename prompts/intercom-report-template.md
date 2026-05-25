@@ -264,3 +264,57 @@ Then show the report inline and ask:
 - **Admin name mapping** — admin IDs from API should be labeled using the table in CLAUDE.md; otherwise show ID only
 - **Pagination** — for periods with > 750 conversations, note the sample size and flag if results are partial
 - **Fin / ai_agent fields** — the `ai_agent` object is `null` unless Fin participated; `resolution_state` and `content_sources` exist only on Fin-touched conversations. Verify those sub-field names against a real Fin conversation before relying on the Fin section.
+
+---
+
+## Standard Protocol Reference
+
+The per-period commands (`/intercom-daily`, `/intercom-weekly`, `/intercom-monthly`, `/intercom-quarterly`, `/intercom-yeartodate`) invoke the following named steps. Each command's `.md` says "run **Standard Step 2** from the template" instead of inlining the same paragraph five times.
+
+### Standard Step 2 — Pull conversations for a period
+
+Use `search_conversations` — it returns the full conversation object (`statistics`, `ai_agent`, `custom_attributes`, `source`, `read`, `waiting_since`) in the list response, so no per-conversation fetch is needed. Make ONE pull from the period's earliest start timestamp:
+
+```
+search_conversations(created_at={"operator": ">=", "value": START_TS}, per_page=150)
+```
+
+Do NOT use the generic `search` tool — it returns only `id/title/text/url`, which forces a `fetch` per conversation (infeasible at weekly volume and up). Paginate with `starting_after` until all conversations are retrieved.
+
+### Standard Step 4 — Pull currently OPEN conversations
+
+```
+search_conversations(state="open", per_page=150)
+```
+
+This is the live open queue regardless of date filter. Paginate with `starting_after` if more than 150 conversations are open.
+
+### Standard Step 5 — Pull KB articles
+
+```
+list_articles(per_page=150)
+```
+
+Count published vs draft; identify recently updated (within 30 days); note which articles Fin cited in the period's conversations.
+
+### Standard Build & Distribute
+
+After writing the metrics JSON and running the per-period build script (`node reports/intercom-<period>.js ...`), do the following three steps in order:
+
+**1. PDF conversion** *(skip if LibreOffice not installed — the .docx is the primary deliverable)*:
+```bash
+/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir out/ out/<DocxFilename>.docx
+```
+
+**2. Google Drive upload (optional).** After showing the report, ask: "Want me to upload the data to Google Sheets?" If yes:
+
+1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
+2. Call `mcp__claude_ai_Google_Drive__create_file` with:
+   - `title`: `"Intercom <Period Type> — <Period Label>"`
+   - `textContent`: the CSV file contents
+   - `contentMimeType`: `"text/csv"`
+3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
+
+**3. Closing prompt.** End the command with the line:
+
+> "Want me to upload the data to Google Sheets, post this to Slack, or tweak anything?"

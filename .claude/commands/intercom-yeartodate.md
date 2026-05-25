@@ -57,12 +57,14 @@ for label, ts in quarters:
     print(f"  {label}_START_TS: {ts}")
 ```
 
-### 2 — Pull ALL conversations (one paginated pull)
-Use `search_conversations` with no date filter — this returns the full workspace history, which the all-time totals and "oldest conversation on record" require. It returns the full conversation object (`statistics`, `ai_agent`, `custom_attributes`, `source`, `read`, `waiting_since`), so no per-conversation fetch is needed:
+### 2 — Pull ALL conversations (no date filter)
+This is the one period command that intentionally **does not pass `START_TS`** — the YTD report includes "all-time totals" and the "oldest conversation on record", both of which require the full workspace history:
+
 ```
 search_conversations(per_page=150)
 ```
-Paginate with `starting_after` until no more pages. This may be 1,000–2,000+ conversations for a mature workspace — that's expected; note the total page count. Do NOT use the generic `search` tool — it returns only `id/title/text/url`.
+
+Paginate with `starting_after` until no more pages. This may be 1,000–2,000+ conversations for a mature workspace — that's expected; note the total page count. Do NOT use the generic `search` tool — it returns only `id/title/text/url`. The list-response object shape and Fin/contact field semantics are the same as in the template's **Standard Step 2**.
 
 ### 3 — Bucket the results in Python
 Split the single all-time pull by each conversation's `created_at`:
@@ -76,15 +78,10 @@ Split the single all-time pull by each conversation's `created_at`:
 If two-years-ago data is sparse (< 50 conversations), note it likely reflects Slabstack's early Intercom adoption.
 
 ### 4 — Pull currently OPEN conversations
-```
-search_conversations(state="open", per_page=150)
-```
-Paginate with `starting_after` if more than 150 are open.
+Run **Standard Step 4** from the template.
 
 ### 5 — Pull KB articles
-```
-list_articles(per_page=150)
-```
+Run **Standard Step 5** from the template.
 
 ### 6 — Compute all metrics
 Apply all formulas from `prompts/intercom-report-template.md`.
@@ -292,25 +289,4 @@ node reports/intercom-yeartodate.js data/outputs/intercom-ytd-metrics-[YYYY].jso
 ```
 Output: `out/Intercom_YTD_[YYYY].docx`
 
-**c) Convert to PDF** *(skip if LibreOffice not installed — the .docx is the primary deliverable)*:
-```bash
-/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir out/ out/Intercom_YTD_[YYYY].docx
-```
-
----
-
-## Google Drive upload (optional)
-
-After showing the report, ask: "Want me to upload the data to Google Sheets?"
-
-If yes:
-1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
-2. Call `mcp__claude_ai_Google_Drive__create_file` with:
-   - `title`: "Intercom Year-to-Date — [Year]"
-   - `textContent`: the CSV file contents
-   - `contentMimeType`: "text/csv"
-3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
-
----
-
-End with: "Want me to upload the data to Google Sheets, send to Slack, or tweak anything?"
+**c) PDF, Drive upload, closing prompt** — run **Standard Build & Distribute** from the template.
