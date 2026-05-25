@@ -164,6 +164,20 @@ Use these when filtering conversations to a specific teammate.
 
 ---
 
+## Asana Team GID
+
+Commands like `/health-score`, `/tasks`, and `/at-risk` filter Asana queries to your team's projects (so sibling-team projects don't pollute results). Set this once.
+
+To find it: open any of your customer projects in Asana, copy the team segment from the URL (the long number between `/teams/` and the next `/`).
+
+```
+Asana Team GID: ASANA_TEAM_GID
+```
+
+If unset, commands fall back to workspace-wide queries — usually slower and noisier. `/check-setup` flags an unset value as 🟡 (optional but recommended).
+
+---
+
 ## Connected services (MCP)
 
 - Gmail

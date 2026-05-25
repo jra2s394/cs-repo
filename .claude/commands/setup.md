@@ -84,6 +84,25 @@ Wait for the answer.
 
 ---
 
+## Step 2.5 — Get Asana Team GID (optional)
+
+Send this message:
+
+```
+Optional: your Asana Team GID. Commands like /health-score, /tasks, and /at-risk use it to filter to your team's projects (so sibling teams' projects don't pollute the results).
+
+To find it:
+  1. Log in to Asana
+  2. Open any of your customer projects
+  3. Look at the URL — copy the long number between /teams/ and the next /
+
+What's your Asana Team GID? (Or reply "skip" — you can add it later in ~/.claude/CLAUDE.md.)
+```
+
+Wait for the answer. If they say "skip", set the value to `[unset]` and continue.
+
+---
+
 ## Step 3 — Confirm and write the file
 
 Show the user exactly what will be written:
@@ -102,6 +121,7 @@ Location: [their location]
 Email: [their email]
 Role: [their role description]
 Intercom Admin ID: [their ID]
+Asana Team GID: [their Asana team GID, or "[unset]" if they skipped]
 ---
 ```
 
@@ -123,6 +143,7 @@ Once confirmed:
    - `[your-email@company.com]` → their email
    - The role description placeholder → their description
    - `YOUR_INTERCOM_ID` in the Intercom admin IDs table → their ID
+   - `ASANA_TEAM_GID` in the Asana Team GID section → their GID (or leave as `ASANA_TEAM_GID` if they answered "skip" — `/check-setup` will flag this as 🟡 so they can fill it in later)
 3. Write the result to `~/.claude/CLAUDE.md`.
 
 Tell the user: "Written to ~/.claude/CLAUDE.md."

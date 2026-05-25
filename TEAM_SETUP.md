@@ -135,6 +135,21 @@ You're using the tool.
 - **Try the morning routine for a week:** `/inbox-triage` after coffee, `/meeting-prep` before your first call.
 - **When the tool surprises you** (good or bad), tell your team owner. The tool is shaped by friction reports — that's how it gets better.
 
+### Day 1 → Week 4 rhythm
+
+A cadence that gets you from "I ran one command" to "I can help onboard the next person" in about a month:
+
+| When | What | Why |
+|---|---|---|
+| **Day 1** | `/check-setup` returns all 🟢 | Catches the silent failures (Intercom ID mismatch, MCP not actually connected) before they bite |
+| **Day 2–3** | Run `/daily` two days in a row, eyeball the output | Confirms your time zone is right and you're getting *your* data, not a teammate's |
+| **End of week 1** | Try `/inbox-triage` and `/meeting-prep` before your first morning call | Confirms Gmail + Calendar are returning real data and the morning routine fits your workflow |
+| **Week 2** | Run a report — `/health-score` or `/intercom-weekly` | Confirms the Finance / Intercom integration path works end-to-end, and you've seen the `.docx` output shape |
+| **Week 3** | Try an approval-required command — `/story-CSEng` or `/escalate` | Confirms the draft-before-create flow makes sense (Claude shows a draft, you approve, *then* it acts) |
+| **Week 4** | You can answer a teammate's "how do I use this?" question without checking docs | You're ready to onboard the next person |
+
+If something feels off at any week, run `/check-setup` first — most surprises trace back to a config drift it catches. For symptoms it doesn't catch, see [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
+
 ---
 
 ## How updates flow
@@ -173,7 +188,7 @@ USER_GUIDE.md's "GitHub 101" section has more detail with screenshots if any of 
 | Commands like `/daily` don't appear in Claude | You opened Claude in the wrong folder. Close it, run `cd cs-repo` first, then `claude` |
 | `git clone` says "permission denied" | You're cloning from a URL that needs a key. Use the `https://` URL, not `git@github.com:`, unless you've set up SSH keys |
 | `pip3 install` complains about Python version | Type `python3 --version` — if you get an error, Python isn't installed. Mac: install via [python.org](https://www.python.org/downloads/) |
-| Anything else | Ask the team owner. The tool is small enough that they probably know |
+| Anything else | First check [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) — symptom-grouped recovery guide. If your symptom isn't there, ask the team owner with the diagnostic info that doc requests |
 
 ---
 
