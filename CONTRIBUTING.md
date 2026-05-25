@@ -44,6 +44,28 @@ usage, not theoretical.
 
 **Requirements:** Python ≥ 3.10 and Node ≥ 18. The pins in `requirements-dev.txt` (pytest ≥ 9.0.3, pillow ≥ 12.2.0, matplotlib ≥ 3.10.9) all require Python 3.10+; pip will fail with `Could not find a version that satisfies the requirement` on Python 3.9 (which is what macOS ships by default). CI uses Python 3.11. The minimum is also enforced in `pyproject.toml` via `requires-python`.
 
+**Recommended setup — project-local venv** (keeps `/usr/bin/python3` untouched, gives you a known-clean dependency set, isolates this repo from anything else on your machine):
+
+```bash
+# One-time, if your system Python is too old:
+brew install python@3.12                 # macOS; or apt/dnf install python3.12
+
+# One-time per clone:
+python3.12 -m venv .venv                 # creates ./.venv/ (already .gitignored)
+.venv/bin/pip install --upgrade pip
+.venv/bin/pip install -r requirements-dev.txt
+npm install                              # docx (runtime) + biome (lint)
+
+# Every session: activate first
+source .venv/bin/activate
+
+# Or invoke the venv tools directly without activating:
+make test                                # works once activated
+.venv/bin/python -m pytest               # works without activation
+```
+
+If you already have Python ≥ 3.10 on `$PATH`, the venv is optional — `make install-dev` + `make test` directly against your system Python works too. CI uses the system-Python path (no venv).
+
 ```bash
 make install-dev   # one-time: installs pytest, ruff, matplotlib, pillow
 npm install        # one-time: installs docx (runtime) and biome (lint)
