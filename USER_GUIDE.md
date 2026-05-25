@@ -524,13 +524,13 @@ Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seco
 Before opening a PR for any code change, run the test suite AND the linters:
 
 ```
-make test    # 572 automated tests (443 Python + 129 JavaScript)
+make test    # 649 automated tests (499 Python + 150 JavaScript)
 make lint    # ruff (Python) + biome (JS) — catches undefined names, unused imports
 ```
 
 The tests cover every hook, every lib helper (csv-export, report-theme, data-loader, copy-to-desktop, report_charts), every report's CLI contract, the publish pipeline, AND every command file's frontmatter (so adding a new slash command without a `description:` fails CI). The linters catch the runtime-bug class that tests can miss — e.g., a missing `require()` in a code path tests don't exercise.
 
-If all pass you'll see `443 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
+If all pass you'll see `499 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
 
 GitHub Actions runs all of `make test` + `make lint` automatically on every pull request. A PR can't sneak a broken change onto `main` without CI catching it first.
 
