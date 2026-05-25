@@ -1,6 +1,8 @@
 # Release Notes
 
-Chronological history of every change merged to `main`, from the first commit to the latest. Each entry maps to a single merged PR. Entries are grouped by date and tagged by theme so you can scan for a class of change (e.g. `[command]`, `[safety]`, `[testing]`).
+Chronological per-PR history of the bootstrap period. Each entry maps to a single merged PR. Entries are grouped by date and tagged by theme so you can scan for a class of change (e.g. `[command]`, `[safety]`, `[testing]`).
+
+> **Scope:** PR #4 through PR #32 (2026-05-23 to 2026-05-24, the first ~30 PRs that defined the repo). Newer history is **not** mirrored here — for everything after PR #32, see `git log --oneline main` or the GitHub PR list. The "Numbers at a glance" table below is a frozen snapshot at PR #29; a "Today" column tracks the current totals so the deltas stay legible.
 
 **Tags:**
 - `[command]` — new or modified slash command in `.claude/commands/`
@@ -315,16 +317,18 @@ Net: 124 files changed, +17,540. The bootstrap.
 
 ## Numbers at a glance
 
-| Metric | At v0 | After PR #29 (today) |
-|---|---|---|
-| Slash commands | 18 | 44 |
-| Hooks | 10 | 11 (added `secret-scan.py`) |
-| Report generators | 9 | 17 |
-| Python tests | 0 | 443 |
-| JS tests | 0 | 129 |
-| Linters | 0 | 2 (ruff + biome) |
-| CI checks | 0 | 4 (pytest + ruff + biome + JS) |
-| `/review-code` sections | n/a | 22 |
+| Metric | At v0 | At PR #29 (snapshot) | Today |
+|---|---|---|---|
+| Slash commands | 18 | 44 | 44 |
+| Hooks | 10 | 11 (added `secret-scan.py`) | 11 |
+| Report generators | 9 | 17 | 17 |
+| Python tests | 0 | 443 | 525 |
+| JS tests | 0 | 129 | 155 |
+| Linters | 0 | 2 (ruff + biome) | 2 (ruff + biome) |
+| CI checks | 0 | 4 (pytest + ruff + biome + JS) | 4 (pytest + ruff + biome + JS) |
+| `/review-code` sections | n/a | 22 | 23 |
+
+The "Today" column drifts with the repo; if it falls behind reality, refresh it from `make test` and `grep -c "^## Section" .claude/commands/review-code.md`.
 
 ---
 
