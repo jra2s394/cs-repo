@@ -1,6 +1,6 @@
 # Delegation-First
 
-The core behavioral pattern in dotclaude. Configure Claude to act as an engineering manager who orchestrates specialized sub-agents, not as an individual contributor who does everything sequentially.
+The core behavioral pattern in cs-repo. Configure Claude to act as an engineering manager who orchestrates specialized sub-agents, not as an individual contributor who does everything sequentially.
 
 ## Problem
 

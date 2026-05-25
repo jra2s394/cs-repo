@@ -2,7 +2,7 @@
 
 > **Prompt:** "Users are reporting the search feature is slow"
 
-## Without dotclaude
+## Without cs-repo guardrails
 
 Claude goes straight to the code.
 
@@ -35,7 +35,7 @@ Here's a migration and the updated query...
 
 User: "Oh yeah, that's ENG-847. Jake's been working on it all week."
 
-## With dotclaude
+## With cs-repo guardrails
 
 Claude searches the PM tool before opening a single file.
 
@@ -75,7 +75,7 @@ answer took 30 seconds instead of 20 minutes.
 - Default Claude treated the report as a signal to start an investigation.
   It read six files and produced a thorough analysis of a problem that was
   already known and already being fixed.
-- With dotclaude, the Bug Triage Workflow fires first: search the PM tool
+- With cs-repo guardrails, the Bug Triage Workflow fires first: search the PM tool
   before touching the codebase. The answer (ENG-847, Jake's on it) takes
   one tool call.
 - The codebase investigation is not skipped permanently. If no ticket had
