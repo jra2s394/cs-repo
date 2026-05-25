@@ -1,5 +1,5 @@
 pytest>=8.0
 pytest-cov>=7.1.0
-matplotlib>=3.7
+matplotlib>=3.10.9
 pillow>=12.2.0
 ruff>=0.15.14
