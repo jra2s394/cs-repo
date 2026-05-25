@@ -213,25 +213,4 @@ node reports/onboarding-monthly.js data/outputs/onboarding-monthly-metrics-YYYY-
 
 Output: `out/Onboarding_Monthly_YYYY-MM.docx`
 
-Convert to PDF *(skip if LibreOffice not installed)*:
-```bash
-/Applications/LibreOffice.app/Contents/MacOS/soffice --headless --convert-to pdf --outdir out/ out/Onboarding_Monthly_YYYY-MM.docx
-```
-
----
-
-## Google Drive upload (optional)
-
-After showing the report, ask: "Want me to upload the data to Google Sheets?"
-
-If yes:
-1. Read the `.csv` file from `out/` (same name as the `.docx`, `.csv` extension)
-2. Call `mcp__claude_ai_Google_Drive__create_file` with:
-   - `title`: "Onboarding Monthly — [Period]"
-   - `textContent`: the CSV file contents
-   - `contentMimeType`: "text/csv"
-3. Google Drive auto-converts it to a native Google Sheet. Return the file link.
-
----
-
-End with: "Want me to upload the data to Google Sheets, share this in Slack, or tweak anything?"
+Then run **Standard Build & Distribute** from `prompts/onboarding-report-template.md` (PDF conversion + Google Drive upload prompt + closing line).
