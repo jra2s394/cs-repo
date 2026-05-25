@@ -65,8 +65,17 @@ WARN_PATTERNS = [
     ("Stripe test publishable",   re.compile(r"\bpk_test_[A-Za-z0-9]{24,}\b")),
 ]
 
-# Diff lines under these paths are skipped (placeholder examples, test fixtures
-# that intentionally include token-looking strings, this file itself).
+# Files whose added lines are skipped during scanning. Lists exact paths
+# (not prefixes) — these files intentionally include token-looking strings
+# (the patterns themselves, and tests that exercise them).
+#
+# Match is exact-equality only — see scan(). A prior version used
+# `startswith()` which would also have allowed `hooks/secret-scan.py.bak`,
+# `tests/hooks/test_secret_scan.py.disabled`, etc. — silently bypassing
+# the scanner on any sibling that happened to share the prefix.
+#
+# If you need to allow a whole directory in the future, extend the
+# membership check in scan() to also match `current_path.startswith(p + "/")`.
 ALLOW_PATHS = (
     "hooks/secret-scan.py",
     "tests/hooks/test_secret_scan.py",
@@ -105,7 +114,7 @@ def scan(diff_text: str, patterns):
         # Only inspect added lines; skip the +++ header above.
         if not line.startswith("+") or line.startswith("+++"):
             continue
-        if current_path and any(current_path.startswith(p) for p in ALLOW_PATHS):
+        if current_path and current_path in ALLOW_PATHS:
             continue
         added = line[1:]
         for label, pattern in patterns:

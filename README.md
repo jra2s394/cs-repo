@@ -59,7 +59,7 @@ Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutori
 Every hook, lib helper, chart, and report is covered by automated tests. Two linters (ruff for Python, biome for JS) catch undefined identifiers and unused imports before they reach CI. GitHub Actions runs the full test + lint suite on every pull request so broken changes can't land on `main`.
 
 ```
-make test       # 682 tests (525 Python + 157 JS)
+make test       # 684 tests (527 Python + 157 JS)
 make lint       # ruff + biome — undefined names, unused imports, etc.
 /review-code    # structured checklist — runs tests first, then 23 fixed sections
 ```
