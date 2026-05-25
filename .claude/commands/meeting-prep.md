@@ -12,11 +12,12 @@ Prepare me for every customer meeting coming up in the next 24 hours. One brief 
 
 Use `list_events` for the next 24 hours in Mountain Time.
 
-Filter to events that look like customer calls:
-- External attendees (non-@yourcompany.com domains)
+Filter to events that look like customer calls. To distinguish internal from external attendees, read the `INTERNAL_EMAIL_DOMAIN` environment variable (e.g. `acme.com`). If it is unset, ask the user for their company's email domain and proceed.
+
+- External attendees: any attendee whose email domain is not `$INTERNAL_EMAIL_DOMAIN`
 - Title contains a customer name, "call", "kickoff", "training", "onboarding", "QBR", "check-in", or "review"
 
-Skip internal-only meetings (all attendees are @yourcompany.com).
+Skip internal-only meetings (every attendee's email domain matches `$INTERNAL_EMAIL_DOMAIN`).
 
 If no customer meetings are found in the next 24 hours, say so and stop.
 
