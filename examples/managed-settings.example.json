@@ -1,0 +1,47 @@
+{
+  "_comment": "Example managed-settings.json for enterprise deployment. NOT auto-loaded. See examples/MANAGED_SETTINGS.md for the deployment story and what each key does.",
+
+  "permissions": {
+    "_comment_permissions": "Managed-only `allowManagedPermissionRulesOnly: true` makes user/project allow/ask/deny rules a no-op — only this file's rules apply. Use this to enforce an org-wide policy that survives `claude --dangerously-skip-permissions` and any contributor edit to .claude/settings.json.",
+
+    "allowManagedPermissionRulesOnly": true,
+
+    "disableBypassPermissionsMode": "disable",
+    "disableAutoMode": "disable",
+
+    "deny": [
+      "mcp__claude_ai_Asana__delete_task",
+      "mcp__claude_ai_Asana__create_project_status_update",
+      "mcp__claude_ai_Google_Calendar__delete_event",
+      "mcp__shortcut__stories-delete",
+      "mcp__shortcut__epics-delete",
+      "mcp__shortcut__iterations-delete"
+    ]
+  },
+
+  "allowManagedHooksOnly": true,
+  "_comment_hooks": "Forces all sessions to load ONLY hooks defined here or in plugins force-enabled via managed `enabledPlugins`. Blocks user/project hooks. Combined with `allowManagedHooksOnly`, an attacker who compromises a contributor's user-level config still cannot disable the audit log or secret scanner.",
+
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "python3 /opt/sysdyne/cs-repo/hooks/secret-scan.py", "timeout": 15 },
+          { "type": "command", "command": "python3 /opt/sysdyne/cs-repo/hooks/push-guard.py" },
+          { "type": "command", "command": "python3 /opt/sysdyne/cs-repo/hooks/branch-enforcer.py" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "python3 /opt/sysdyne/cs-repo/hooks/audit-log.py", "timeout": 5 }
+        ]
+      }
+    ]
+  },
+
+  "_comment_deploy": "Deploy this file to one of the managed-settings locations Claude Code reads BEFORE user/project settings: macOS: /Library/Application Support/ClaudeCode/managed-settings.json | Linux: /etc/claude-code/managed-settings.json | Windows: C:/ProgramData/ClaudeCode/managed-settings.json | also (HKLM\\Software\\Policies\\ClaudeCode registry on Windows). MDM (Jamf, Intune, etc.) is the supported delivery channel."
+}

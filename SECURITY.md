@@ -69,3 +69,35 @@ If you discover that a token has been committed to this repo:
 ## Customer PII
 
 This repo handles customer names, emails, and domains in its slash commands at runtime, but **never commits them**. The scrub checklist in `.github/pull_request_template.md` exists to catch accidental PII commits. If you find PII in committed files, report it as a security issue.
+
+## Data handling appendix
+
+Where customer data actually flows when the slash commands run. The repo's *code* never persists customer data to disk except for the local-only artifacts called out below.
+
+| Data class | Where it lives | Brokered by | Persisted locally? |
+|---|---|---|---|
+| Intercom conversations, contacts, articles | Intercom's servers | Intercom MCP integration | Only in `data/outputs/intercom-*-metrics-*.json` (aggregated counts, no raw conversation text) and the generated `out/*.docx` reports (top-customer rollups; no per-message bodies). |
+| Asana tasks, projects, comments | Asana's servers | Asana MCP | Only in generated `out/Onboarding_*.docx` task-health tables (task names, assignees, statuses). |
+| Gmail threads | Google's servers | Gmail MCP | Drafts only — written via `create_draft`, never `send`. Body text is held in Claude Code's session memory, not written to disk by this repo. |
+| Google Calendar events | Google's servers | Calendar MCP | Read-only for `/meeting-prep` / `/follow-up` / `/meeting-notes`. Event titles + attendees may appear in standup `.md` files in `data/outputs/`. |
+| Google Drive folders | Google's servers | Drive MCP | Folder paths only (used by `/start-onboarding` to scaffold per-customer folders). Drive file content is never read into this repo. |
+| Slack messages | Slack's servers | Slack MCP | Outbound only — standup drafts written via `slack_send_message_draft`. No inbound DMs or channel reads persist locally. |
+| Shortcut stories, epics | Shortcut's servers | Shortcut MCP | Story titles + IDs only, in `out/*.docx` engineering-review tables. |
+| Finance renewal data (CARR, ARR) | Excel files supplied by Finance team | Local file read | Original `.xlsx` is gitignored; aggregated tables land in `out/Renewals_*.docx`. |
+
+**Brokerage detail:** every MCP call is made by Claude Code's MCP runtime, not by code in this repo. The repo defines *which* tools the agent may call (`.claude/settings.json` `permissions` + the `draft-before-create` hook); it does not handle the network transport or the data payload directly. For the customer-data flow path, see Anthropic's published data-handling docs for the relevant MCP provider.
+
+## Retention policy
+
+The repo's local artifacts (the only ones it can control):
+
+| Artifact | Default retention | How to enforce |
+|---|---|---|
+| `data/outputs/*.md`, `data/outputs/*.json` | 30 days | `bash scripts/cleanup-data-outputs.sh --apply` |
+| `out/*.docx`, `out/*.csv` | 30 days | same script |
+| `~/Desktop/CS Reports/**` (the Desktop-copy mirror) | 30 days | same script |
+| `~/.claude/tool-audit.log` (auto-rotated at 5 MB → `.1`) | Manual — 2 generations retained by the hook | Hook-managed; bound size limit |
+| `~/.claude/session-export.log` (Obsidian-export errors) | No retention enforced | Manual `rm` |
+| Obsidian vault session notes (if integration enabled) | Per-user / vault choice | Per the user's vault retention policy |
+
+`scripts/cleanup-data-outputs.sh` is **dry-run by default** — prints what would be removed without removing. Pass `--apply` to actually delete. Pass `--days N` to override the retention window. Recommended cadence: monthly, scheduled via cron or your OS task scheduler. The repo does not run this automatically — retention is an operator choice.
