@@ -62,9 +62,35 @@ The `code-scanning/alerts` API returns 404 — no CodeQL or other analyzer is co
 
 ---
 
+## Branch protection rules on `main`
+
+Pulled live via `gh api repos/jra2s394/cs-repo/branches/main/protection` (and the `/required_pull_request_reviews` sub-endpoint, which doesn't roll up into the parent response).
+
+| Rule | API key | State |
+|---|---|---|
+| Require pull request before merging | `required_pull_request_reviews` (sub-endpoint) | ✅ on |
+| Required approving reviews | `required_approving_review_count` | 1 |
+| Status checks must pass | `required_status_checks.contexts` | `["test"]` |
+| Strict status checks (branch up-to-date with base) | `required_status_checks.strict` | ✅ true |
+| Allow force pushes | `allow_force_pushes.enabled` | ❌ false |
+| Allow branch deletion | `allow_deletions.enabled` | ❌ false |
+| Require linear history | `required_linear_history.enabled` | ✅ true |
+| Enforce for admins | `enforce_admins.enabled` | ❌ false (escape hatch retained — repo owner can bypass the 1-approval rule for solo work) |
+| Required signatures | `required_signatures.enabled` | ❌ false |
+| Required conversation resolution | `required_conversation_resolution.enabled` | ❌ false |
+| Lock branch | `lock_branch.enabled` | ❌ false |
+| Rulesets (modern alternative) | `/rulesets` | none defined (`[]`) |
+
+This matches the table in [CLAUDE.md § GitHub branch protection rules](../CLAUDE.md), which is the user-facing reference.
+
+## Other GitHub-side state
+
+- **Releases:** 0 (no tagged releases — repo treats `main` as continuous deployment for internal use)
+- **Actions cache:** ~2.5 GB / 10 GB used across 49 caches (room to grow; well under the limit)
+- **Language mix (per GitHub):** JavaScript 184 KB, Python 151 KB, Shell 25 KB, PowerShell 2.5 KB, Makefile 1.2 KB
+
 ## What this doc does NOT cover
 
-- Branch protection rules — those are documented in [CLAUDE.md § Git Workflow](../CLAUDE.md). Refresh them with `gh api repos/jra2s394/cs-repo/branches/main/protection`.
 - Local hooks and lint config — `hooks/README.md` and `SECURITY.md` cover those.
 
 Refresh this doc when any of the above changes, or at least once per significant audit pass.
