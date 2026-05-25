@@ -1,5 +1,5 @@
 ---
-description: Show my open Asana tasks and help me manage them — add, update, or close tasks with approval
+description: Show my open Asana tasks and help me manage them — add new tasks or update non-completion fields with approval. Completion happens in Asana, not here.
 ---
 
 Read `CLAUDE.md` from this repo before starting.

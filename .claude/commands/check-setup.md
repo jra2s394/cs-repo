@@ -35,7 +35,7 @@ For each of the 7 MCPs, attempt one read-only no-op call. Catch any error per MC
 | Google Calendar | `list_calendars` (no args) |
 | Google Drive | `list_recent_files` (small page size) |
 | Asana | `get_me` (no args) |
-| Intercom | `search_companies` with a generic query (e.g. `name:test`, accepting empty result) |
+| Intercom | `list_companies` with a small `per_page` (e.g. 1) — the MCP does not expose a `search_companies` or `get_me`; this is the simplest read-only probe |
 | Slack | `slack_search_channels` with a generic query |
 | Shortcut | `users-get-current` (no args) |
 
@@ -53,7 +53,7 @@ Critical sanity check: the Intercom Admin ID in `~/.claude/CLAUDE.md` should mat
 
 Compare:
 - ID in CLAUDE.md
-- ID of the currently authenticated Intercom admin (use `get_me` if available, otherwise fetch the admin profile via the search API)
+- ID of the currently authenticated Intercom admin. The Intercom MCP does not expose `get_me`; derive the admin ID by fetching a recent conversation via `search_conversations` (or `list_articles`) and reading the `author.id` / `assignee.id` of an item the user themselves authored or owns. If no such item is found, report 🟡 with "manual verification needed".
 
 Report:
 - 🟢 match

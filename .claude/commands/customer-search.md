@@ -23,9 +23,10 @@ Accept anything: `"acme"`, `"acme co"`, `"acmeco"`, `"smith"`, `"acme.com"`, etc
 Run these in parallel — don't block one on another.
 
 **Intercom:**
-- `search_companies` by `name` containing the term (case-insensitive)
+- `search` with the term (general full-text — matches company names, contact names, conversation snippets in one pass)
 - `search_contacts` by `name` OR `email` containing the term
 - For each hit, capture: company name, contact name(s), conversation count, last contact date
+- The Intercom MCP does NOT expose a `search_companies` tool. To filter to just companies, post-process `search` results client-side or fall back to `list_companies` and filter by name.
 
 **Asana:**
 - `search_tasks` for tasks/projects with the term in the name
