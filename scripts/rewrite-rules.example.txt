@@ -1,0 +1,60 @@
+# cs-repo history-rewrite substitution rules — EXAMPLE template.
+#
+# Copy this file to `scripts/rewrite-rules.local.txt` (gitignored) and
+# fill in the strings you want to scrub. The local copy never ships in
+# the repo, so the heredoc-self-substitution trap that broke the
+# previous in-script ruleset can never apply here.
+#
+# Format (one rule per line, ASCII `==>` separator, no quoting):
+#     <literal-string>==><replacement>
+#
+# Lines starting with `#` are comments and are stripped by the script
+# before passing to git-filter-repo (filter-repo itself treats `#` as
+# a literal pattern, NOT as a comment marker, so we strip them here).
+#
+# Order matters: filter-repo applies rules top-to-bottom against each
+# blob and commit message. Put the longest / most-specific match
+# BEFORE any shorter substring that would also match — otherwise the
+# shorter rule eats the prefix and the longer rule never fires.
+#
+# ---------------------------------------------------------------------------
+# Example blocks (illustrative — replace with your real strings).
+# ---------------------------------------------------------------------------
+
+# Typo / wrong-spelling email fixes (full email first, then substring):
+tripp.arnold@oldspelling.com==>tripp.arnold@newspelling.com
+oldspelling==>newspelling
+
+# Absolute filesystem paths leaking your home dir or repo path
+# (longest first so the repo-root rule fires before the home-dir catch-all):
+/Users/yourname/Developer/yourrepo==>[REPO_ROOT]
+/Users/yourname/==>[HOME]/
+
+# Customers — list each name + its possessive + lowercase + domain variants:
+ExampleCustomer's==>[CUSTOMER_A]'s
+ExampleCustomer==>[CUSTOMER_A]
+examplecustomer.com==>[customer_a].com
+examplecustomer==>[customer_a]
+SecondCustomer==>[CUSTOMER_B]
+
+# Competitors:
+ExampleCompetitor==>[COMPETITOR_X]
+
+# Contacts (names of customer-side people):
+Jane Doe==>[CONTACT_A]
+John Smith==>[CONTACT_B]
+
+# Internal teams or product names you don't want public:
+Internal Team Name==>[TEAM_INTERNAL]
+
+# Your own identity (if you want commits re-authored, prefer the
+# --mailmap flag rather than --replace-text for the author tag itself;
+# these substitutions only catch your name where it appears IN file
+# contents or commit messages):
+Your Name==>[YOUR_NAME]
+your-work-email@employer.com==>[YOUR_EMAIL]
+
+# External IDs that should not be public (Asana team GIDs, Drive folder
+# IDs, etc.):
+000000000000000==>[ASANA_TEAM_GID]
+abc123-DRIVE-FOLDER-ID==>[DRIVE_PARENT_FOLDER_ID]

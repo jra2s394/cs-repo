@@ -41,3 +41,8 @@ build/
 # Editor / IDE local state
 .vscode/
 .idea/
+
+# History-rewrite substitution rules — the file contains real PII strings
+# being scrubbed, so it must never be committed. Use rewrite-rules.example.txt
+# as the template (committed) and copy to rewrite-rules.local.txt (ignored).
+scripts/rewrite-rules.local.txt
