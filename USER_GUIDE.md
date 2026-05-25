@@ -492,7 +492,7 @@ Read-only — no MCP calls, no file edits.
 Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
 
 Type `/review-code`. Claude will:
-1. Run all 650 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
+1. Run all 654 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
 2. Run both linters (`make lint` — ruff for Python, biome for JS) to confirm no undefined names or unused imports
 3. Work through a fixed 23-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
@@ -524,7 +524,7 @@ Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seco
 Before opening a PR for any code change, run the test suite AND the linters:
 
 ```
-make test    # 650 automated tests (499 Python + 151 JavaScript)
+make test    # 654 automated tests (499 Python + 155 JavaScript)
 make lint    # ruff (Python) + biome (JS) — catches undefined names, unused imports
 ```
 
