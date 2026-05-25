@@ -21,6 +21,12 @@ repos:
         args: ['--maxkb=500']
       - id: check-merge-conflict
       - id: detect-private-key
+        # The secret-scan test file contains deliberate
+        # PEM-block-shaped fixtures (RSA, GCP service-account, etc.) used
+        # to verify that our own hooks/secret-scan.py BLOCKS commits
+        # containing those patterns. Same allow-listing pattern as
+        # `hooks/secret-scan.py::ALLOW_PATHS`.
+        exclude: '^tests/hooks/test_secret_scan\.py$'
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.15.14
