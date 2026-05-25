@@ -2,9 +2,9 @@
 description: Run the structured QA checklist — same questions every time, same order
 ---
 
-Run `make test` first. If any of the 572 tests fail (443 Python + 129 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
+Run `make test` first. If any of the 649 tests fail (499 Python + 150 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
 
-The checklist has 22 sections covering every hook, every lib helper, every report's contract, and every read-only/draft-first slash command. Walk them in order, don't skip.
+The checklist has 23 sections covering every hook, every lib helper, every report's contract, and every read-only/draft-first slash command. Walk them in order, don't skip.
 
 Then work through every section below in order. For each item: check it, mark ✅ (pass) or ❌ (fail + exact line), and do not skip. Report all findings at the end in a single block.
 

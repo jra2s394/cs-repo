@@ -58,13 +58,16 @@ Over-filled memory is worse than sparse memory. Claude has to parse everything i
 
 ## File Format
 
-Each memory file uses YAML frontmatter for metadata:
+Each memory file uses YAML frontmatter for metadata. `type` lives under a
+`metadata:` block — not at the top level — because the runtime adds its own
+metadata fields (`node_type`, `originSessionId`) into the same block.
 
 ```markdown
 ---
-name: descriptive name
-description: one-line description used for relevance matching
-type: user|feedback|project|reference
+name: descriptive-kebab-case-slug
+description: one-line summary used for relevance matching in future sessions
+metadata:
+  type: user|feedback|project|reference
 ---
 
 Content here.
@@ -72,6 +75,10 @@ Content here.
 
 The `description` field matters. Claude uses it to decide whether a memory is relevant to the
 current task. Write it like a search query you'd use to find this file later.
+
+The runtime may add additional `metadata` fields (e.g. `node_type: memory`,
+`originSessionId: <uuid>`) — leave those in place when editing an existing
+memory file.
 
 ## The MEMORY.md Index
 
