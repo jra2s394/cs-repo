@@ -2,7 +2,7 @@
 description: Identify expansion opportunities — customers showing growth signals, upsell readiness, or referral potential based on live data.
 ---
 
-Read `CLAUDE.md` from this repo before starting.
+Read `CLAUDE.md` and `prompts/expansion-template.md` from this repo before starting — the prompt template has the per-system signal queries and scoring rubric this command relies on.
 
 Surface expansion opportunities across the customer base. **Read-only triage — no outreach is created or sent without explicit approval.**
 

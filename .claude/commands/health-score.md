@@ -2,7 +2,7 @@
 description: Portfolio health scorecard (or single-customer snapshot if you pass a customer name) — green/yellow/red view from live Asana, Intercom, Shortcut, Gmail, and Calendar data
 ---
 
-Read `CLAUDE.md` from this repo before starting.
+Read `CLAUDE.md` and `prompts/health-score-template.md` from this repo before starting — the prompt template has the data-pull sequence and 4-dimension scoring rubric this command relies on.
 
 Two modes:
 - **Portfolio mode** (no argument) — score every active customer, build a branded `.docx` report

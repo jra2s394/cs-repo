@@ -142,8 +142,8 @@ These hooks run automatically. Know what they block:
 | `block-attribution.py` | Blocks commits containing AI attribution strings (`Co-Authored-By: Claude`, etc.) |
 | `secret-scan.py` | Blocks `git commit` when staged content matches a known token pattern (Shortcut, GitHub, OpenAI legacy + project keys, Anthropic, Stripe live, Twilio, GCP service account, Slack `xox[abcepsr]-`, AWS access key + secret, Google API, RSA private key, JWT). Stripe test keys warn but do not block. |
 | `draft-before-create.py` | Forces a permission prompt before creating or mutating items in Slack, Asana, Intercom, Shortcut — covers all write/delete/update operations including Shortcut stories, epics, iterations, documents, and task mutations |
-| `file-protector.py` | Blocks edits to `.env` and `.env.*` files (but not `.envrc`), private keys, and named credential files via Edit/Write tools |
-| `pr-template-reminder.py` | Reminds you to use the PR template when running `gh pr create` without `--body-file` |
+| `file-protector.py` | Blocks Edit/Write to `.env` and `.env.*` (but not `.envrc`), private keys (`.pem`/`.key`/`.p12`/`.pfx`), named credential files (`id_rsa`, `credentials.json`, `service-account.json`, `.mcp.json`, etc.), and anything inside `.git/` |
+| `pr-template-reminder.py` | When you submit a prompt about creating or opening a PR (or one mentioning `gh pr create`), injects context telling Claude to read `.github/pull_request_template.md` and match its structure |
 | `compact-reinject.py` | Re-injects critical rules from this file when context compacts mid-session |
 | `audit-log.py` | Logs every tool call to `~/.claude/tool-audit.log` (PostToolUse, non-blocking) |
 | `notify.py` | Plays a sound / shows a notification when Claude needs your attention |
