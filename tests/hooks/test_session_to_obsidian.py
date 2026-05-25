@@ -3,6 +3,7 @@
 Tests the pure helper functions by importing the module directly,
 and tests the full export flow against a temp vault.
 """
+import io
 import json
 import os
 import sys
@@ -359,3 +360,218 @@ class TestBuildMarkdown:
     def test_contains_wikilink_for_cs_repo(self, sto):
         md = sto.build_markdown(self._sample_data())
         assert "[[CS Repo]]" in md
+
+
+# ---------------------------------------------------------------------------
+# find_existing_export
+# ---------------------------------------------------------------------------
+
+class TestFindExistingExport:
+    """Re-export detection: when the same session is exported twice, the
+    second run finds the prior .md by scanning frontmatter for session_id.
+    Lookup is bounded to the first 20 lines so a session_id mention in
+    conversation body cannot trigger a false match.
+    """
+
+    def test_returns_none_when_session_id_empty(self, sto):
+        assert sto.find_existing_export("") is None
+
+    def test_returns_none_when_sessions_dir_missing(self, sto):
+        # VAULT_ROOT exists (autouse fixture mkdirs it) but the Sessions
+        # subdirectory has never been created — first export of any session.
+        assert sto.find_existing_export("abc12345") is None
+
+    def test_returns_none_when_no_match(self, sto):
+        sto.SESSIONS_DIR.mkdir(parents=True)
+        other = sto.SESSIONS_DIR / "2026-05-25 other session.md"
+        other.write_text("---\nsession_id: different00\n---\n# Other\n")
+        assert sto.find_existing_export("abc12345") is None
+
+    def test_finds_match_within_first_20_lines(self, sto):
+        sto.SESSIONS_DIR.mkdir(parents=True)
+        existing = sto.SESSIONS_DIR / "2026-05-25 prior export.md"
+        existing.write_text("---\nsession_id: abc12345\ntopic: prior\n---\n")
+        assert sto.find_existing_export("abc12345") == existing
+
+    def test_ignores_session_id_past_line_20(self, sto):
+        # If session_id only appears deep in the body, it's not a frontmatter
+        # match — likely a quoted log line, not the real export marker.
+        sto.SESSIONS_DIR.mkdir(parents=True)
+        f = sto.SESSIONS_DIR / "decoy.md"
+        f.write_text("\n".join(["filler"] * 25) + "\nsession_id: abc12345\n")
+        assert sto.find_existing_export("abc12345") is None
+
+    def test_tolerates_unreadable_file(self, sto, monkeypatch):
+        # An IOError on one file shouldn't crash the scan; subsequent files
+        # are still checked. Simulate by monkeypatching open() to raise on
+        # the first file but succeed on the second.
+        sto.SESSIONS_DIR.mkdir(parents=True)
+        bad = sto.SESSIONS_DIR / "bad.md"
+        bad.write_text("---\nsession_id: abc12345\n---\n")
+        good = sto.SESSIONS_DIR / "good.md"
+        good.write_text("---\nsession_id: abc12345\n---\n")
+        real_open = open
+        def flaky_open(path, *args, **kwargs):
+            if str(path).endswith("bad.md"):
+                raise PermissionError("simulated")
+            return real_open(path, *args, **kwargs)
+        monkeypatch.setattr("builtins.open", flaky_open)
+        # Should return `good` — the bad one was skipped, not fatal.
+        assert sto.find_existing_export("abc12345") == good
+
+
+# ---------------------------------------------------------------------------
+# main() — full export orchestration
+# ---------------------------------------------------------------------------
+
+def _stop_payload(session_id="abc12345", transcript_path=None, cwd=None):
+    """Build the JSON payload Claude Code sends to a Stop hook on stdin."""
+    p = {"session_id": session_id}
+    if transcript_path is not None:
+        p["transcript_path"] = str(transcript_path)
+    if cwd is not None:
+        p["cwd"] = cwd
+    return p
+
+
+def _basic_jsonl(tmp_path, session_id="abc12345", filename="session.jsonl"):
+    """Write a JSONL with exactly one user→assistant turn and return its path."""
+    jsonl = tmp_path / filename
+    jsonl.write_text(
+        json.dumps({
+            "type": "user",
+            "message": {"content": "do the thing"},
+            "sessionId": session_id,
+            "cwd": "/tmp/cs-repo",
+        }) + "\n" +
+        json.dumps({
+            "type": "assistant",
+            "message": {
+                "role": "assistant",
+                "id": "m1",
+                "content": [{"type": "text", "text": "Done."}],
+            },
+        }) + "\n"
+    )
+    return jsonl
+
+
+def _run_main(sto, payload, monkeypatch):
+    """Invoke main() with the payload piped via stdin. main() only calls
+    sys.exit() on skip/fail paths — the happy path returns normally — so we
+    catch SystemExit if it's raised but don't require it.
+    """
+    monkeypatch.setattr("sys.stdin", io.StringIO(json.dumps(payload)))
+    try:
+        sto.main()
+        return 0
+    except SystemExit as exc:
+        return exc.code if exc.code is not None else 0
+
+
+class TestMain:
+    """Full export orchestration. main() reads a Stop-hook payload from stdin,
+    locates the session JSONL via three fallbacks (transcript_path → projects
+    dir → cwd), parses it, builds the markdown, and atomically writes to the
+    vault. These tests cover each path and the skip/fail edge cases.
+    """
+
+    def test_happy_path_writes_export(self, sto, tmp_path, monkeypatch):
+        jsonl = _basic_jsonl(tmp_path)
+        payload = _stop_payload(transcript_path=jsonl)
+        code = _run_main(sto, payload, monkeypatch)
+        assert code == 0 or code is None
+        # Markdown landed in SESSIONS_DIR
+        md_files = list(sto.SESSIONS_DIR.glob("*.md"))
+        assert len(md_files) == 1
+        assert "session_id: abc12345" in md_files[0].read_text()
+        # Raw JSONL archived
+        raw_files = list(sto.RAW_DIR.glob("*.jsonl"))
+        assert len(raw_files) == 1
+        assert raw_files[0].read_bytes() == jsonl.read_bytes()
+
+    def test_fallback_to_find_session_file(self, sto, tmp_path, monkeypatch):
+        # No transcript_path; main() should fall back to scanning
+        # ~/.claude/projects for <session_id>.jsonl.
+        projects = tmp_path / "projects"
+        proj = projects / "some-project"
+        proj.mkdir(parents=True)
+        _basic_jsonl(proj, filename="abc12345.jsonl")
+        monkeypatch.setattr(sto, "CLAUDE_PROJECTS", projects)
+        payload = _stop_payload()  # no transcript_path, no cwd
+        code = _run_main(sto, payload, monkeypatch)
+        assert code == 0 or code is None
+        assert list(sto.SESSIONS_DIR.glob("*.md"))
+
+    def test_fallback_to_find_session_by_cwd(self, sto, tmp_path, monkeypatch):
+        # Neither transcript_path nor session-id match works; main() should
+        # fall back to find_session_by_cwd. That helper slugs the cwd as
+        # cwd.replace("/", "-").lstrip("-"), so /tmp/my/project → tmp-my-project.
+        projects = tmp_path / "projects"
+        proj = projects / "tmp-my-project"
+        proj.mkdir(parents=True)
+        _basic_jsonl(proj, filename="latest.jsonl")
+        monkeypatch.setattr(sto, "CLAUDE_PROJECTS", projects)
+        payload = _stop_payload(session_id="nomatch", cwd="/tmp/my/project")
+        code = _run_main(sto, payload, monkeypatch)
+        assert code == 0
+        assert list(sto.SESSIONS_DIR.glob("*.md"))
+
+    def test_skip_when_no_jsonl_found(self, sto, tmp_path, monkeypatch):
+        # All three fallback paths miss → SKIP log, no files written.
+        monkeypatch.setattr(sto, "CLAUDE_PROJECTS", tmp_path / "nonexistent")
+        payload = _stop_payload()
+        code = _run_main(sto, payload, monkeypatch)
+        assert code == 0 or code is None
+        assert not list(sto.SESSIONS_DIR.glob("*.md")) if sto.SESSIONS_DIR.exists() else True
+
+    def test_skip_when_jsonl_has_no_turns(self, sto, tmp_path, monkeypatch):
+        jsonl = tmp_path / "empty.jsonl"
+        jsonl.write_text("")
+        payload = _stop_payload(transcript_path=jsonl)
+        code = _run_main(sto, payload, monkeypatch)
+        assert code == 0 or code is None
+        # No markdown written because parse_session returned no turns
+        assert not list(sto.SESSIONS_DIR.glob("*.md")) if sto.SESSIONS_DIR.exists() else True
+
+    def test_fail_when_vault_missing(self, sto, tmp_path, monkeypatch):
+        # Remove the vault directory before main() runs — should log FAIL
+        # and exit 0 (non-blocking; export failure must never kill the session).
+        import shutil
+        shutil.rmtree(sto.VAULT_ROOT)
+        jsonl = _basic_jsonl(tmp_path)
+        payload = _stop_payload(transcript_path=jsonl)
+        code = _run_main(sto, payload, monkeypatch)
+        assert code == 0 or code is None
+        # SESSIONS_DIR was never created
+        assert not sto.SESSIONS_DIR.exists()
+
+    def test_collision_appends_counter_suffix(self, sto, tmp_path, monkeypatch):
+        # A different session with the same inferred filename already exists.
+        # main() must not overwrite it — append (1), (2), etc. instead.
+        sto.SESSIONS_DIR.mkdir(parents=True)
+        date_str = datetime.now().strftime("%Y-%m-%d")
+        # Pre-create a file with the topic main() will infer
+        topic = "do the thing"
+        existing = sto.SESSIONS_DIR / f"{date_str} {topic}.md"
+        existing.write_text("---\nsession_id: other00\n---\n")
+        jsonl = _basic_jsonl(tmp_path)
+        payload = _stop_payload(transcript_path=jsonl)
+        _run_main(sto, payload, monkeypatch)
+        # Original survives; new export got a (1) suffix
+        assert existing.exists()
+        assert (sto.SESSIONS_DIR / f"{date_str} {topic} (1).md").exists()
+
+    def test_re_export_replaces_prior_export(self, sto, tmp_path, monkeypatch):
+        # When the same session_id is exported twice, the prior .md should be
+        # removed and the new one written in its place — no duplicate accumulation.
+        jsonl = _basic_jsonl(tmp_path)
+        payload = _stop_payload(transcript_path=jsonl)
+        _run_main(sto, payload, monkeypatch)
+        first_files = list(sto.SESSIONS_DIR.glob("*.md"))
+        assert len(first_files) == 1
+        # Re-run with the same payload
+        _run_main(sto, payload, monkeypatch)
+        second_files = list(sto.SESSIONS_DIR.glob("*.md"))
+        # Still exactly one export for this session_id, not two
+        assert len(second_files) == 1
