@@ -62,7 +62,7 @@ if (d.quarterlyTable && d.quarterlyTable.length > 0) {
     align: [T.AlignmentType.LEFT,
             T.AlignmentType.CENTER, T.AlignmentType.CENTER,
             T.AlignmentType.CENTER, T.AlignmentType.CENTER],
-    rows: d.quarterlyTable,
+    rows: d.quarterlyTable || [],
   }));
   children.push(T.gap(160));
 }

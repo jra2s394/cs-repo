@@ -64,7 +64,7 @@ children.push(T.dataTable({
   columnWidths: [780, 5580, 3000],
   header: ["Rank", "Domain", "Conversations"],
   align: [T.AlignmentType.CENTER, T.AlignmentType.LEFT, T.AlignmentType.CENTER],
-  rows: d.topCustomers,
+  rows: d.topCustomers || [],
 }));
 children.push(T.gap(160));
 
