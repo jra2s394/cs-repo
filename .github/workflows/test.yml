@@ -59,15 +59,15 @@ jobs:
       # (once for results, once for coverage); --cov is a superset of the
       # plain run, so collapsing them saves ~30s/run.
       #
-      # --cov-fail-under=70 locks in the current floor (74% combined across
+      # --cov-fail-under=85 locks in the current floor (~90% combined across
       # the line-tested files: lib/report_charts.py at 100% and
-      # hooks/session-to-obsidian.py at ~70%). Subprocess-tested hooks are
-      # omitted per .coveragerc — they're behaviorally tested but coverage.py
-      # can't see them. The 4-point buffer below the current number lets a
-      # small defensive branch land without immediately needing a test, but
-      # catches a deleted test file or a major regression.
+      # hooks/session-to-obsidian.py at ~89% after round 43 added main()
+      # integration tests). Was 70 before round 43 — bumped after the orchestration
+      # coverage gap closed. Subprocess-tested hooks are omitted per .coveragerc.
+      # The 5-point buffer below current lets a small defensive branch land
+      # without an immediate test but catches a deleted test file or regression.
       - name: Run Python tests (with coverage)
-        run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --cov-fail-under=70 --tb=short -q
+        run: python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --cov-fail-under=85 --tb=short -q
 
       - name: Lint Python (ruff)
         run: make lint-py

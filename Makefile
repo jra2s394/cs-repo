@@ -20,7 +20,7 @@ test-lib:
 
 # Run with coverage report. --cov-fail-under matches CI; see test.yml comment.
 test-cov:
-	python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --cov-fail-under=70
+	python3 -m pytest --cov=hooks --cov=lib --cov-report=term-missing --cov-fail-under=85
 
 # Install dev dependencies
 install-dev:
