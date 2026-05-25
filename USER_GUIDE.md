@@ -667,6 +667,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/prs` | CS Eng: show Shortcut stories pending eng review |
 | `/tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
+| `/setup` | First-time setup wizard — fills in your personal CLAUDE.md placeholders, checks integrations (mostly covered by [TEAM_SETUP.md](TEAM_SETUP.md) / [SETUP.md](SETUP.md)) |
 | `/check-setup` | Validate your config — CLAUDE.md, all 7 MCPs, Intercom ID match, output dirs |
 | `/commands` | List every available slash command (live from `.claude/commands/`) |
 | `/review-code` | Run tests + structured quality checklist |

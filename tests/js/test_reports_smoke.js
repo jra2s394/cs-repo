@@ -1,15 +1,17 @@
 "use strict";
 /**
  * tests/js/test_reports_smoke.js
- * Smoke tests for reports/*.js — verifies the shared CLI contract held by
- * data-loader.js applies to every report consistently:
+ * Smoke tests for reports/*.js — runs every report through four scenarios:
  *   1. Running with no arg → exit 1, prints "Usage:"
  *   2. Running with a bad path → exit 1, prints "Error loading"
  *   3. Running with an empty {} JSON → exit 1, prints "Missing required fields"
+ *   4. Running with a valid fixture from tests/js/fixtures/report-fixtures.js
+ *      → exit 0, produces a non-empty .docx in out/ (and matching .csv if the
+ *      report writes one). Generated files are cleaned up at the end so the
+ *      tree stays unpolluted between runs.
  *
- * Positive end-to-end runs are covered manually against data/outputs/*.json;
- * automating those would require checking docx-js output, which is the job
- * of test_report_theme.js. Here we just guard the CLI contract.
+ * docx-internal structural validation is covered by test_report_theme.js;
+ * here we just guard the CLI + end-to-end-runs contract.
  *
  * Run: node tests/js/test_reports_smoke.js
  */
