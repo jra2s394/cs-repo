@@ -66,7 +66,7 @@ children.push(T.dataTable({
     T.AlignmentType.CENTER, T.AlignmentType.CENTER, T.AlignmentType.CENTER,
     T.AlignmentType.CENTER, T.AlignmentType.CENTER, T.AlignmentType.CENTER,
   ],
-  rows: d.quarterlyTable,
+  rows: d.quarterlyTable || [],
 }));
 children.push(T.gap(160));
 
@@ -109,7 +109,7 @@ children.push(T.dataTable({
     T.AlignmentType.CENTER, T.AlignmentType.LEFT,
     T.AlignmentType.CENTER, T.AlignmentType.CENTER, T.AlignmentType.CENTER,
   ],
-  rows: d.topCustomers,
+  rows: d.topCustomers || [],
 }));
 children.push(T.gap(160));
 

@@ -64,7 +64,7 @@ children.push(T.dataTable({
   columnWidths: [2400, 1490, 1490, 1490, 2490],
   header: ["Week", "New", "Closed", "Resolution", "Avg FRT"],
   align: [T.AlignmentType.LEFT, T.AlignmentType.CENTER, T.AlignmentType.CENTER, T.AlignmentType.CENTER, T.AlignmentType.CENTER],
-  rows: d.weeklyTable,
+  rows: d.weeklyTable || [],
 }));
 children.push(T.gap(160));
 
@@ -74,7 +74,7 @@ children.push(T.dataTable({
   columnWidths: [780, 5580, 3000],
   header: ["Rank", "Domain", "Conversations"],
   align: [T.AlignmentType.CENTER, T.AlignmentType.LEFT, T.AlignmentType.CENTER],
-  rows: d.topCustomers,
+  rows: d.topCustomers || [],
 }));
 children.push(T.gap(160));
 
