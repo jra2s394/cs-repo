@@ -26,6 +26,34 @@ Five additional fields landed in recent versions. None are required for a basic 
 | `sandbox.failIfUnavailable` | (sandboxing doc) | When `true`, Claude Code refuses to start if Seatbelt (macOS) or bubblewrap (Linux/WSL2) can't initialize. Default behavior is a warning + silent fallback to unsandboxed execution. | Use when sandboxing is a security gate, not a nice-to-have. An OS update that breaks Seatbelt, or a missing bubblewrap install on Linux, would otherwise quietly remove the protection. Hard-fail surfaces the breakage. |
 | `sandbox.allowUnsandboxedCommands` | (sandboxing doc) | When `false` ("Strict Sandbox Mode"), the `dangerouslyDisableSandbox` retry parameter is ignored — commands that can't run sandboxed must be in `excludedCommands` or they don't run. Default is `true`. | Use in managed deployments where contributors shouldn't have a personal escape hatch. Single-user repos usually keep the default so the developer can bypass for one-off system commands. |
 
+## Controlling subagent access
+
+Round 79 introduced this repo's first custom subagent (`.claude/agents/code-reviewer.md`). Per [/en/permissions](https://code.claude.com/docs/en/permissions#agent-subagents), Claude Code permission rules now support an `Agent()` specifier that lets you allow or deny specific subagents — by name for custom ones, or by built-in name like `Agent(Explore)` for the bundled types. Two patterns matter for fleet deployments:
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Agent(Explore)"
+    ]
+  }
+}
+```
+
+That blocks the bundled `Explore` subagent everywhere it's reachable (CLI, slash routing, the Agent tool). Use it when your security team wants to keep parallel exploration sessions out of scope. For custom subagents authored in your project — like our `code-reviewer` — the same shape applies with the agent's name:
+
+```json
+{
+  "permissions": {
+    "deny": [
+      "Agent(code-reviewer)"
+    ]
+  }
+}
+```
+
+Combine with `allowManagedPermissionRulesOnly: true` (above) to make the rule unbypassable from user or project settings. Not enabled in the example file — it's a documented option, not a default. Most fleet deployments will want the opposite: allow custom subagents and only deny ones with known footguns.
+
 ## Where to put the file
 
 Claude Code looks for managed settings at OS-specific locations (per [the Anthropic docs](https://code.claude.com/docs/en/settings#settings-files)):

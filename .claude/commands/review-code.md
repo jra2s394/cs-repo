@@ -2,7 +2,7 @@
 description: Run the structured QA checklist — same questions every time, same order
 ---
 
-Run `make test` first. If any of the 728 tests fail (571 Python + 157 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
+Run `make test` first. If any of the 878 tests fail (721 Python + 157 JS), stop and report failures — do not proceed with the review. Then run `make lint` to confirm ruff and biome are both clean.
 
 The checklist has 23 sections covering every hook, every lib helper, every report's contract, and every read-only/draft-first slash command. Walk them in order, don't skip.
 
@@ -211,7 +211,7 @@ Delete operations are gated by `permissions.deny` (Section 9b), not by `draft-be
 ## Section 19b — ruff (Python lint)
 
 - [ ] Does `ruff.toml` `select` include `E`, `F`, `B`, `UP` (errors, pyflakes, bugbear, pyupgrade)?
-- [ ] Does `ruff.toml` `target-version` match the minimum Python this repo supports (currently `py39`)?
+- [ ] Does `ruff.toml` `target-version` match the minimum Python this repo supports (currently `py310`, raised from `py39` in round 50)?
 - [ ] Does the `per-file-ignores` for `tests/**/*.py` include `F401` (unused imports — fixtures) and `B011` (assert False patterns)?
 - [ ] Does `make lint-py` and `python3 -m ruff check` both pass with zero findings on a clean tree?
 
