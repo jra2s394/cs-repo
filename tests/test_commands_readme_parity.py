@@ -30,6 +30,7 @@ COMMANDS_DIR = REPO_ROOT / ".claude" / "commands"
 ALLOWED_NON_FILE_REFS = {
     "mcp": "Built-in Claude Code command (shipped with the CLI, not authored here). See https://code.claude.com/docs/en/mcp",
     "tasks": "Historical reference — renamed to `/my-tasks` in round 60 to avoid collision with the Claude Code built-in `/tasks` (list background tasks). The historical mention stays in CLAUDE.md so teammates remember the rename rationale.",
+    "agents": "Built-in Claude Code command for managing custom subagents (`/agents` opens the manager). Referenced from the round-79 Subagents section in CLAUDE.md. See https://code.claude.com/docs/en/sub-agents",
 }
 
 # Pattern: backtick-wrapped slash command in markdown table or prose.

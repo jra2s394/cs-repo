@@ -80,6 +80,18 @@ If anything isn't connected, run `/mcp` in the Claude Code prompt to see status.
 
 ---
 
+## Subagents (`.claude/agents/`)
+
+Custom subagents are markdown files with YAML frontmatter that Claude Code can delegate side tasks to — each runs in its own context window and returns only the summary. Use `/agents` to manage them.
+
+| Subagent | When it fires | Tools |
+|---|---|---|
+| `code-reviewer` | When the user runs `/review-code` or asks for a structured code review. Walks the 23-section checklist from `.claude/commands/review-code.md`. | Read, Grep, Glob, Bash — no write tools, no MCP |
+
+Frontmatter contract is enforced by `tests/test_agents_frontmatter.py`: every agent file must have `description` (≥40 chars, used by Claude's routing), `tools` (explicit allowlist), and `model` fields.
+
+---
+
 ## Trusted infrastructure
 
 This section steers Claude Code's [auto-mode classifier](https://code.claude.com/docs/en/auto-mode-config). The classifier reads CLAUDE.md to learn what's internal to this workflow versus what should be treated as external. Writing this in plain prose — like onboarding a new engineer — reduces false-positive auto-mode prompts when Claude does routine internal work.
