@@ -72,7 +72,7 @@ All commands live in `.claude/commands/`. Invoke with `/command-name`.
 | `/escalate` | Escalate an Intercom conversation to a Shortcut ticket (draft → approval → create) |
 | `/story-CSEng` | CS Eng: create a Shortcut story for CSM support (draft → approval → create) |
 | `/prs` | CS Eng: show Shortcut stories pending eng review — read-only status check |
-| `/tasks` | View/manage Asana tasks grouped by urgency |
+| `/my-tasks` | View/manage Asana tasks grouped by urgency (renamed from `/tasks` in round 60 — collision with Claude Code built-in) |
 | `/kb-draft` | Draft a new Intercom KB article from a topic or conversation ID |
 
 **Onboarding lifecycle**
@@ -166,7 +166,7 @@ Use these when filtering conversations to a specific teammate.
 
 ## Asana Team GID
 
-Commands like `/health-score`, `/tasks`, and `/at-risk` filter Asana queries to your team's projects (so sibling-team projects don't pollute results). Set this once.
+Commands like `/health-score`, `/my-tasks`, and `/at-risk` filter Asana queries to your team's projects (so sibling-team projects don't pollute results). Set this once.
 
 To find it: open any of your customer projects in Asana, copy the team segment from the URL (the long number between `/teams/` and the next `/`).
 

@@ -30,7 +30,7 @@ Works on **Mac, Linux, and Windows** (Windows via WSL2 for full sandbox protecti
 
 **Executive reporting** — `/executive-summary` for a portfolio-wide view combining onboarding, support, renewals, and health, `/weekly-team` to roll up the team's week for leadership.
 
-**Utilities** — `/customer` for a pre-call briefing, `/customer-search` for fuzzy customer lookup across all systems, `/inbox-triage` to sort the morning email pile, `/meeting-notes` for a structured post-meeting summary (read-only, no email), `/standup-recap` to roll up the week's daily files for `/eow`, `/escalate` to create a Shortcut ticket, `/tasks` to manage Asana, `/kb-draft` to write a KB article.
+**Utilities** — `/customer` for a pre-call briefing, `/customer-search` for fuzzy customer lookup across all systems, `/inbox-triage` to sort the morning email pile, `/meeting-notes` for a structured post-meeting summary (read-only, no email), `/standup-recap` to roll up the week's daily files for `/eow`, `/escalate` to create a Shortcut ticket, `/my-tasks` to manage Asana, `/kb-draft` to write a KB article.
 
 **Discoverability** — `/commands` lists every available slash command pulled live from `.claude/commands/*.md` frontmatter (and flags any drift between the directory and CLAUDE.md).
 

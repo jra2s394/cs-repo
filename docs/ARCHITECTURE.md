@@ -73,7 +73,7 @@ Every command in `.claude/commands/` matches one of three shapes. Knowing which 
 
 ### 3. Read-only (no file written)
 
-**Examples:** `/customer`, `/customer-search`, `/inbox-triage`, `/meeting-prep`, `/meeting-notes`, `/prs`, `/check-setup`, `/tasks`, `/commands`, `/at-risk` (when single-customer)
+**Examples:** `/customer`, `/customer-search`, `/inbox-triage`, `/meeting-prep`, `/meeting-notes`, `/prs`, `/check-setup`, `/my-tasks`, `/commands`, `/at-risk` (when single-customer)
 
 **Flow:** Command file → Claude pulls data → assembles inline summary → prints to chat. No file output. The user reads the screen and decides what to do.
 
