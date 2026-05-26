@@ -109,6 +109,8 @@ CI runs the same `make` targets, so if it's green locally it'll stay green on PR
 
 > **Subprocess coverage for hooks.** Hooks under `hooks/` are tested as subprocesses via `tests/conftest.py::run_hook`. Round 62 wired `COVERAGE_PROCESS_START` + a `.pth` bootstrap so subprocesses are instrumented, and round 69 fixed a cwd resolution bug (`${COV_REPO_ROOT}/hooks` env-var expansion in `.coveragerc`) that had three hooks showing 0–33% coverage. Combined with `--parallel`, the `.coverage.*` files are merged at report time. Current measured coverage: **~92% line coverage across `hooks/` + `lib/`**, comfortably above the 85% floor.
 
+> **Heads-up on bundled `/code-review`.** Anthropic ships a bundled `/code-review` skill alongside our `/review-code` slash command. Different names, different behavior — ours runs `make test` + `make lint` + the 23-section repo checklist (and round-79 added a `code-reviewer` subagent). If the bundled one is distracting in your `/` menu, suppress it per-user via `/skills` → highlight `code-review` → Space to cycle to `"off"` → Enter to save. The menu writes to `.claude/settings.local.json` (gitignored), so it stays a personal preference and doesn't affect teammates.
+
 ## Scrub checklist
 
 Before submitting, verify:

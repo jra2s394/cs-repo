@@ -38,6 +38,8 @@ The 44 commands (registered here so the round-60 parity test catches new files t
 
 Report-style commands (`/intercom-*`, `/onboarding-*`, `/renewals-*`) generate branded `.docx` files in `out/` after the user uploads a Finance mastersheet first. Renewal billing handles both **volume-based** (quantity × per-unit cost) and **fixed-rate** (ARR × uplift rate) — Claude detects the model from the Finance sheet columns.
 
+> **Don't confuse `/review-code` with the bundled `/code-review` skill.** `/review-code` (ours, in `.claude/commands/`) runs `make test` + `make lint` + the 23-section repo-specific checklist for hooks/lib/reports/commands; round-79 also wired it to the `code-reviewer` subagent. Anthropic also ships a bundled `/code-review` skill that does a generic diff review. They're separate commands with separate behaviors — type the exact name you mean. If you want to hide the bundled one, run `/skills`, highlight `code-review`, and press Space to cycle to `"off"` (the menu writes to `.claude/settings.local.json`, per-user and gitignored).
+
 ---
 
 ## Read.ai integration
