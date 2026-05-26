@@ -32,96 +32,11 @@ Two things:
 
 ## Slash commands
 
-All commands live in `.claude/commands/`. Invoke with `/command-name`.
+All commands live in `.claude/commands/<name>.md`. Each file's YAML frontmatter has a `description:` field — that's the authoritative source. Run `/commands` for a live grouped listing, or see USER_GUIDE.md for the per-command walkthroughs.
 
-**Standup updates**
+The 44 commands (registered here so the round-60 parity test catches new files that miss CLAUDE.md): `/at-risk`, `/check-setup`, `/commands`, `/customer`, `/customer-search`, `/daily`, `/end-onboarding`, `/eow`, `/escalate`, `/executive-summary`, `/expansion`, `/follow-up`, `/go-live`, `/handoff`, `/health-score`, `/inbox-triage`, `/intercom-daily`, `/intercom-monthly`, `/intercom-quarterly`, `/intercom-weekly`, `/intercom-yeartodate`, `/kb-draft`, `/meeting-notes`, `/meeting-prep`, `/midweek`, `/my-tasks` (renamed from `/tasks` in round 60), `/onboarding-monthly`, `/onboarding-quarterly`, `/onboarding-status-report`, `/onboarding-weekly`, `/onboarding-yearly`, `/prs`, `/qbr`, `/renewal-health`, `/renewals-nextmonth`, `/renewals-nextquarter`, `/renewals-thismonth`, `/review-code`, `/setup`, `/standup-recap`, `/start-onboarding`, `/story-CSEng`, `/weekly-team`, `/weekstart`.
 
-| Command | When |
-|---|---|
-| `/daily` | Tue–Fri — yesterday + today (terse format) |
-| `/midweek` | Wed — Mon–today wins + rest of week (house format) |
-| `/eow` | Fri — full week recap + carryover + next week (house format) |
-| `/weekstart` | Mon — last week carryover + this week goals (house format) |
-| `/standup-recap` | Aggregate the week's `data/outputs/daily-*.md` into a recap that feeds `/eow` (read-only file aggregation, no MCP calls) |
-
-**Intercom reports** — pull live Intercom data, generate a JSON metrics file, then run `node reports/intercom-<period>.js <path-to-metrics.json>` to produce a `.docx` in `out/`
-
-| Command | Period |
-|---|---|
-| `/intercom-daily` | Today vs yesterday |
-| `/intercom-weekly` | This week vs last week |
-| `/intercom-monthly` | This month vs last month |
-| `/intercom-quarterly` | This quarter vs last quarter |
-| `/intercom-yeartodate` | Full year to date |
-
-**Customer intelligence**
-
-| Command | What it does |
-|---|---|
-| `/customer` | Full snapshot — Intercom, Gmail, Calendar, Asana, Shortcut, Read.ai |
-| `/customer-search` | Fuzzy lookup — find a customer across all systems when you don't know the exact name |
-| `/inbox-triage` | Morning Gmail triage — Respond / FYI / Escalation / Customer Signal buckets; drafts replies only on request, never sends without approval |
-| `/meeting-prep` | Briefings for all customer meetings in the next 24h |
-| `/meeting-notes` | Read-only post-meeting summary (Read.ai + calendar + Gmail + Asana + Shortcut). Counterpart to `/follow-up` when you just want notes, not an email |
-| `/follow-up` | Draft follow-up email after a call (Read.ai → draft → approval → send) |
-| `/go-live` | Go-live readiness check — blockers across Asana, Shortcut, Intercom, Gmail |
-| `/at-risk` | Surface all at-risk customers across all systems — read-only triage |
-| `/health-score` | Portfolio health scorecard, or single-customer snapshot if you pass a name (`/health-score Acme`) — green/yellow/red across Asana, Intercom, Shortcut |
-| `/expansion` | Identify expansion and upsell opportunities from live signals |
-| `/qbr` | QBR prep — full quarter data pull, wins sourced, agenda drafted |
-| `/escalate` | Escalate an Intercom conversation to a Shortcut ticket (draft → approval → create) |
-| `/story-CSEng` | CS Eng: create a Shortcut story for CSM support (draft → approval → create) |
-| `/prs` | CS Eng: show Shortcut stories pending eng review — read-only status check |
-| `/my-tasks` | View/manage Asana tasks grouped by urgency (renamed from `/tasks` in round 60 — collision with Claude Code built-in) |
-| `/kb-draft` | Draft a new Intercom KB article from a topic or conversation ID |
-
-**Onboarding lifecycle**
-
-| Command | What it does |
-|---|---|
-| `/start-onboarding` | Kick off a new customer — Asana project, Drive folder, Shortcut story, Slack channel |
-| `/onboarding-status-report` | Customer-facing onboarding status report — email, calendar, Asana, Intercom |
-| `/end-onboarding` | Close out a completed onboarding — checklist, go-live email, post-closure tasks |
-| `/handoff` | Generate a CSM handoff brief when account ownership changes |
-
-**Renewal & executive**
-
-| Command | What it does |
-|---|---|
-| `/renewal-health` | Renewal pipeline health — upcoming renewals, risk scores, recommended actions |
-| `/executive-summary` | Portfolio-wide executive summary — onboarding + support + renewals + health |
-| `/weekly-team` | Weekly CS team summary for manager standup or team Slack channel |
-
-**Onboarding reports** — upload the finance mastersheet first, then run the command to generate a branded `.docx` in `out/`. Data sources: mastersheet (CARR) + Asana (task health).
-
-| Command | Period |
-|---|---|
-| `/onboarding-weekly` | This week vs last week |
-| `/onboarding-monthly` | This month vs last month + QTD context |
-| `/onboarding-quarterly` | This quarter vs last quarter + YTD context |
-| `/onboarding-yearly` | Full year to date + multi-year + all-time totals |
-
-**Renewal reports** — upload the Finance renewals sheet (monthly Excel file from Finance), then run the command to generate a branded invoice report `.docx` in `out/`. Used to tell Finance what amount to invoice each customer. Handles two billing models automatically: volume-based (quantity × per-unit cost) and fixed-rate (ARR × uplift rate).
-
-| Command | What you get |
-|---|---|
-| `/renewals-thismonth` | This month's invoice detail — what Finance bills now |
-| `/renewals-nextmonth` | Next month's pipeline — confirm renewals before month end |
-| `/renewals-nextquarter` | Full quarter pipeline — three-month invoice forecast, grouped by month |
-
-Renewal billing models:
-- **Volume-based**: Quantity (projected cubic yards/meters) × Per Unit Cost = Invoice Amount
-- **Fixed-rate**: Current ARR × (1 + uplift rate, e.g. 1.05) = Invoice Amount
-- Claude detects the model automatically from the Finance sheet columns.
-
-**Tooling**
-
-| Command | What it does |
-|---|---|
-| `/setup` | First-time setup wizard — fills in your personal CLAUDE.md, checks integrations |
-| `/check-setup` | Read-only validator — confirms CLAUDE.md is filled in, all 7 MCPs reachable, Intercom ID matches your authenticated session, output dirs exist |
-| `/commands` | List every available slash command live from `.claude/commands/*.md` — surfaces commands missing from this CLAUDE.md table |
-| `/review-code` | Run the 23-section QA checklist (tests + lint + per-component review) |
+Report-style commands (`/intercom-*`, `/onboarding-*`, `/renewals-*`) generate branded `.docx` files in `out/` after the user uploads a Finance mastersheet first. Renewal billing handles both **volume-based** (quantity × per-unit cost) and **fixed-rate** (ARR × uplift rate) — Claude detects the model from the Finance sheet columns.
 
 ---
 
@@ -192,20 +107,6 @@ If anything isn't connected, run `/mcp` in the Claude Code prompt to see status.
 
 ---
 
-## Tools
-
-| Tool | Purpose |
-|---|---|
-| **Gmail** | Work email |
-| **Google Calendar** | Meetings, customer calls, go-live dates |
-| **Asana** | Project and task management for CS ops work |
-| **Intercom** | Knowledge base articles, customer messaging, support conversations |
-| **Slack** | Standup posts, team communication |
-| **Google Drive** | Docs and shared files |
-| **Shortcut** | Bug and feature tracking; escalation to product/eng |
-
----
-
 ## Trusted infrastructure
 
 This section steers Claude Code's [auto-mode classifier](https://code.claude.com/docs/en/auto-mode-config). The classifier reads CLAUDE.md to learn what's internal to this workflow versus what should be treated as external. Writing this in plain prose — like onboarding a new engineer — reduces false-positive auto-mode prompts when Claude does routine internal work.
@@ -236,21 +137,7 @@ All changes follow the feature-branch PR flow. Direct commits and pushes to `mai
 
 Branch naming: `chore/`, `fix/`, `feature/`, or `docs/` prefix + short description.
 
-### GitHub branch protection rules (main)
-
-Configured server-side at `github.com/jra2s394/cs-repo/settings/branches`:
-
-| Rule | Setting |
-|---|---|
-| Require pull request before merging | ✅ on |
-| Required approvals | 1 (effectively 0 — `enforce_admins: false`, so the repo owner can self-merge solo work) |
-| Required status checks | ✅ `test` must pass; strict (branch must be up-to-date with `main`) |
-| Allow force pushes | ❌ off |
-| Allow branch deletion | ❌ off |
-| Require linear history | ✅ on (squash/rebase only) |
-| Enforce for admins | ❌ off (escape hatch retained) |
-
-These rules apply even when pushing from your own terminal — GitHub rejects the push before it lands.
+GitHub branch protection on `main` is configured server-side (PR-required, force-push-blocked, linear history). The full settings live in [docs/github-repo-audit.md](docs/github-repo-audit.md). GitHub rejects bad pushes before they land, so the local hooks + remote rules form a two-layer guard.
 
 ---
 
@@ -319,72 +206,12 @@ I have been burned by hallucinated wins. Follow these strictly:
 
 ---
 
-## Format House Style
+## Format and content standards
 
-Two formats, by update type.
+Two reference docs Claude reads when actually drafting (rather than every session):
 
-**Daily** — terse; posts straight to Slack. No opener. Title line, then three sections:
-
-```
-*Daily Update — [Weekday], [Month Day]*
-
-*Yesterday:*
-• [...]
-
-*Today:*
-• [...]
-
-*Blockers:*
-• [...]
-```
-
-**Midweek / EOW / Week Start** — the fuller house format; starts with:
-
-```
-How are you feeling? (1-10) 🧘
-[I'll fill in]
-
-@your-slack-handle is excited about:
-- [2-3 highlights from this period]
-
-🎉 :slab: :party_gopher:
-```
-
-Then the period-specific body (see `prompts/*.md`).
-
-All update types: end the message to me with —
-
-> "Want me to drop this in Slack as a draft, or tweak anything?"
-
----
-
-## Content Standards
-
-### Knowledge Base Articles (Intercom)
-
-- Lead with the outcome the customer is trying to achieve, not the feature name.
-- Use numbered steps for procedures; bullets for reference lists.
-- Keep sentences short — Slabstack customers are in the field, often on mobile.
-- Every article needs: a clear title, a one-sentence intro, step-by-step body, and a "next steps" or related articles section.
-- Tag articles by product area and customer segment before publishing.
-
-### Onboarding Videos
-
-- Script before recording. Draft the script in conversation for review first.
-- Each video covers exactly one workflow — no multi-topic videos.
-- Include a written companion article in Intercom for every video.
-
-### Pre-Sales Docs
-
-- Audience is the buyer, not the end user. Lead with business outcomes and ROI, not feature lists.
-- Use Slabstack's concrete industry terminology (mix designs, batch tickets, plant operations, etc.).
-- Confirm the target persona and deal stage before drafting.
-
-### Integration Guides
-
-- Always specify the third-party system by name and version if known.
-- Structure: Overview → Prerequisites → Step-by-step setup → Troubleshooting → Support contact.
-- Flag any steps that require IT or admin access so the customer can prepare.
+- [docs/STANDUP_FORMAT.md](docs/STANDUP_FORMAT.md) — house format for `/daily`, `/midweek`, `/eow`, `/weekstart` (terse Daily vs. fuller Midweek/EOW/Weekstart shape, the closing line).
+- [docs/CONTENT_STANDARDS.md](docs/CONTENT_STANDARDS.md) — standards for the four content types: KB articles (Intercom), onboarding video scripts, pre-sales docs, integration guides.
 
 ---
 
@@ -435,13 +262,7 @@ Acme Concrete ([CONTACT_F], Bob Jones), Regional Ready Mix (Tom Brown), ...
 
 ---
 
-## MCP Precision Notes
-
-- **Gmail:** `search_threads` with `is:unread` for unread count. Use `newer_than:1d -in:draft` for last 24h. Use `after:YYYY/MM/DD -in:draft -category:promotions -category:social` for date ranges.
-- **Calendar:** `list_events` requires explicit ISO 8601 `startTime` and `endTime` bounding the full day range (e.g., `2026-05-15T00:00:00` to `2026-05-15T23:59:59`).
-- **Intercom:** `search_conversations()` requires at least one filter parameter — use `created_at >= timestamp`. **Exception:** `/intercom-yeartodate` intentionally makes an unbounded all-time pull to compute workspace totals; that is the only command where no date filter is correct.
-- **MCP config:** server entries in `.mcp.json` go under `mcpServers` keyed by name (the *key* is the server name — there is no separate `name` field). Two shapes, by transport: **stdio** uses `command` / `args` / `env` (no `type` needed; this is what our `.mcp.json` Shortcut entry uses); **remote HTTP/SSE** uses `type: "http"` (or `"sse"` / `"streamable-http"`) + `url` + optional `headers`. Mixing shapes (e.g. adding `url` to a stdio entry) silently breaks the server. See <https://code.claude.com/docs/en/mcp> for the full reference, including env-var expansion (`${VAR}` and `${VAR:-default}`).
-- **Latency:** calling many MCP servers at once is slow. For testing, use Gmail + Calendar + Asana only.
+MCP query gotchas (date filters, latency, per-server quirks) live in [docs/MCP_PRECISION_NOTES.md](docs/MCP_PRECISION_NOTES.md). Claude reads it on demand when a query misbehaves.
 
 ---
 
@@ -454,25 +275,4 @@ Acme Concrete ([CONTACT_F], Bob Jones), Regional Ready Mix (Tom Brown), ...
 
 ---
 
-## Repo Structure
-
-```
-cs-repo/
-├── CLAUDE.md                  — this file
-├── .mcp.json                  — MCP server config
-├── .claude/commands/          — slash commands (/daily, /midweek, /eow, /weekstart)
-├── prompts/                   — standup prompt templates
-├── data/outputs/              — generated standup updates land here
-├── slabstack-cs/              — CS content library
-│   ├── onboarding/            — self-serve video scripts and checklists
-│   ├── presales/              — discovery decks, objection handling, ROI templates
-│   ├── integrations/          — integration setup guides
-│   ├── kb-articles/           — knowledge base articles (Intercom-ready)
-│   ├── customer-master/       — master customer tracker
-│   └── qbr-templates/        — quarterly business review templates
-├── hooks/                     — Claude Code hooks (audit, safety, notifications)
-├── skills/                    — reusable Claude Code skill definitions
-├── patterns/                  — Claude Code patterns and best practices
-├── docs/                      — documentation and templates
-└── examples/                  — before/after examples and session transcripts
-```
+Repo structure is self-evident from `ls` and explained in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
