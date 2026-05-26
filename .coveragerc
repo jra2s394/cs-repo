@@ -22,7 +22,16 @@
 # behavioral coverage across most of the hook surface.
 
 [run]
-source = hooks, lib
+# `source` paths are resolved relative to the running process's cwd.
+# When coverage runs in a subprocess whose cwd is tmp_path (set by
+# pytest fixtures like main_branch_repo), a bare `source = hooks`
+# can't find `hooks/` from there and traces zero lines. The fix:
+# use ${COV_REPO_ROOT}-expanded absolute paths. conftest.py sets
+# COV_REPO_ROOT to the repo root path so every subprocess (regardless
+# of cwd) resolves source consistently.
+source =
+    ${COV_REPO_ROOT}/hooks
+    ${COV_REPO_ROOT}/lib
 parallel = True
 
 [report]
