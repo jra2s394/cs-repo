@@ -206,6 +206,24 @@ If anything isn't connected, run `/mcp` in the Claude Code prompt to see status.
 
 ---
 
+## Trusted infrastructure
+
+This section steers Claude Code's [auto-mode classifier](https://code.claude.com/docs/en/auto-mode-config). The classifier reads CLAUDE.md to learn what's internal to this workflow versus what should be treated as external. Writing this in plain prose — like onboarding a new engineer — reduces false-positive auto-mode prompts when Claude does routine internal work.
+
+**Organization.** [Your Company] customer success operations. Claude Code is the AI assistant for CS ops work (standups, customer reports, knowledge base articles, meeting prep, follow-ups). All external writes flow through the seven MCPs listed in "Connected services" above — no other external systems are touched.
+
+**Source control.** GitHub. The only remote pushed to is the one configured in `.git/config`. Force pushes and direct commits to `main` are blocked at two layers (`hooks/push-guard.py` locally + GitHub branch protection server-side).
+
+**Trusted external services.** The seven MCPs above (Gmail, Calendar, Drive, Asana, Intercom, Slack, Shortcut), accessed via the user's own work-account credentials. Write operations always go through `hooks/draft-before-create.py` — no command sends or posts without explicit user approval per draft.
+
+**Trusted local paths.** `data/outputs/` (generated standup `.md` files), `out/` (generated `.docx` reports), `~/Desktop/CS Reports/` (optional Desktop copy of reports), `/tmp/` (scratch). The repo working tree itself gets normal source-control treatment.
+
+**Trusted network endpoints.** Pre-allowed in `.claude/settings.json::sandbox.network.allowedDomains`: `github.com`, `api.github.com`, `registry.npmjs.org`, `pypi.org`, `files.pythonhosted.org`, `code.claude.com`, `anthropic.com`. Other domains trigger a one-time approval prompt on first use.
+
+**Explicitly not trusted.** Any URL or service not listed above is treated as external. Credential directories (`~/.ssh`, `~/.aws`, `~/.gnupg`) are blocked by the sandbox's `denyRead`. Generic exfiltration targets (pastebins, arbitrary webhooks, gists, third-party code-review APIs) get auto-mode prompts before they're touched.
+
+---
+
 ## Git Workflow
 
 All changes follow the feature-branch PR flow. Direct commits and pushes to `main` are blocked at two levels: local hooks (Claude Code) and GitHub branch protection rules (server-side).
