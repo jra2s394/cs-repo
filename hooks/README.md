@@ -8,7 +8,7 @@ Each hook is a shell command (typically a Python script) that receives a JSON pa
 
 Hooks can take three actions: **allow** (exit code 0, let the tool call proceed), **block** (exit code 2, cancel the tool call and show an error message from stderr to the user), or **ask** (output a JSON object with `permissionDecision: "ask"`, pause and surface a permission prompt so the user can approve or deny).
 
-Hook types map to lifecycle events: `PreToolUse` fires before a tool executes, `PostToolUse` fires after a successful tool call, `PostToolUseFailure` fires after a failed tool call (so failures don't silently vanish from audit trails), `UserPromptSubmit` fires when the user submits a message, `Notification` fires when Claude needs user input, `Stop` fires when a session ends, `SessionStart` fires when a session starts (with an optional `compact` matcher to target post-compaction restarts), `PreCompact` fires just before Claude Code compacts the conversation context, and `ConfigChange` fires when a settings file (project/local/user) or skill/agent frontmatter is mutated. Hooks are registered in `~/.claude/settings.json` under the `hooks` key, scoped to an event type and optionally filtered by a `matcher` (a regex or tool name pattern).
+Hooks are registered in `~/.claude/settings.json` under the `hooks` key, scoped to one of the 29 event types Claude Code supports (see [Available events](#available-events) below for the full catalog), and optionally filtered by a `matcher` (a regex or tool name pattern). This repo currently wires 8 events: `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `UserPromptSubmit`, `Notification`, `Stop`, `PreCompact`, and `ConfigChange`.
 
 Hooks run synchronously by default and block execution until they exit, so keep them fast. The `async: true` field in settings.json makes a hook fire-and-forget, useful for Stop hooks that write to disk or call external services.
 
@@ -24,6 +24,71 @@ Hooks run synchronously by default and block execution until they exit, so keep 
    - Exit 2: block the action; show stderr to the user as an error.
    - JSON output with `permissionDecision: "ask"`: pause and prompt the user.
 5. Claude continues or stops based on that result.
+
+---
+
+## Available events
+
+Claude Code supports 29 hook events as of v2.1.141+. This repo wires 8 (✓ below); the other 21 are available if a future round wants to hook in. Grouped by category — when adding a new hook, pick the smallest-blast-radius event that gets you the signal you need.
+
+### Tool-use events (fire around tool calls)
+| Event | When | Can block? | Wired |
+|---|---|:---:|:---:|
+| `PreToolUse` | Before tool runs | Yes | ✓ |
+| `PostToolUse` | After tool succeeds | No | ✓ |
+| `PostToolUseFailure` | After tool fails | No | ✓ |
+| `PostToolBatch` | After parallel tool batch resolves | Yes | — |
+| `PermissionRequest` | Permission dialog appears | Yes | — |
+| `PermissionDenied` | Tool denied by auto-mode classifier | No (can set `retry: true`) | — |
+
+### Session lifecycle
+| Event | When | Can block? | Wired |
+|---|---|:---:|:---:|
+| `SessionStart` | Session begins or resumes | No | — |
+| `SessionEnd` | Session terminates | No | — |
+| `Setup` | `--init-only`, `--init`, or `--maintenance` flags fire | No | — |
+| `Stop` | Claude finishes responding | Yes | ✓ |
+| `StopFailure` | Turn ends due to API error | No | — |
+| `Notification` | Notification sent | No | ✓ |
+
+### User input
+| Event | When | Can block? | Wired |
+|---|---|:---:|:---:|
+| `UserPromptSubmit` | User submits a prompt | Yes | ✓ |
+| `UserPromptExpansion` | Slash command expands | Yes | — |
+
+### Context window
+| Event | When | Can block? | Wired |
+|---|---|:---:|:---:|
+| `PreCompact` | Before context compaction | Yes | ✓ |
+| `PostCompact` | After compaction | No | — |
+| `InstructionsLoaded` | CLAUDE.md or rules loaded | No | — |
+
+### Subagents & tasks
+| Event | When | Can block? | Wired |
+|---|---|:---:|:---:|
+| `SubagentStart` | Subagent spawned | No | — |
+| `SubagentStop` | Subagent finishes | Yes | — |
+| `TaskCreated` | Task created via TaskCreate | Yes | — |
+| `TaskCompleted` | Task marked as completed | Yes | — |
+| `TeammateIdle` | Agent team teammate goes idle | Yes | — |
+
+### Workspace
+| Event | When | Can block? | Wired |
+|---|---|:---:|:---:|
+| `CwdChanged` | Working directory changes | No | — |
+| `FileChanged` | Watched file changes on disk | No | — |
+| `WorktreeCreate` | Worktree creation | Yes | — |
+| `WorktreeRemove` | Worktree removal | No | — |
+| `ConfigChange` | Config file changes (project/local/user settings, skills) | Yes | ✓ |
+
+### MCP
+| Event | When | Can block? | Wired |
+|---|---|:---:|:---:|
+| `Elicitation` | MCP server requests user input | Yes | — |
+| `ElicitationResult` | User responds to MCP elicitation | Yes | — |
+
+> Now that round-79 added a `code-reviewer` subagent, the `SubagentStart` / `SubagentStop` events are the next obvious wiring opportunity if we want subagent lifecycle in the audit log. Tracking as a candidate for a future round, not load-bearing today.
 
 ---
 
