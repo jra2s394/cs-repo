@@ -43,6 +43,7 @@ Hooks run synchronously by default and block execution until they exit, so keep 
 | `notify.py` | Notification | Sends a desktop notification when Claude needs input |
 | `session-to-obsidian.py` | Stop | Exports the session transcript to an Obsidian vault |
 | `lint-after-edit.py` | PostToolUse (Edit, Write) | Runs `ruff` on edited `.py` files and `biome` on edited `.js` files; non-blocking, prints findings to stderr |
+| `config-change-audit.py` | ConfigChange | Logs every config-file change (project/local/user settings, skills) to `~/.claude/config-change.log` for forensic review; non-blocking |
 
 ---
 
@@ -236,6 +237,18 @@ sys.exit(0)
 **Event:** PostToolUse, matcher: `Edit|Write`
 
 **Customize:** Add file extensions to `LINTER_MAP` (e.g., `.ts` → `["tsc", "--noEmit"]`) for additional languages. Add path prefixes to `SKIP_PREFIXES` to silence directories that intentionally don't follow the same rules. Switch from informational to blocking by changing the final `return 0` to `return 2` when issues are found — but only do this if your team's workflow expects lint to gate edits.
+
+---
+
+### `config-change-audit.py`
+
+**What it does:** Audit hook (non-blocking, append-only). On every `ConfigChange` event — any change to `.claude/settings.json` (project_settings), `.claude/settings.local.json` (local_settings), `~/.claude/settings.json` (user_settings), policy_settings, or skill/agent frontmatter — appends a timestamped line to `~/.claude/config-change.log`. Log format: `timestamp | session_id (8 char) | matcher | cwd`. Never blocks. Failures silently ignored. Rotates at 5 MB (same scheme as `audit-log.py`).
+
+Per [Claude Code security docs](https://code.claude.com/docs/en/security): *"Audit or block settings changes during sessions with ConfigChange hooks."* This hook is the AUDIT half — useful for forensic review of what a session changed about the agent's own config.
+
+**Event:** ConfigChange, matcher: `""` (all config sources)
+
+**Customize:** Change `log_path` to write logs elsewhere. Add fields from the `data` dict (e.g., `transcript_path`, `permission_mode`) for richer per-event detail. To convert to a BLOCKING hook (refuse any config change mid-session), change the final `sys.exit(0)` to `sys.exit(2)` — be aware this will reject every settings.json edit Claude or the user attempts, including ones the user explicitly wants. Most teams want the audit half, not the block half.
 
 ---
 
