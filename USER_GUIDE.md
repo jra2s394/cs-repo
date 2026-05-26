@@ -526,6 +526,8 @@ This gives you the same check every time, not a different result each session. I
 
 > Use `/review-code` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
 
+> **Not the same as the bundled `/code-review`.** Anthropic ships a bundled `/code-review` skill that does a generic diff review. Ours is `/review-code` (different name on purpose) and runs the 23-section checklist tailored to this repo's hooks, reports, and library helpers. Type the exact name you want. To hide the bundled one if it's distracting, run `/skills`, highlight `code-review`, press Space to cycle to `"off"`, Enter to save.
+
 ---
 
 ## Saving changes to the repo (Git workflow)

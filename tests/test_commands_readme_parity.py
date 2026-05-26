@@ -31,6 +31,8 @@ ALLOWED_NON_FILE_REFS = {
     "mcp": "Built-in Claude Code command (shipped with the CLI, not authored here). See https://code.claude.com/docs/en/mcp",
     "tasks": "Historical reference — renamed to `/my-tasks` in round 60 to avoid collision with the Claude Code built-in `/tasks` (list background tasks). The historical mention stays in CLAUDE.md so teammates remember the rename rationale.",
     "agents": "Built-in Claude Code command for managing custom subagents (`/agents` opens the manager). Referenced from the round-79 Subagents section in CLAUDE.md. See https://code.claude.com/docs/en/sub-agents",
+    "code-review": "Bundled Anthropic skill (not authored here) — separate from our `/review-code`. Referenced from the round-80 disambiguation callout in CLAUDE.md (and USER_GUIDE.md, but this test only walks CLAUDE.md). See https://code.claude.com/docs/en/commands",
+    "skills": "Built-in Claude Code command for managing skills (`/skills` opens the picker; Space cycles a skill's `skillOverrides` value, Enter saves to `.claude/settings.local.json`). Referenced from the round-80 disambiguation callout in CLAUDE.md. See https://code.claude.com/docs/en/skills",
 }
 
 # Pattern: backtick-wrapped slash command in markdown table or prose.
