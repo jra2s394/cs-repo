@@ -2,7 +2,7 @@
 
 Chronological per-PR history of the bootstrap period. Each entry maps to a single merged PR. Entries are grouped by date and tagged by theme so you can scan for a class of change (e.g. `[command]`, `[safety]`, `[testing]`).
 
-> **Scope:** PR #4 through PR #109 (2026-05-23 to 2026-05-25). Two phases of history live in this file: the v2.0 bootstrap (PR #4-#32, detailed entries below) and the v2.1 audit storm (PR #75-#109, summarized in the next section as rounds 10–39 with one-line + PR-link per round). Everything in between can be reached via `git log --oneline main` or the GitHub PR list. The "Numbers at a glance" table further down was a snapshot at PR #29; a "Today" column tracks the current totals so deltas stay legible.
+> **Scope:** PR #4 through PR #145 (2026-05-23 to 2026-05-25). Two phases of history live in this file: the v2.0 bootstrap (PR #4-#32, detailed entries below) and the v2.1 audit storm (PR #75-#145, summarized in the next section as rounds 10–74 with one-line + PR-link per round). Everything in between can be reached via `git log --oneline main` or the GitHub PR list. The "Numbers at a glance" table further down was a snapshot at PR #29; a "Today" column tracks the current totals so deltas stay legible.
 
 **Tags:**
 - `[command]` — new or modified slash command in `.claude/commands/`
@@ -19,9 +19,9 @@ Chronological per-PR history of the bootstrap period. Each entry maps to a singl
 
 ---
 
-## 2026-05-25 — v2.1: post-audit baseline (rounds 10–35, PR #75–#105)
+## 2026-05-25 — v2.1: post-audit baseline (rounds 10–74, PR #75–#145)
 
-After v2.0 the repo entered a 22-round audit storm. Each round was scoped to one finding or one cohesive cleanup, shipped as a single PR, reviewed against the PR template, and merged before the next started. The pattern produced 105 PRs in roughly two weeks. By the end: 7 real bugs fixed, 11 doc-accuracy drifts corrected, 8 future-proofing test families added (44 parametrized + 31 one-off cases), every hook wired into pre-commit + CI matrix, full GitHub community profile, formal data-handling appendix in SECURITY.md, managed-settings deployment template, retention enforcement script, and the entire repo generalized away from Mountain Time hardcoding so it forks cleanly for any time zone.
+After v2.0 the repo entered a 65-round audit storm. Each round was scoped to one finding or one cohesive cleanup, shipped as a single PR, reviewed against the PR template, and merged before the next started. The pattern produced 145 PRs in roughly two weeks. Rounds 10–35 laid the team + enterprise readiness baseline (7 real bugs fixed, doc drifts corrected, test families added, sandbox + secret-scan + draft-before-create coverage filled in, repo generalized away from Mountain Time hardcoding). Rounds 36–74 ratcheted further: CodeQL + Dependabot live, full coverage tracking with 85% floor on Python + JS lines (50% JS branches), 3 verification/forensic hooks added (`_stdin` helper, `lint-after-edit`, `config-change-audit`), CLAUDE.md slimmed 478→218 lines per Anthropic best-practices, `.envrc`/direnv for venv auto-activation, and 4 sweeps against fresh Anthropic doc fetches (rounds 24, 26, 38, 64-65, 72).
 
 The round-by-round table below indexes the work for fast navigation. For full per-PR context, follow the `#NNN` link — every PR body documents its detection method, fix, test plan, and what was deliberately not changed.
 
@@ -62,27 +62,69 @@ The round-by-round table below indexes the work for fast navigation. For full pe
 | 37 | #107 | `[safety]` `[docs]` | Enabled CodeQL + Dependabot security updates (two-click via GitHub UI). First CodeQL scan flagged `hooks/secret-scan.py:164` for `py/clear-text-logging-sensitive-data` — tightened the snippet truncation from `first-8 + last-4` (12 chars exposed) to `first-4 + last-2` (6 chars), added a 10-line inline comment block explaining the threat model, and dispositioned the alert "won't fix — by design" with a link to the comment. `docs/github-repo-audit.md` refreshed: both gaps from round-19 closed, new "CodeQL alert disposition" section added |
 | 38 | #108 | `[docs]` `[command]` | Enablement pack: three new docs (`docs/ARCHITECTURE.md` — command-execution flow + 3 archetypes + hook event ordering, `docs/TROUBLESHOOTING.md` — symptom-grouped recovery guide, `docs/COMMAND_GUIDE.md` — add-a-command runbook). Surfaced `ASANA_TEAM_GID` per-person config in the CLAUDE.md template + SETUP.md Step 4 + `/setup` Step 2.5 + `/check-setup` validator (🟡 when unset). Added a Day-1 → Week-4 cadence table to TEAM_SETUP.md so new teammates have rhythm beyond "ran one command on day 1" |
 | 39 | #109 | `[fix]` `[docs]` | Three real issues caught by the post-#108 risk-mitigation pass (smoke-tested 17/17 report renderers, validated doc links, walked the `/setup` wizard chain). Fixed: (a) `/setup` Step 3 ↔ Step 4 contradiction for the skipped-GID case (Step 3 previewed `[unset]`, Step 4 said to leave the template placeholder); (b) `/check-setup` false-negative against legacy prose-format personal CLAUDE.md (added a `## Who I am` heading heuristic + single-🟡 migration prompt instead of per-field "missing" flood); (c) `docs/COMMAND_GUIDE.md` hallucinated a parity test reference (`tests/test_commands_readme_parity.py`) — softened to the truth |
-| 40 | (this PR) | `[testing]` `[docs]` | Made the round-39 honesty good: added the parity test that backs the COMMAND_GUIDE.md claim (every `.claude/commands/*.md` appears in a CLAUDE.md table row; every CLAUDE.md `/cmd-name` table entry resolves to a real file); updated this RELEASE_NOTES to cover rounds 36–39 + this PR so the changelog matches `git log` |
+| 40 | #110 | `[testing]` `[docs]` | Made the round-39 honesty good: added the parity test that backs the COMMAND_GUIDE.md claim (every `.claude/commands/*.md` appears in a CLAUDE.md table row; every CLAUDE.md `/cmd-name` table entry resolves to a real file); updated this RELEASE_NOTES to cover rounds 36–39 + this PR so the changelog matches `git log` |
+| 40b | #111 | `[infra]` `[lint]` | Added `mypy` type-checking for `hooks/` + `lib/` with a lenient baseline (no `--strict`, just catches untyped locals + obvious mismatches); fixed one real bug — untyped `Counter` local that mypy flagged in `audit-log.py`; `make typecheck` target wired in |
+| 41 | #112 | `[hook]` `[safety]` | `PostToolUseFailure` event was unwired — failed tool calls silently vanished from the audit log, leaving a forensic gap. Wired into `audit-log.py`; pinned `autoUpdatesChannel: stable` after WebFetch surfaced that the default `latest` opts into pre-releases |
+| 42 | #113 | `[testing]` | `--cov-fail-under=85` enforced in CI so coverage can no longer silently decay between audit rounds. Set conservatively at the then-current level (~85%) to avoid blocking the round on test additions |
+| 43 | #114 | `[testing]` | `session-to-obsidian.py main()` was 90+ lines of untested orchestration. Added integration tests covering the export flow + edge cases (no vault, empty transcript, missing config); ratcheted Python coverage floor 70 → 85 |
+| 44 | #115 | `[safety]` `[docs]` | `permissions.disableSkillShellExecution: "disable"` added after WebFetch surfaced it (skills could otherwise execute inline shell with no audit). Refreshed `docs/audit-cadence.md` Detection record which had stalled at round 29 — backfilled 30-43 |
+| 45 | #116 | `[safety]` `[testing]` | Zero of 44 slash commands used `allowed-tools` frontmatter — every command had implicit access to every tool. Added the field on 3 read-only commands (`/check-setup`, `/commands`, `/prs`) + parity test ensuring the frontmatter parses correctly across the directory |
+| 46 | #117 | `[safety]` `[testing]` | Zero commands used `disable-model-invocation` — Claude could auto-fire manual write commands like `/escalate` mid-conversation. Added the flag where appropriate. Also: JS had ~1500 LOC tested but no coverage tracking; wired `c8` with floor `lines: 75` initially |
+| 47 | #118 | `[docs]` | Doc consistency sweep after rounds 40-46: stale test counts, missing make targets, missing CI checks across README/CONTRIBUTING/USER_GUIDE/RELEASE_NOTES |
+| 48 | #119 | `[refactor]` `[hook]` | 6 hooks duplicated the same 4-line stdin-JSON parse boilerplate. Extracted `hooks/_stdin.py::parse_or_exit()` shared helper; converted all 6 callers; net –18 lines with stronger error handling |
+| 49 | #120 | `[refactor]` | `.claude/settings.json` had 52 individual matcher blocks for `draft-before-create` (one per MCP tool, 470 lines of boilerplate). Consolidated to per-server matcher patterns — file shrank from 665 → 144 lines |
+| 50 | #121 | `[lint]` `[fix]` | `ruff.toml::target-version` was stuck at `py39` despite project requiring 3.10+ since round 27; rule set was 4 groups when 8 catch real bugs (B905 zip-strict, RUF059 unused-unpacked, SIM105 suppressible-exception, RUF012 mutable-class-default). Expanded ruleset + fixed every surfaced finding |
+| 51 | #122 | `[safety]` | 16 manual report commands (the round-46 cohort covered the 8 most obvious) still missed `disable-model-invocation`. Closed the gap |
+| 52 | #123 | `[safety]` | 4 high-risk customer-facing commands (`/customer`, `/customer-search`, `/inbox-triage`, `/kb-draft`) had no `allowed-tools` restriction despite handling untrusted external input. Restricted them |
+| 53 | #124 | `[safety]` | Bash sandbox enabled — biggest unaddressed security feature per WebFetch /en/sandboxing. `sandbox.enabled: true`, `denyRead: [~/.ssh, ~/.aws, ~/.gnupg]`, `allowedDomains` for github/npm/pypi/etc. |
+| 54 | #125 | `[fix]` `[safety]` | Round-53 sandbox enabled but `gh pr create` immediately failed Seatbelt TLS (OSStatus -26276) — exact issue the doc warned about. `excludedCommands: ["gh *", "git *"]` was the documented fix; reproduced + applied in the same session |
+| 55 | #126 | `[docs]` | USER_GUIDE.md test counts 4-places stale (728→841); rounds 45-54 added safety layers (sandbox, allowed-tools, disable-model-invocation) that weren't mentioned anywhere user-facing. Refresh + add a defense-layer section |
+| 56 | #127 | `[infra]` `[safety]` | macOS TCC protection had spread to every hook file + every `.claude/commands/*.md` since round 53 — pre-commit `end-of-file-fixer` failing locally. Broadened excludes to `^\.claude/|^hooks/`. Plus 2 remaining `disable-model-invocation` gaps (`/inbox-triage`, `/kb-draft`) closed; added Linux sandbox note |
+| 57 | #128 | `[fix]` `[testing]` | Same Seatbelt TLS issue that hit `gh` (round 53/54) confirmed broken on `pip` and `npm` too — quarterly audit-cadence pip-audit/npm audit would silently break. Extended `excludedCommands` to `pip*`, `pip3*`, `npm*`, `npx*`. JS branch coverage at 50.88% had no floor; added one at 50 |
+| 58 | #129 | `[docs]` | Sandbox docs in rounds 53-56 didn't mention Windows — native Windows isn't supported by Claude Code's sandbox (only WSL2). Added explicit "Mac / Linux / WSL2" callout in defense-layer prose so PC users know they need WSL2 for parity |
+| 59 | #130 | `[docs]` | Auto-mode classifier reads `CLAUDE.md` for context but CLAUDE.md had no positive "trusted infrastructure" prose — only "draft before X" / "never auto-send" rules. Added a Trusted-infrastructure section (org, source control, MCPs, local paths, network endpoints, what's NOT trusted) so the classifier has positive context |
+| 60 | #131 | `[command]` `[fix]` | `/tasks` collided with the bundled Claude Code built-in `/tasks` (list background tasks); built-in shadows custom commands so users typing `/tasks` got the wrong functionality silently. Renamed `/tasks` → `/my-tasks` across commands + CLAUDE.md tables (same class as round-24's `/review` → `/review-code` rename) |
+| 61 | #132 | `[docs]` | CONTRIBUTING.md gained a slash-command frontmatter reference table; `docs/audit-cadence.md` Detection record formalized as the canonical "why is this checklist on this schedule" reference |
+| 62 | #133 | `[testing]` | Wired subprocess coverage tracking for hook scripts via `COVERAGE_PROCESS_START` + `.pth` + `parallel=True`. Previously hooks invoked as subprocesses didn't trip coverage and showed 0%; lifted measured coverage from 46% → 82% |
+| 63 | #134 | `[content]` `[docs]` | First explicit no-drift audit outcome: walked all 31 files under `slabstack-cs/` for staleness — no findings. Onboarding video status counts, KB plan counts, customer-master schema, QBR templates all current. Documented the methodology so future content audits follow the same shape |
+| 64 | #135 | `[hook]` `[safety]` | No verification hooks (only safety hooks) — lint feedback came only from `make lint` or CI, not at edit-time. Added `lint-after-edit.py` PostToolUse(Edit\|Write) hook that runs ruff/biome on the modified file, surfaces findings on stderr, never blocks the edit |
+| 65 | #136 | `[docs]` | CLAUDE.md was 478 lines — Anthropic best-practices doc explicitly warns "Bloated CLAUDE.md files cause Claude to ignore your actual instructions." Extracted full slash commands tables (95→5 lines), Tools dup (14→0), Format House Style (39→pointer to docs/STANDUP_FORMAT.md), Content Standards (30→pointer), MCP Precision Notes (10→pointer), GitHub branch protection (18→pointer), Repo Structure (22→0). Down to 278 lines |
+| 66 | #137 | `[docs]` | After round 65 still 278 lines with 4 sections of pure template placeholders (Intercom IDs, Asana GID, Key People, Recurring Customers) — placeholders give Claude no actual info; SETUP.md already covered the how-to. Moved to `docs/templates/CLAUDE_MD_PERSONAL_TEMPLATE.md`. Down to 218 lines |
+| 67 | #138 | `[infra]` `[docs]` | Pre-commit hooks pinned at v5.0.0 since round 27 (autoupdate bumps to v6.0.0); SETUP.md still had a `/tasks` reference round 60 missed. Bumped + scrubbed |
+| 68 | #139 | `[hook]` `[safety]` | No ConfigChange hook despite /en/security explicitly recommending one — settings.json edits left no forensic trail. Added `config-change-audit.py` mirroring the `audit-log.py` shape for config events |
+| 69 | #140 | `[fix]` `[testing]` | Round 62's subprocess coverage left 3 hooks at 0%/33% because `.coveragerc` had `source = hooks, lib` (relative path) — coverage resolved it relative to subprocess cwd (tmp_path) and source filter rejected everything. Fix: `${COV_REPO_ROOT}/...` env-var expansion. Coverage 82% → 92% |
+| 70 | #141 | `[testing]` | Smoke fixtures passed empty arrays for optional fields and omitted rich fields entirely — reports skipped the conditional render sections. Enriched fixtures with optional render data (RECS, ATRISK, UPCOMING_RENEWALS, etc.). JS lines 82→89%, branches 51→54%; floor 75 → 85 |
+| 71 | #142 | `[docs]` | Doc consistency refresh after rounds 64-70 — test counts, hook counts, coverage figures, new-doc pointers across README/USER_GUIDE/CONTRIBUTING/CLAUDE.md |
+| 72 | #143 | `[infra]` | WebFetch sweep of 4 Anthropic docs (`/en/managed-mcp`, `/en/agent-teams`, `/en/worktrees`, `/en/checkpointing`) — one drift: `.claude/worktrees/` missing from `.gitignore` per explicit /en/worktrees recommendation. Other three produced no drift |
+| 73 | #144 | `[infra]` `[docs]` | Makefile calls `python3` literally → Apple's `/usr/bin/python3` (3.9.6) resolves before venv → round-50 `zip(strict=True)` fails locally even though CI passes. Shipped `.envrc` (`source .venv/bin/activate`) for direnv auto-activate; CONTRIBUTING.md documents the opt-in setup |
+| 74 | #145 | `[docs]` | Sync README + USER_GUIDE for rounds 72-73 — venv-activation note in both `make test` blocks; fixed stale `684 passed` → `712 passed` in USER_GUIDE |
 
 ### Numbers at a glance
 
-| Metric | At v2.0 | At v2.1 |
-|---|---|---|
-| Slash commands | 44 | 44 (stable) |
-| Hooks | 11 | 11 (stable) |
-| Report generators | 17 | 17 (stable) |
-| Python tests | 443 | 571 (+128) |
-| JS tests | 129 | 157 (+28) |
-| Pre-commit hook checks | 0 | 9 |
-| CI steps | 4 | 6 (matrix x3 + ruff + biome + pre-commit + JS) |
-| Required status checks | 1 stale | 3 (one per matrix entry) |
-| Branch protection rules | 5 | 5 (one accuracy fix) |
-| Known code bugs | 7 | **0** |
-| Known doc-accuracy drifts | many | **0** |
-| GitHub community health | ~50% | ~95% |
-| Hardcoded `Mountain Time` / `America/Denver` references | 84 | 0 (intentional doc examples retained) |
-| `pip-audit` against pinned deps | failed on Python 3.9 | clean |
-| `npm audit` | clean | clean |
+The "v2.1 baseline" column snapshots the round-35 state (when the team-readiness Tier 2 rollup landed). The "Round 74" column shows what rounds 36-74 added on top.
+
+| Metric | At v2.0 | At v2.1 baseline (round 35) | At round 74 |
+|---|---|---|---|
+| Slash commands | 44 | 44 (stable) | 44 (stable; `/tasks` renamed `/my-tasks` round 60) |
+| Hooks | 11 | 11 (stable) | 14 (+`_stdin.py` r48, `lint-after-edit.py` r64, `config-change-audit.py` r68) |
+| Report generators | 17 | 17 (stable) | 17 (stable) |
+| Python tests | 443 | 571 (+128) | 712 (+141 more) |
+| JS tests | 129 | 157 (+28) | 157 (stable; fixture enrichment round 70 raised coverage not count) |
+| Coverage (Python) | none | none | 92% measured / 85% floor (r62 wired, r69 fixed, r43 ratcheted) |
+| Coverage (JS) | none | none | 89% lines / 54% branches / 85% + 50% floors (r46/r57/r70) |
+| Pre-commit hook checks | 0 | 9 | 9 (stable; autoupdate v5→v6 round 67) |
+| CI steps | 4 | 6 (matrix x3 + ruff + biome + pre-commit + JS) | 6 (+ mypy round 40b, JS-cov round 46) |
+| Required status checks | 1 stale | 3 (one per matrix entry) | 3 (stable) |
+| Branch protection rules | 5 | 5 (one accuracy fix) | 5 (stable) |
+| Known code bugs | 7 | **0** | **0** |
+| Known doc-accuracy drifts | many | **0** | **0** |
+| GitHub community health | ~50% | ~95% | ~95% |
+| Hardcoded `Mountain Time` / `America/Denver` references | 84 | 0 (intentional doc examples retained) | 0 |
+| `pip-audit` against pinned deps | failed on Python 3.9 | clean | clean |
+| `npm audit` | clean | clean | clean |
+| CodeQL + Dependabot security updates | off | off | on (round 37) |
+| Bash sandbox | off | off | on (round 53, hardened r54/r57) |
+| CLAUDE.md size | 478 lines | 478 lines | 218 lines (r65 + r66 split) |
 
 ---
 
