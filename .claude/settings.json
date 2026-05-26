@@ -78,6 +78,17 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 hooks/lint-after-edit.py",
+            "statusMessage": "Linting edited file...",
+            "timeout": 15
+          }
+        ]
       }
     ],
     "PostToolUseFailure": [

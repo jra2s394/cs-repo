@@ -81,6 +81,12 @@ Hooks are small Python scripts in `hooks/` that run automatically on certain act
 | `block-attribution.py` | Committing messages with AI-attribution lines |
 | `draft-before-create.py` | Creating items in Asana/Slack/Intercom/Shortcut without an explicit draft+approval |
 
+There's also one **verification** hook (non-blocking, just surfaces information):
+
+| Hook | What it does |
+|---|---|
+| `lint-after-edit.py` | After Claude edits a `.py` or `.js` file, runs ruff or biome on it and prints any lint findings to stderr. Doesn't block the edit — just makes the feedback visible immediately instead of waiting for `make lint` or CI to surface it. |
+
 If a hook blocks something you actually wanted, the error message tells you why. Don't disable hooks — they exist because someone (probably you in a different session) made the mistake they prevent.
 
 ### What else keeps you safe (beyond the hooks)

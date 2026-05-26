@@ -42,6 +42,7 @@ Hooks run synchronously by default and block execution until they exit, so keep 
 | `pr-template-reminder.py` | UserPromptSubmit | Reminds Claude to read and follow the repo's PR template |
 | `notify.py` | Notification | Sends a desktop notification when Claude needs input |
 | `session-to-obsidian.py` | Stop | Exports the session transcript to an Obsidian vault |
+| `lint-after-edit.py` | PostToolUse (Edit, Write) | Runs `ruff` on edited `.py` files and `biome` on edited `.js` files; non-blocking, prints findings to stderr |
 
 ---
 
@@ -225,6 +226,16 @@ sys.exit(0)
 **Event:** PostToolUse, matcher: `""` (all tools)
 
 **Customize:** Change `log_path` to write logs elsewhere. Add fields from the `data` dict (e.g. `tool_input`) to capture more detail per call.
+
+---
+
+### `lint-after-edit.py`
+
+**What it does:** Verification hook (non-blocking, informational). After Claude edits a `.py` or `.js` file, runs the appropriate linter (`ruff check` for Python via `python3 -m ruff`, `biome check` for JS via `npx --no-install biome`) and surfaces any findings on stderr. Lint-clean files produce no output. Always exits 0 — the hook makes lint feedback visible, it does NOT block the edit. Skips files under generated/cache/output dirs (`node_modules/`, `.venv/`, `out/`, `data/outputs/`, etc.) and files outside the repo.
+
+**Event:** PostToolUse, matcher: `Edit|Write`
+
+**Customize:** Add file extensions to `LINTER_MAP` (e.g., `.ts` → `["tsc", "--noEmit"]`) for additional languages. Add path prefixes to `SKIP_PREFIXES` to silence directories that intentionally don't follow the same rules. Switch from informational to blocking by changing the final `return 0` to `return 2` when issues are found — but only do this if your team's workflow expects lint to gate edits.
 
 ---
 
