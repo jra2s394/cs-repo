@@ -94,7 +94,7 @@ If a hook blocks something you actually wanted, the error message tells you why.
 
 The hooks above catch mistakes at the moment they happen. The repo also has three quieter safety layers that work in the background, so you never have to think about them:
 
-**Manual-only commands.** 28 commands won't fire just because you mention them in conversation. You have to explicitly type the slash command. That includes every standup command (`/daily`, `/midweek`, `/eow`, `/weekstart`), every report command (`/intercom-*`, `/onboarding-*`, `/renewals-*`, `/qbr`, `/executive-summary`, `/weekly-team`), and the write-action ones (`/escalate`, `/start-onboarding`, `/end-onboarding`, `/follow-up`). Read-only intelligence commands (`/customer`, `/at-risk`, `/health-score`, etc.) stay auto-invocable so Claude can pull them up when the conversation naturally needs them.
+**Manual-only commands.** 26 commands won't fire just because you mention them in conversation. You have to explicitly type the slash command. That includes every standup command (`/daily`, `/midweek`, `/eow`, `/weekstart`), every report command (`/intercom-*`, `/onboarding-*`, `/renewals-*`, `/qbr`, `/executive-summary`, `/weekly-team`), the write-action ones (`/escalate`, `/start-onboarding`, `/end-onboarding`, `/follow-up`), and the two that handle untrusted external content (`/inbox-triage`, `/kb-draft`). Read-only intelligence commands (`/customer`, `/at-risk`, `/health-score`, etc.) stay auto-invocable so Claude can pull them up when the conversation naturally needs them.
 
 **Tool restrictions.** Seven commands are locked down to only the work-app tools they actually need. If something tried to hijack `/inbox-triage` into running a shell command or touching Shortcut, it couldn't — the command literally doesn't have permission. Same for `/escalate`, `/follow-up`, `/kb-draft`, and the three read-only commands (`/commands`, `/standup-recap`, `/prs`).
 
@@ -583,7 +583,7 @@ GitHub is where the repo lives online. You use it for one thing in this workflow
 After Claude pushes your branch, it will print a link like:
 
 ```
-https://github.com/jra2s394/cs-repo/pull/new/chore/your-branch-name
+https://github.com/YOUR-USERNAME/cs-repo/pull/new/chore/your-branch-name
 ```
 
 Click that link. It opens GitHub in your browser.
@@ -626,7 +626,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 
 ---
 
-
+## Where your output files land
 
 | What | Where |
 |---|---|
