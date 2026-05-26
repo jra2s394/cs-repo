@@ -24,7 +24,10 @@ Optional frontmatter fields (see <https://code.claude.com/docs/en/skills> for th
 - `argument-hint: <customer> [quarter]` — shown in autocomplete to indicate expected args. Use `<...>` for required, `[...]` for optional. The frontmatter test validates the bracket shape when this field is present.
 - `disable-model-invocation: true` — only the user can invoke (Claude can't auto-trigger). Useful for commands with side effects.
 - `allowed-tools: Bash(git status *) Read` — pre-approve specific tools when the command is active.
+- `when_to_use: ...` — extra trigger-phrase context for the classifier, appended to `description`. Counts toward the 1,536-character cap; use when the description alone doesn't fully cover when Claude should invoke the skill.
+- `arguments: customer quarter` — named positional arguments for `$name` substitution in the body. Accepts a space-separated string or YAML list; names map to argument positions in order.
 - `model: opus` / `effort: high` — per-command model or effort override.
+- `shell: bash` (default) or `powershell` — shell used for any inline `` !`command` `` or ` ```! ` blocks in the skill body. Setting `powershell` requires `CLAUDE_CODE_USE_POWERSHELL_TOOL=1`.
 
 Note: `.claude/commands/*.md` files keep working, but Anthropic's docs now recommend the equivalent `.claude/skills/<name>/SKILL.md` shape for new work — it adds supporting files, dynamic context injection, and auto-loading. Migration is not required.
 
