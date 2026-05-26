@@ -70,6 +70,16 @@ make test                                # works once activated
 .venv/bin/python -m pytest               # works without activation
 ```
 
+**Optional — auto-activate with direnv.** The repo ships a `.envrc` that runs `source .venv/bin/activate` whenever you cd into the directory. To opt in:
+
+```bash
+brew install direnv                      # macOS; or apt/dnf install direnv
+echo 'eval "$(direnv hook zsh)"' >> ~/.zshrc   # bash users: replace zsh with bash
+direnv allow                             # one-time per repo, authorizes the .envrc
+```
+
+After that, `make test` and ad-hoc `python3` calls inside the repo always use the venv's Python 3.12 — no more "works in CI, fails locally" from accidentally hitting Apple's 3.9.
+
 The `pre-commit install` step is important — without it the `.pre-commit-config.yaml` rules only fire if you manually run `pre-commit run --all-files`. With it, they fire automatically on every `git commit` and block the commit on failure. CI runs the same hooks on every push as a safety net, so an unconfigured local doesn't reach `main` broken.
 
 If you already have Python ≥ 3.10 on `$PATH`, the venv is optional — `make install-dev` + `make test` directly against your system Python works too. CI uses the system-Python path (no venv).
