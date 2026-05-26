@@ -354,7 +354,7 @@ Counterpart to `/follow-up` for the case where you just want notes — not an em
 
 Type `/meeting-notes` (or `/meeting-notes Acme`). Claude finds the meeting, pulls Read.ai + calendar + Gmail + Asana + Shortcut in parallel, and presents: a 2–3 sentence summary, decisions, an action-items table (each action cross-referenced against existing Asana tasks and Shortcut stories so you don't duplicate work), customer signals quoted verbatim from the Read.ai transcript, and a parking-lot section for open questions.
 
-Strictly read-only — no email drafts, no task creation, no story updates. After the notes, Claude asks if you want to save them to `slabstack-cs/meeting-notes/` (the only action this command will take, and only after explicit "yes save"). For follow-up actions, Claude points you at `/follow-up`, `/tasks`, `/story-CSEng`, or `/escalate` so you stay in control.
+Strictly read-only — no email drafts, no task creation, no story updates. After the notes, Claude asks if you want to save them to `slabstack-cs/meeting-notes/` (the only action this command will take, and only after explicit "yes save"). For follow-up actions, Claude points you at `/follow-up`, `/my-tasks`, `/story-CSEng`, or `/escalate` so you stay in control.
 
 ---
 
@@ -460,7 +460,7 @@ Nothing is created or changed — this is a read-only status check.
 
 ---
 
-## Manage tasks — `/tasks`
+## Manage tasks — `/my-tasks`
 
 Shows your open Asana tasks grouped by urgency: overdue, due today, due this week, upcoming.
 
@@ -683,7 +683,7 @@ After merging, GitHub shows a **"Delete branch"** button. Click it. The branch h
 | `/escalate` | Escalate Intercom → Shortcut ticket |
 | `/story-CSEng` | CS Eng: create a Shortcut story for CSM support |
 | `/prs` | CS Eng: show Shortcut stories pending eng review |
-| `/tasks` | View and manage Asana tasks |
+| `/my-tasks` | View and manage Asana tasks |
 | `/kb-draft` | Draft a KB article for Intercom |
 | `/setup` | First-time setup wizard — fills in your personal CLAUDE.md placeholders, checks integrations (mostly covered by [TEAM_SETUP.md](TEAM_SETUP.md) / [SETUP.md](SETUP.md)) |
 | `/check-setup` | Validate your config — CLAUDE.md, all 7 MCPs, Intercom ID match, output dirs |

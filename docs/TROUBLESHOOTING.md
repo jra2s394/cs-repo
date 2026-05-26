@@ -15,7 +15,7 @@ Architecture refresher: [ARCHITECTURE.md](ARCHITECTURE.md). Setup validator: `/c
 1. Run `/check-setup` — Step 3 explicitly cross-checks ID-vs-session.
 2. If it reports a mismatch: re-do **Step 3 of SETUP.md** (log in to Intercom, copy the number from the profile URL), then update `~/.claude/CLAUDE.md`.
 
-**Less common:** Asana Team GID is wrong, so `/health-score` and `/tasks` filter to the wrong team. Same fix shape — update the GID line in `~/.claude/CLAUDE.md` (see SETUP.md Step 4).
+**Less common:** Asana Team GID is wrong, so `/health-score` and `/my-tasks` filter to the wrong team. Same fix shape — update the GID line in `~/.claude/CLAUDE.md` (see SETUP.md Step 4).
 
 ---
 
