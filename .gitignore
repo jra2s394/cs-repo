@@ -23,6 +23,7 @@ out/
 .claude/cache/
 .claude/settings.local.json
 .claude/*.lock
+.claude/worktrees/
 .mcp.json
 
 # Test runner caches
