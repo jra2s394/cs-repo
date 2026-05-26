@@ -143,6 +143,91 @@ class TestStatusColumn:
         assert parts[2] == "OK"
 
 
+class TestSubagentEvents:
+    """Round 85 wired SubagentStart / SubagentStop to audit-log.py so the
+    code-reviewer subagent's lifecycle gets recorded. These events don't
+    have a `tool_name` field — the hook reads `agent_type` instead and
+    records the entry as e.g. `subagent:code-reviewer` with status
+    `START` / `STOP`."""
+
+    def test_subagent_start_logs_with_agent_type(self, isolated_home):
+        run_audit(
+            {
+                "session_id": "abc12345",
+                "cwd": "/project",
+                "hook_event_name": "SubagentStart",
+                "agent_type": "code-reviewer",
+            },
+            isolated_home,
+        )
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        parts = log_path.read_text().strip().split(" | ")
+        assert parts[2] == "START"
+        assert parts[3] == "subagent:code-reviewer"
+
+    def test_subagent_stop_logs_with_agent_type(self, isolated_home):
+        run_audit(
+            {
+                "session_id": "abc12345",
+                "cwd": "/project",
+                "hook_event_name": "SubagentStop",
+                "agent_type": "code-reviewer",
+            },
+            isolated_home,
+        )
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        parts = log_path.read_text().strip().split(" | ")
+        assert parts[2] == "STOP"
+        assert parts[3] == "subagent:code-reviewer"
+
+    def test_subagent_event_missing_agent_type_falls_back_to_unknown(self, isolated_home):
+        # Defensive: if Claude Code ever fires the event without agent_type,
+        # the hook should still log something useful rather than crash.
+        run_audit(
+            {
+                "session_id": "abc12345",
+                "cwd": "/project",
+                "hook_event_name": "SubagentStart",
+                # no agent_type
+            },
+            isolated_home,
+        )
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        parts = log_path.read_text().strip().split(" | ")
+        assert parts[2] == "START"
+        assert parts[3] == "subagent:unknown"
+
+    def test_tool_call_after_subagent_unaffected(self, isolated_home):
+        # Two-line check: subagent event first, then a regular PostToolUse.
+        # The second line must use the standard tool_name/OK format, not
+        # leak the subagent code path's behavior.
+        run_audit(
+            {
+                "session_id": "abc12345",
+                "cwd": "/project",
+                "hook_event_name": "SubagentStart",
+                "agent_type": "code-reviewer",
+            },
+            isolated_home,
+        )
+        run_audit(
+            {
+                "tool_name": "Bash",
+                "session_id": "abc12345",
+                "cwd": "/project",
+                "hook_event_name": "PostToolUse",
+            },
+            isolated_home,
+        )
+        log_path = isolated_home / ".claude" / "tool-audit.log"
+        lines = log_path.read_text().strip().split("\n")
+        assert len(lines) == 2
+        first_parts = lines[0].split(" | ")
+        second_parts = lines[1].split(" | ")
+        assert first_parts[2] == "START" and first_parts[3] == "subagent:code-reviewer"
+        assert second_parts[2] == "OK" and second_parts[3] == "Bash"
+
+
 class TestLogRotation:
     def test_log_rotated_when_over_5mb(self, isolated_home):
         log_path = isolated_home / ".claude" / "tool-audit.log"

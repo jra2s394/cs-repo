@@ -29,7 +29,7 @@ Hooks run synchronously by default and block execution until they exit, so keep 
 
 ## Available events
 
-Claude Code supports 29 hook events as of v2.1.141+. This repo wires 8 (✓ below); the other 21 are available if a future round wants to hook in. Grouped by category — when adding a new hook, pick the smallest-blast-radius event that gets you the signal you need.
+Claude Code supports 29 hook events as of v2.1.141+. This repo wires 10 (✓ below); the other 19 are available if a future round wants to hook in. Grouped by category — when adding a new hook, pick the smallest-blast-radius event that gets you the signal you need.
 
 ### Tool-use events (fire around tool calls)
 | Event | When | Can block? | Wired |
@@ -67,8 +67,8 @@ Claude Code supports 29 hook events as of v2.1.141+. This repo wires 8 (✓ belo
 ### Subagents & tasks
 | Event | When | Can block? | Wired |
 |---|---|:---:|:---:|
-| `SubagentStart` | Subagent spawned | No | — |
-| `SubagentStop` | Subagent finishes | Yes | — |
+| `SubagentStart` | Subagent spawned | No | ✓ |
+| `SubagentStop` | Subagent finishes | Yes | ✓ |
 | `TaskCreated` | Task created via TaskCreate | Yes | — |
 | `TaskCompleted` | Task marked as completed | Yes | — |
 | `TeammateIdle` | Agent team teammate goes idle | Yes | — |
@@ -88,7 +88,7 @@ Claude Code supports 29 hook events as of v2.1.141+. This repo wires 8 (✓ belo
 | `Elicitation` | MCP server requests user input | Yes | — |
 | `ElicitationResult` | User responds to MCP elicitation | Yes | — |
 
-> Now that round-79 added a `code-reviewer` subagent, the `SubagentStart` / `SubagentStop` events are the next obvious wiring opportunity if we want subagent lifecycle in the audit log. Tracking as a candidate for a future round, not load-bearing today.
+> Round 85 wired `SubagentStart` / `SubagentStop` to `audit-log.py`, so the `code-reviewer` subagent's lifecycle now lands in `~/.claude/tool-audit.log` as `subagent:code-reviewer` with `START` / `STOP` status. Next likely-candidate events: `PostCompact` (counterpart to wired `PreCompact`), `WorktreeCreate` / `WorktreeRemove` (if we start using worktrees regularly), `TaskCreated` / `TaskCompleted` (if background task usage picks up).
 
 ---
 
@@ -96,7 +96,7 @@ Claude Code supports 29 hook events as of v2.1.141+. This repo wires 8 (✓ belo
 
 | Hook | Event | What it does |
 |---|---|---|
-| `audit-log.py` | PostToolUse | Logs every tool call to a local audit file |
+| `audit-log.py` | PostToolUse / PostToolUseFailure / SubagentStart / SubagentStop | Logs every tool call, tool failure, and subagent lifecycle event to a local audit file (subagent events recorded as `subagent:<agent_type>` with START/STOP status — wired round 85) |
 | `block-attribution.py` | PreToolUse (Bash) | Blocks commits containing AI attribution strings |
 | `branch-enforcer.py` | PreToolUse (Bash) | Blocks `git commit` directly on `main`/`master` |
 | `push-guard.py` | PreToolUse (Bash) | Blocks `git push` and `gh pr merge` |
