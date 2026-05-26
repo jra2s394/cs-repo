@@ -387,12 +387,12 @@ Net: 124 files changed, +17,540. The bootstrap.
 | Metric | At v0 | At PR #29 (snapshot) | Today |
 |---|---|---|---|
 | Slash commands | 18 | 44 | 44 |
-| Hooks | 10 | 11 (added `secret-scan.py`) | 11 |
+| Hooks | 10 | 11 (added `secret-scan.py`) | 14 (added `_stdin.py`, `lint-after-edit.py`, `config-change-audit.py`) |
 | Report generators | 9 | 17 | 17 |
-| Python tests | 0 | 443 | 680 |
+| Python tests | 0 | 443 | 712 |
 | JS tests | 0 | 129 | 157 |
 | Linters / type-checkers | 0 | 2 (ruff + biome) | 3 (ruff + biome + mypy) |
-| Coverage thresholds | none | none | Python ≥85%, JS ≥75% |
+| Coverage thresholds | none | none | Python ≥85%, JS lines ≥85%, JS branches ≥50 |
 | CI checks | 0 | 4 (pytest + ruff + biome + JS) | 6 (pytest + ruff + mypy + biome + JS-cov + pre-commit) |
 | `/review-code` sections | n/a | 22 | 23 |
 

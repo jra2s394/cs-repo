@@ -61,7 +61,7 @@ Full walkthrough (no tech experience needed) → [USER_GUIDE.md § GitHub tutori
 Every hook, lib helper, chart, and report is covered by automated tests. Two linters (ruff for Python, biome for JS), mypy type-checking, and c8 coverage tracking on the JS side catch issues before they reach CI. GitHub Actions runs the full suite on every pull request so broken changes can't land on `main`.
 
 ```
-make test         # 837 tests (680 Python + 157 JS)
+make test         # 869 tests (712 Python + 157 JS)
 make typecheck    # mypy — Python type checking (lenient baseline)
 make test-cov     # pytest with coverage threshold (≥85%)
 make test-js-cov  # JS tests under c8 with coverage threshold (≥75%)
