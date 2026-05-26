@@ -94,6 +94,8 @@ Custom subagents are markdown files with YAML frontmatter that Claude Code can d
 
 Frontmatter contract is enforced by `tests/test_agents_frontmatter.py`: every agent file must have `description` (≥40 chars, used by Claude's routing), `tools` (explicit allowlist), and `model` fields.
 
+> **Invocation paths differ.** Custom subagents are reachable two ways in interactive Claude Code sessions: the `/agents` menu (or any slash-command that delegates to one), and natural-language routing where Claude matches a task to the subagent's `description`. They are **not** exposed via the SDK / scripted `Agent` tool's `subagent_type` enum — that enum only accepts built-in types (`Explore`, `Plan`, `general-purpose`, etc.). For scripted contexts that need a custom-subagent equivalent, fall back to spawning `general-purpose` with the subagent's prompt and tool restrictions inlined. Discovered round 85 while trying to invoke `code-reviewer` from a scripted Agent call.
+
 ---
 
 ## Trusted infrastructure
