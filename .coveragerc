@@ -1,37 +1,29 @@
-# Coverage config — keep `make test-cov` honest.
+# Coverage config — measures both in-process tests AND subprocess-tested
+# hooks. Most hook tests under tests/hooks/ run the hook scripts as
+# subprocesses (see tests/conftest.py::run_hook), so we use coverage.py's
+# parallel + subprocess-init mechanism:
 #
-# Most hook tests under tests/hooks/ exercise the hooks by running them as
-# subprocesses (see tests/conftest.py::run_hook). coverage.py does not
-# instrument subprocesses by default, so those files showed 0% coverage in
-# the report even though they have hundreds of behavioral tests against
-# them. That made the headline coverage number meaningless.
+#   1. `parallel = True` makes each process write to its own
+#      .coverage.HOST.PID.RND file instead of overwriting a single
+#      .coverage file.
+#   2. The `a1_coverage.pth` file (auto-installed by `pip install
+#      coverage`) calls `coverage.process_startup()` whenever a Python
+#      process starts with COVERAGE_PROCESS_START set in its env.
+#   3. tests/conftest.py sets COVERAGE_PROCESS_START and COVERAGE_FILE
+#      to absolute paths so every subprocess — even ones launched with
+#      `cwd=tmp_path` — writes data into the repo root where pytest-cov
+#      finds and combines them.
+#   4. pytest-cov's --cov flag automatically runs `coverage combine`
+#      after pytest exits.
 #
-# Two principled choices:
-#   1. Configure subprocess coverage tracking (COVERAGE_PROCESS_START +
-#      .pth files in site-packages). Real, accurate, but invasive to set up.
-#   2. Omit subprocess-tested hooks from the report so the number reflects
-#      the code that actually IS line-tested in-process.
-#
-# We pick (2). The hooks are tested — just not by coverage.py. The number
-# you see now is the coverage of `lib/` (where line coverage is the right
-# metric) and the one hook that's tested via importlib direct import
-# (session-to-obsidian.py, ~70% covered).
+# Was: rounds 42-43 omitted the subprocess-tested hooks (11 files) because
+# coverage.py couldn't see them. Round 62 wired subprocess tracking so we
+# can drop the omit list and the headline number now reflects real
+# behavioral coverage across most of the hook surface.
 
 [run]
 source = hooks, lib
-omit =
-    # Subprocess-tested hooks — see comment above.
-    hooks/_git.py
-    hooks/audit-log.py
-    hooks/block-attribution.py
-    hooks/branch-enforcer.py
-    hooks/compact-reinject.py
-    hooks/draft-before-create.py
-    hooks/file-protector.py
-    hooks/notify.py
-    hooks/pr-template-reminder.py
-    hooks/push-guard.py
-    hooks/secret-scan.py
+parallel = True
 
 [report]
 # Surface lines coverage.py thinks aren't reached. Helpful when you add
