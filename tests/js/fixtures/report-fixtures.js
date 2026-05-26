@@ -45,6 +45,36 @@ const SCORECARD_TABLE = [
   ["CARR Completed", "$100k", "$80k", "▲ 25%", "▲ 10%"],
 ];
 
+// Optional-section fixtures. Round 70 added these to push branch coverage:
+// many reports have `if (d.optionalField && d.optionalField.length > 0)`
+// blocks that only render when the field is populated. Passing empty
+// arrays everywhere meant the smoke test only exercised the "skip
+// section" branch. These let fixtures exercise the "render section"
+// branch too — shapes match the per-report render code.
+const RECS = [
+  // tagColor is a hex string (no #) per lib/report-theme.js COLORS palette.
+  // 9C6B14 = amber, 2C3E63 = navySoft. These match the kinds report-theme
+  // calls "warn" and "neutral" respectively.
+  { num: 1, title: "Schedule QBR with Acme", tag: "URGENT", tagColor: "9C6B14", body: "Set up the Q3 review meeting." },
+  { num: 2, title: "Follow up on integration blocker", tag: "NORMAL", tagColor: "2C3E63", body: "Email contact about next steps." },
+];
+
+const ATRISK = [
+  { customer: "Acme Co", issue: "Integration blocker", owner: "Alice", action: "Follow up by EOW", critical: true },
+];
+
+const UPCOMING_RENEWALS = [
+  { customer: "Acme Co", renewalDate: "Aug 1, 2026", daysOut: 67, arr: "$50k", risk: "Low" },
+];
+
+const UPCOMING_EVENTS = [
+  { date: "May 30", customer: "Acme Co", event: "QBR", owner: "Test User" },
+];
+
+const TOP_CUSTOMERS = [["Acme Co", "12", "10"]];
+const OPEN_QUEUE = [["Acme Co", "Integration question", "5d", "Alice"]];
+const FIN_ADOPTION = [["May 2026", "85%", "+3pt"]];
+
 module.exports = {
   // ── Intercom reports ─────────────────────────────────────────────────────
   "intercom-daily.js": {
@@ -60,8 +90,8 @@ module.exports = {
     weekStartDate: "2026-05-19",
     summaryTable: SUMMARY_TABLE,
     dailyTable: [["Monday", "10", "8", "+2"]],
-    topCustomers: [],
-    openQueue: [],
+    topCustomers: TOP_CUSTOMERS,
+    openQueue: OPEN_QUEUE,
     mtdContext: "MTD: 88 conversations",
   },
 
@@ -69,11 +99,11 @@ module.exports = {
     ...COMMON,
     summaryTable: SUMMARY_TABLE,
     weeklyTable: [["May 1–7", "20", "18", "90%", "5m"]],
-    topCustomers: [],
-    openQueue: [],
+    topCustomers: TOP_CUSTOMERS,
+    openQueue: OPEN_QUEUE,
     qtdContext: "Q2 2026: 230 conversations",
     ytdContext: "YTD 2026: 572 conversations",
-    recs: [],
+    recs: RECS,
   },
 
   "intercom-quarterly.js": {
@@ -84,7 +114,7 @@ module.exports = {
     monthlyTable: [["April", "100", "90", "90%", "5m", "10%"]],
     topCustomers: [],
     ytdContext: "YTD 2026: 572 conversations",
-    recs: [],
+    recs: RECS,
   },
 
   "intercom-yeartodate.js": {
@@ -105,8 +135,8 @@ module.exports = {
       topCustomerAllTime: "example.com (50 convs)",
     },
     topCustomers: [],
-    finAdoptionTable: [],
-    recs: [],
+    finAdoptionTable: FIN_ADOPTION,
+    recs: RECS,
   },
 
   // ── Onboarding reports ───────────────────────────────────────────────────
@@ -134,8 +164,12 @@ module.exports = {
     sourceFile: "mastersheet.xlsx",
     scorecardTable: SCORECARD_TABLE,
     monthlyTable: [["April 2026", "5", "3", "$25k", "$15k"]],
-    accountsTable: [],
-    carrBacklog: "—",
+    accountsTable: [["Acme Co", "Core", "$25k", "In-Flight", "30d"]],
+    ytdContext: "YTD 2026: $250k onboarded",
+    atRisk: ATRISK,
+    backlogTable: [["Acme Co", "Integration", "$50k"]],
+    recs: RECS,
+    carrBacklog: "$120k",
   },
 
   "onboarding-yearly.js": {
@@ -191,7 +225,7 @@ module.exports = {
     kpis:         KPIS,
     executiveSummary: [["Metric", "Value"], ["NPS", "9"]],
     wins:         [{ win: "Launched", impact: "High", source: "Email 5/20" }],
-    openIssues:   [],
+    openIssues:   [{ issue: "Integration blocker", impact: "Medium", status: "Active" }],
     renewal: {
       date: "Aug 1, 2026",
       daysOut: 67,
@@ -232,6 +266,11 @@ module.exports = {
     period: "Q3 2026",
     dateRange: "Jul 1 – Sep 30, 2026",
     summaryTable: [["July", "5", "$50k"]],
+    monthlyGroups: [
+      { month: "July 2026",   invoiceTable: [["Acme Co", "$10k", "Jul 1, 2026"]], pending: false },
+      { month: "August 2026", invoiceTable: [],                                    pending: true },
+    ],
+    recs: RECS,
   },
 
   // ── Portfolio reports ────────────────────────────────────────────────────
@@ -245,12 +284,22 @@ module.exports = {
       ["🟡 Yellow", "2", "25%"],
       ["🔴 Red",    "1", "13%"],
     ],
+    atRisk:           ATRISK,
+    upcomingRenewals: UPCOMING_RENEWALS,
+    recs:             RECS,
   },
 
   "executive-summary.js": {
     ...COMMON,
-    portfolioMetrics: [["Active Accounts", "15", "—"]],
-    highlights:       [{ title: "Strong renewal pipeline", body: "..." }],
-    openIssues:       [],
+    portfolioMetrics:    [["Active Accounts", "15", "—"]],
+    highlights:          [
+      { title: "Strong renewal pipeline", body: "$500k in Q3", critical: false },
+      { title: "Critical: Acme escalation", body: "Integration blocker", critical: true },
+    ],
+    openIssues:          [["Acme Co", "Integration", "Alice", "Active"]],
+    onboardingSnapshot:  [["Active Accounts", "15"], ["Completed This Quarter", "5"]],
+    intercomSnapshot:    [["Open Conversations", "12"], ["Avg Response", "5m"]],
+    upcomingEvents:      UPCOMING_EVENTS,
+    recs:                RECS,
   },
 };
