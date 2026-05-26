@@ -17,7 +17,7 @@
         "anthropic.com"
       ]
     },
-    "excludedCommands": ["gh *", "git *"]
+    "excludedCommands": ["gh *", "git *", "pip *", "pip3 *", "npm *", "npx *"]
   },
   "hooks": {
     "PreToolUse": [
