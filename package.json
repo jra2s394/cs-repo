@@ -14,7 +14,7 @@
     "include": ["lib/**", "reports/**"],
     "reporter": ["text", "text-summary"],
     "check-coverage": true,
-    "lines": 75,
+    "lines": 85,
     "branches": 50
   },
   "dependencies": {
