@@ -60,3 +60,5 @@ slabstack-cs/
 ---
 
 *Maintained by the Slabstack Customer Success team.*
+
+*Content last audited for staleness: round 63 (2026-05-25) — see [docs/audit-cadence.md](../docs/audit-cadence.md) Detection record. No drift found; counts above accurately reflect what's in the repo.*
