@@ -10,7 +10,7 @@
 #   pre-commit run --all-files
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v5.0.0
+    rev: v6.0.0
     hooks:
       # Both whitespace-fixers below skip files that macOS TCC has put
       # under write protection once Claude Code touches them. Started as

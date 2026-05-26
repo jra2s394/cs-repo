@@ -110,7 +110,9 @@ Asana Team GID: paste-your-asana-team-id-here   (optional — see below)
 
 Save and close.
 
-> **Asana Team GID is optional but recommended.** Commands like `/health-score`, `/tasks`, and `/at-risk` use it to filter to your team's projects only. To find it: log in to [Asana](https://app.asana.com), open any customer project, copy the long number between `/teams/` and the next `/` in the URL. Without it, those commands fall back to workspace-wide queries — slower and noisier, but still functional.
+> **More personal fields.** Once the basics above work, see [docs/templates/CLAUDE_MD_PERSONAL_TEMPLATE.md](docs/templates/CLAUDE_MD_PERSONAL_TEMPLATE.md) for additional sections you can add to your personal CLAUDE.md (Key People, Recurring Customers, an Intercom-IDs table for filtering by teammate). These are optional but help Claude recognize names in inbox triage, meeting prep, and follow-up drafts.
+
+> **Asana Team GID is optional but recommended.** Commands like `/health-score`, `/my-tasks`, and `/at-risk` use it to filter to your team's projects only. To find it: log in to [Asana](https://app.asana.com), open any customer project, copy the long number between `/teams/` and the next `/` in the URL. Without it, those commands fall back to workspace-wide queries — slower and noisier, but still functional.
 
 ---
 
