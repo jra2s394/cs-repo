@@ -102,12 +102,12 @@ Subtargets if you only need part of it:
 | `make lint-py`     | ruff only |
 | `make lint-js`     | biome only |
 | `make typecheck`   | mypy on `hooks/` + `lib/` (added round 40; lenient baseline) |
-| `make test-cov`    | pytest with coverage report + `--cov-fail-under=85` threshold (scope: `lib/` + `session-to-obsidian.py` — see note) |
-| `make test-js-cov` | JS tests under c8 with `--check-coverage --lines=75` threshold (added round 46) |
+| `make test-cov`    | pytest with coverage report + `--cov-fail-under=85` threshold (scope: `hooks/` + `lib/`) |
+| `make test-js-cov` | JS tests under c8 with `lines=85` + `branches=50` thresholds (config in `package.json::c8`; floor raised from 75 → 85 in round 70) |
 
 CI runs the same `make` targets, so if it's green locally it'll stay green on PR.
 
-> **Why does `make test-cov` only measure part of `hooks/`?** Most hooks under `hooks/` are tested via subprocess (`tests/conftest.py::run_hook`), and `coverage.py` doesn't instrument subprocesses. Behavioral coverage of hooks is high (200+ tests across the 11 hook scripts in `tests/hooks/`); they just don't show up in the line-coverage number. See `.coveragerc` for the explicit omit list. `session-to-obsidian.py` is the exception — it's imported directly via `importlib`, so it appears in the report. The 85% floor reflects the combined `lib/` + `session-to-obsidian.py` baseline, not the full hook surface.
+> **Subprocess coverage for hooks.** Hooks under `hooks/` are tested as subprocesses via `tests/conftest.py::run_hook`. Round 62 wired `COVERAGE_PROCESS_START` + a `.pth` bootstrap so subprocesses are instrumented, and round 69 fixed a cwd resolution bug (`${COV_REPO_ROOT}/hooks` env-var expansion in `.coveragerc`) that had three hooks showing 0–33% coverage. Combined with `--parallel`, the `.coverage.*` files are merged at report time. Current measured coverage: **~92% line coverage across `hooks/` + `lib/`**, comfortably above the 85% floor.
 
 ## Scrub checklist
 
