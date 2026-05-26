@@ -522,7 +522,7 @@ Type `/review-code`. Claude will:
 3. Work through a fixed 23-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
 
-This gives you the same check every time, not a different result each session. If everything passes, you'll see "684 passed, 0 failed" and a full green table.
+This gives you the same check every time, not a different result each session. If everything passes, you'll see "712 passed, 0 failed" (Python) and a full green table.
 
 > Use `/review-code` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
 
@@ -549,9 +549,12 @@ Claude handles steps 1–4 for you. Step 5 you do on GitHub (takes about 30 seco
 Before opening a PR for any code change, run the test suite AND the linters:
 
 ```
-make test    # 869 automated tests (712 Python + 157 JavaScript)
-make lint    # ruff (Python) + biome (JS) — catches undefined names, unused imports
+source .venv/bin/activate   # one-time per shell — macOS's default python3 is 3.9, which is too old
+make test                    # 869 automated tests (712 Python + 157 JavaScript)
+make lint                    # ruff (Python) + biome (JS) — catches undefined names, unused imports
 ```
+
+> If you've set up direnv (see CONTRIBUTING.md), the venv auto-activates when you `cd` into the repo and you can skip the first line.
 
 The tests cover every hook, every lib helper (csv-export, report-theme, data-loader, copy-to-desktop, report_charts), every report's CLI contract, the publish pipeline, AND every command file's frontmatter (so adding a new slash command without a `description:` fails CI). The linters catch the runtime-bug class that tests can miss — e.g., a missing `require()` in a code path tests don't exercise.
 
