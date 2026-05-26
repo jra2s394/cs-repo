@@ -14,7 +14,8 @@
     "include": ["lib/**", "reports/**"],
     "reporter": ["text", "text-summary"],
     "check-coverage": true,
-    "lines": 75
+    "lines": 75,
+    "branches": 50
   },
   "dependencies": {
     "docx": "9.7.0"
