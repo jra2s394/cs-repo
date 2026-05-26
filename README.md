@@ -2,6 +2,8 @@
 
 You type a command. Claude reads your real data, writes the output, and shows it to you before doing anything. Nothing gets posted or sent without your OK.
 
+Works on **Mac, Linux, and Windows** (Windows via WSL2 for full sandbox protection; native Windows works for everything except the OS-level Bash sandbox). Setup docs have side-by-side **Mac:** / **PC:** instructions.
+
 ---
 
 **Joining as a teammate (fork → clone → configure)?** → [TEAM_SETUP.md](TEAM_SETUP.md) — full handoff path, ~20 min
