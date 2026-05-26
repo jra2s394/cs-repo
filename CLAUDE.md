@@ -62,7 +62,9 @@ These hooks run automatically. Know what they block:
 | `file-protector.py` | Blocks Edit/Write to `.env` and `.env.*` (but not `.envrc`), private keys (`.pem`/`.key`/`.p12`/`.pfx`), named credential files (`id_rsa`, `credentials.json`, `service-account.json`, `.mcp.json`, etc.), and anything inside `.git/` |
 | `pr-template-reminder.py` | When you submit a prompt about creating or opening a PR (or one mentioning `gh pr create`), injects context telling Claude to read `.github/pull_request_template.md` and match its structure |
 | `compact-reinject.py` | Re-injects critical rules from this file when context compacts mid-session |
-| `audit-log.py` | Logs every tool call to `~/.claude/tool-audit.log` (PostToolUse, non-blocking) |
+| `audit-log.py` | Logs every tool call (PostToolUse), tool failure (PostToolUseFailure), and subagent lifecycle event (SubagentStart, SubagentStop — wired round 85) to `~/.claude/tool-audit.log`. Non-blocking. |
+| `lint-after-edit.py` | After Claude edits a `.py` or `.js` file (PostToolUse Edit\|Write), runs `ruff` or `biome` on it and prints any findings to stderr. Non-blocking — surfaces lint feedback at edit-time instead of waiting for CI. |
+| `config-change-audit.py` | Logs every config-file change (ConfigChange event — `.claude/settings.json`, `~/.claude/settings.json`, skill/agent frontmatter) to `~/.claude/config-change.log`. Non-blocking forensic trail for post-incident review. |
 | `notify.py` | Plays a sound / shows a notification when Claude needs your attention |
 | `session-to-obsidian.py` | Exports session transcript to Obsidian vault on session end (async); set `OBSIDIAN_VAULT` env var or run `install.sh` to configure the vault path |
 
