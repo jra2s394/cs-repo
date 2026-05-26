@@ -31,6 +31,13 @@ COVERAGE_CONFIG = REPO_ROOT / ".coveragerc"
 # them differently) still wins.
 os.environ.setdefault("COVERAGE_PROCESS_START", str(COVERAGE_CONFIG))
 os.environ.setdefault("COVERAGE_FILE", str(REPO_ROOT / ".coverage"))
+# .coveragerc's `source` paths use ${COV_REPO_ROOT}/... expansion so
+# subprocess coverage resolves to absolute paths regardless of cwd.
+# Without this, a bare `source = hooks` is resolved relative to each
+# subprocess's cwd — subprocesses launched with cwd=tmp_path can't
+# find `hooks/` and trace zero lines, even though the .pth file fires
+# and a (empty) data file gets written. Round-69 fix.
+os.environ.setdefault("COV_REPO_ROOT", str(REPO_ROOT))
 
 
 def run_hook(hook_name: str, stdin_data) -> tuple[int, str, str]:
