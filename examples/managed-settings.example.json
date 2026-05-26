@@ -36,6 +36,13 @@
 
   "_comment_policy_helper": "Added v2.1.136+. NOT enabled here, just documented for awareness: `policyHelper: { path: '/usr/local/bin/claude-policy' }` lets an admin-deployed executable compute managed settings dynamically at startup. Honored only from MDM/system tier. Use when settings depend on machine identity (AD group, asset tag, on-call rotation) and need to be computed per-machine instead of statically baked into this file.",
 
+  "sandbox": {
+    "enabled": true,
+    "failIfUnavailable": true,
+    "allowUnsandboxedCommands": false,
+    "_comment_sandbox": "Mirrors the project-tier .claude/settings.json hardening. `failIfUnavailable: true` blocks Claude Code from starting if Seatbelt (macOS) or bubblewrap (Linux/WSL2) can't initialize — the alternative is silent fallback to unsandboxed execution, which means a missing dependency or OS update could quietly remove the protection without anyone noticing. `allowUnsandboxedCommands: false` (Strict Sandbox Mode) refuses the `dangerouslyDisableSandbox` escape hatch — commands that can't run sandboxed must be explicitly listed in excludedCommands. This is the right shape for a fleet deployment where contributors shouldn't have a personal escape hatch. The single-user project tier keeps the default (true) so the developer running this repo can still bypass for brew/system commands when needed."
+  },
+
   "hooks": {
     "PreToolUse": [
       {
