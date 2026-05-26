@@ -116,3 +116,52 @@ class TestLintingFires:
         code, _, stderr = run_lint(edit_payload(str(HOOKS_DIR / "_stdin.py")))
         assert code == 0
         assert stderr == ""
+
+
+class TestBranchCoverage:
+    """Targets specific branches that round-82 coverage scout flagged as
+    uncovered: relative-path normalization, SKIP_PREFIXES hits with files
+    that actually exist on disk, and unsupported-extension inside the repo."""
+
+    def test_relative_path_normalized_against_repo_root(self):
+        # When tool_input.file_path is relative (no leading slash), the hook
+        # should resolve it against REPO_ROOT — line 74. Using hooks/_stdin.py
+        # which is clean → expect silent success.
+        code, _, stderr = run_lint(edit_payload("hooks/_stdin.py"))
+        assert code == 0
+        assert stderr == ""
+
+    def test_skip_prefix_with_existing_file(self, tmp_path):
+        # The existing TestSkipPrefixes uses paths that don't exist on disk,
+        # so the hook bails at line 78 (`if not path.exists()`) before ever
+        # reaching the SKIP_PREFIXES loop. This test creates a real .py file
+        # under a SKIP_PREFIXES dir to actually exercise line 91.
+        skip_dir = REPO_ROOT / "data" / "outputs"
+        skip_dir.mkdir(parents=True, exist_ok=True)
+        skipped_file = skip_dir / "_lint_after_edit_skip_probe.py"
+        skipped_file.write_text("import os\n")  # would be a lint issue if checked
+        try:
+            code, _, stderr = run_lint(edit_payload(str(skipped_file)))
+            assert code == 0
+            # Critical: stderr must be empty. If lint actually ran on this
+            # file, ruff would flag the unused `import os` and surface it.
+            assert stderr == "", (
+                f"SKIP_PREFIXES failed — file under data/outputs/ was linted: {stderr!r}"
+            )
+        finally:
+            skipped_file.unlink(missing_ok=True)
+
+    def test_unsupported_extension_inside_repo_silent(self):
+        # An .md or .txt file inside the repo (so it passes the relative_to
+        # check) should hit line 96's "no linter for this extension" return.
+        # Existing test_non_py_non_js_exits_zero uses tmp_path which is
+        # outside the repo, so it bails at the relative_to ValueError (line
+        # 85) before reaching the LINTER_MAP lookup.
+        probe = REPO_ROOT / "lib" / "_lint_after_edit_ext_probe.txt"
+        probe.write_text("not a lintable file\n")
+        try:
+            code, _, stderr = run_lint(edit_payload(str(probe)))
+            assert code == 0
+            assert stderr == ""
+        finally:
+            probe.unlink(missing_ok=True)
