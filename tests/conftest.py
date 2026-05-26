@@ -1,5 +1,6 @@
 """Shared fixtures and helpers for hook tests."""
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -8,6 +9,28 @@ import pytest
 
 REPO_ROOT = Path(__file__).parent.parent
 HOOKS_DIR = REPO_ROOT / "hooks"
+COVERAGE_CONFIG = REPO_ROOT / ".coveragerc"
+
+# Enable subprocess coverage tracking. The `a1_coverage.pth` file
+# auto-installed by `pip install coverage` calls `coverage.process_startup()`
+# on every Python process startup when `COVERAGE_PROCESS_START` is set in
+# its environment. Setting it once at conftest load time means every test
+# that does `subprocess.run(...)` — whether through the helpers below or
+# its own `env=os.environ.copy()` pattern — gets coverage instrumentation
+# in the subprocess. Without this, hook scripts ran uninstrumented and the
+# 11 subprocess-tested hooks showed 0% in the coverage report.
+#
+# COVERAGE_FILE pins the data file path to the repo root. Without this,
+# subprocesses launched with `cwd=tmp_path` would write their .coverage.*
+# files into the test's tmp_path — which pytest then deletes before
+# pytest-cov can combine them. With an absolute path, every process
+# writes to the same shared location and `coverage combine` picks them
+# all up.
+#
+# Both use setdefault so an external override (e.g. CI explicitly setting
+# them differently) still wins.
+os.environ.setdefault("COVERAGE_PROCESS_START", str(COVERAGE_CONFIG))
+os.environ.setdefault("COVERAGE_FILE", str(REPO_ROOT / ".coverage"))
 
 
 def run_hook(hook_name: str, stdin_data) -> tuple[int, str, str]:
