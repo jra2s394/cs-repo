@@ -22,6 +22,20 @@
   "allowManagedHooksOnly": true,
   "_comment_hooks": "Forces all sessions to load ONLY hooks defined here or in plugins force-enabled via managed `enabledPlugins`. Blocks user/project hooks. Combined with `allowManagedHooksOnly`, an attacker who compromises a contributor's user-level config still cannot disable the audit log or secret scanner.",
 
+  "strictPluginOnlyCustomization": ["skills", "agents", "hooks", "mcp"],
+  "_comment_strict_plugin_only": "Added v2.1.129+. Blocks user/project sources from contributing skills, agents, hooks, or MCP servers — only this managed file and force-enabled plugins can. Use `true` to lock all surfaces or an array to lock only the listed ones. Combined with allowManagedHooksOnly + allowManagedPermissionRulesOnly, makes the entire customization surface admin-controlled in a fleet deployment.",
+
+  "parentSettingsBehavior": "first-wins",
+  "_comment_parent_settings": "Added v2.1.133+. Controls how parent-supplied managed settings (from embedding hosts like the desktop app) layer with this admin-deployed file. 'first-wins' drops the parent settings entirely; 'merge' applies them under the admin tier. Honored only from MDM/system tier — placing it in user/project settings is a no-op.",
+
+  "allowManagedMcpServersOnly": true,
+  "_comment_managed_mcp_only": "When this and allowedMcpServers are both set in managed settings, only the managed allowlist applies. User/project allowlists are ignored. deniedMcpServers still merges from all sources, so users can always block more for themselves. See /en/managed-mcp for the full MCP restriction story.",
+
+  "skillOverrides": {},
+  "_comment_skill_overrides": "Added v2.1.129+. Per-skill visibility map without editing SKILL.md. Values per skill: 'on' (default), 'name-only' (skill name appears in /skills list but body doesn't auto-load), 'user-invocable-only' (only loads when user types /skill-name), 'off' (hidden). Empty object above = no overrides. Use to disable specific bundled skills your org doesn't want loaded (e.g. {\"deploy\": \"off\"}). Does not apply to plugin skills.",
+
+  "_comment_policy_helper": "Added v2.1.136+. NOT enabled here, just documented for awareness: `policyHelper: { path: '/usr/local/bin/claude-policy' }` lets an admin-deployed executable compute managed settings dynamically at startup. Honored only from MDM/system tier. Use when settings depend on machine identity (AD group, asset tag, on-call rotation) and need to be computed per-machine instead of statically baked into this file.",
+
   "hooks": {
     "PreToolUse": [
       {

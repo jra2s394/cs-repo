@@ -12,6 +12,18 @@ Managed settings are read **before** user and project settings and **cannot be o
 | `permissions.disableBypassPermissionsMode: "disable"` | Locks out the `bypassPermissions` permission mode and the `--dangerously-skip-permissions` CLI flag. | The escape hatch is gone for everyone. Required if your security team won't sign off on a CS-data-touching tool having one. |
 | `allowManagedHooksOnly: true` | Only hooks defined in managed settings (or in plugins force-enabled via managed `enabledPlugins`) load. User and project hooks are ignored. | An attacker who compromises a contributor's `~/.claude/settings.json` cannot disable the audit log, the secret scanner, or the push guard. |
 
+## Newer admin controls (v2.1.129 → v2.1.136)
+
+Five additional fields landed in recent versions. None are required for a basic enterprise deployment, but each closes a specific gap. All are documented inline in `managed-settings.example.json`.
+
+| Key | Added in | What it does | When to use |
+|---|---|---|---|
+| `strictPluginOnlyCustomization` | v2.1.129+ | Blocks user/project sources from contributing skills, agents, hooks, or MCP servers. `true` locks all surfaces; `["skills", "hooks"]` etc. locks only the named ones. | Use when `allowManagedHooksOnly` alone isn't enough — this also covers skills, agents, and MCP. Combine with `allowManagedHooksOnly` + `allowManagedPermissionRulesOnly` for full admin control of the customization surface. |
+| `parentSettingsBehavior` | v2.1.133+ | Controls how parent-supplied managed settings (from embedding hosts like the desktop app) layer with this file. `"first-wins"` drops parent; `"merge"` applies parent under admin tier. | Set to `"first-wins"` to guarantee this file is the only managed-tier policy. Honored only from MDM/system tier. |
+| `allowManagedMcpServersOnly` | (managed-mcp doc) | When set with `allowedMcpServers`, locks the MCP allowlist to managed sources only. User/project allowlists ignored; deny lists still merge from all sources. | Use when you've published an approved MCP catalog and want to prevent contributors from adding their own servers. See [/en/managed-mcp](https://code.claude.com/docs/en/managed-mcp) for the full restriction story. |
+| `skillOverrides` | v2.1.129+ | Per-skill visibility map without editing SKILL.md. Values: `"on"` (default), `"name-only"` (listed but body doesn't auto-load), `"user-invocable-only"` (only on `/skill-name`), `"off"` (hidden). | Use to disable specific bundled skills your org doesn't want loaded (e.g., `{"deploy": "off"}`). Does not apply to plugin skills. |
+| `policyHelper` | v2.1.136+ | Admin executable that computes managed settings dynamically at startup. Shape: `{"path": "/usr/local/bin/your-helper"}`. Honored only from MDM/system tier. | Use when settings depend on machine identity (AD group, asset tag, on-call rotation) and need per-machine computation instead of a static file. Not enabled in the example — left as a documented reference. |
+
 ## Where to put the file
 
 Claude Code looks for managed settings at OS-specific locations (per [the Anthropic docs](https://code.claude.com/docs/en/settings#settings-files)):
