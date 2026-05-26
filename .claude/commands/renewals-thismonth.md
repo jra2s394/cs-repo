@@ -76,6 +76,8 @@ node reports/renewals-thismonth.js data/outputs/renewals-thismonth-metrics-YYYY-
 
 Output: `out/Renewals_ThisMonth_YYYY-MM.docx`
 
+Auto-copies to `~/Desktop/CS Reports/Renewals/` via `lib/copy-to-desktop.js` when that folder exists (run `bash scripts/setup-desktop.sh` once to create it).
+
 ---
 
 ## Google Drive upload (optional)

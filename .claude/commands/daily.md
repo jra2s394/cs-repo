@@ -17,6 +17,7 @@ Then generate today's daily Slack standup update for me.
 - Pull fresh data from Gmail, Google Calendar, Asana, and Intercom (per the prompt instructions)
 - Apply the accuracy rules from CLAUDE.md strictly — no hallucinated wins
 - Save the final output to `data/outputs/daily-<today's date>.md`
+- Also copy the saved file to `~/Desktop/CS Reports/Standups/` if that folder exists (run `bash scripts/setup-desktop.sh` once to create it). Silently skip the copy if the folder is missing.
 - After saving, show me the update inline so I can copy it to Slack
 
 If any MCP tool is unavailable, tell me which one and proceed with what you have.

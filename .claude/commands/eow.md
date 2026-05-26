@@ -15,4 +15,5 @@ Then generate the Friday end-of-week Slack standup update for me.
   without inbox/calendar evidence.
 - Apply ALL accuracy rules from CLAUDE.md
 - Save to `data/outputs/eow-<today's date>.md`
+- Also copy the saved file to `~/Desktop/CS Reports/Standups/` if that folder exists (run `bash scripts/setup-desktop.sh` once to create it). Silently skip the copy if the folder is missing.
 - Show me the update inline after saving

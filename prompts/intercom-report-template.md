@@ -299,7 +299,9 @@ Count published vs draft; identify recently updated (within 30 days); note which
 
 ### Standard Build & Distribute
 
-After writing the metrics JSON and running the per-period build script (`node reports/intercom-<period>.js ...`), do the following three steps in order:
+After writing the metrics JSON and running the per-period build script (`node reports/intercom-<period>.js ...`), do the following three steps in order.
+
+> The build script auto-copies the .docx to `~/Desktop/CS Reports/Intercom/` via `lib/copy-to-desktop.js` when that folder exists (run `bash scripts/setup-desktop.sh` once to create it). No extra step needed — just confirm the "→ Desktop copy" line printed.
 
 **1. PDF conversion** *(skip if LibreOffice not installed — the .docx is the primary deliverable)*:
 ```bash

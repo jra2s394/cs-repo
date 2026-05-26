@@ -197,7 +197,8 @@ Delete operations are gated by `permissions.deny` (Section 9b), not by `draft-be
 
 - [ ] Does `setup-desktop.sh` create `~/Desktop/CS Reports/Health Reports/`?
 - [ ] Does `setup-desktop.sh` create `~/Desktop/CS Reports/Executive Summaries/`?
-- [ ] Does the footer message list all six report folders (Intercom, Onboarding, Renewals, QBR, Health Reports, Executive Summaries)?
+- [ ] Does `setup-desktop.sh` create `~/Desktop/CS Reports/Standups/`?
+- [ ] Does the footer message list all seven report folders (Intercom, Onboarding, Renewals, QBR, Health Reports, Executive Summaries, Standups)?
 
 ## Section 19 — lib/report-theme.js publishReport + CI parity
 

@@ -5,6 +5,7 @@
 #          $HOME\Desktop\CS Reports\QBR\
 #          $HOME\Desktop\CS Reports\Health Reports\
 #          $HOME\Desktop\CS Reports\Executive Summaries\
+#          $HOME\Desktop\CS Reports\Standups\
 # Also creates a shortcut to the cs-repo folder on your Desktop.
 #
 # Run once after cloning. In PowerShell:
@@ -21,7 +22,7 @@ $reports = Join-Path $desktop "CS Reports"
 Write-Host "Setting up CS Reports folder on your Desktop..."
 
 # Create report subfolders
-foreach ($sub in "Intercom", "Onboarding", "Renewals", "QBR", "Health Reports", "Executive Summaries") {
+foreach ($sub in "Intercom", "Onboarding", "Renewals", "QBR", "Health Reports", "Executive Summaries", "Standups") {
     $dir = Join-Path $reports $sub
     try {
         if (-not (Test-Path $dir)) {
@@ -57,6 +58,7 @@ Write-Host "  $reports\Renewals\             (Renewal invoice reports)"
 Write-Host "  $reports\QBR\                  (QBR prep briefs)"
 Write-Host "  $reports\Health Reports\       (Portfolio health scorecards)"
 Write-Host "  $reports\Executive Summaries\  (Executive summary reports)"
+Write-Host "  $reports\Standups\             (Daily/Midweek/EOW/Week-start .md files)"
 Write-Host ""
 Write-Host "To open Claude Code in this repo, open PowerShell and type:"
 Write-Host "  cd `"$repoDir`""
