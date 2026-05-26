@@ -6,6 +6,7 @@
 #          ~/Desktop/CS Reports/QBR/
 #          ~/Desktop/CS Reports/Health Reports/
 #          ~/Desktop/CS Reports/Executive Summaries/
+#          ~/Desktop/CS Reports/Standups/
 #          ~/Desktop/cs-repo  (symlink to this repo)
 # Run once after cloning: bash scripts/setup-desktop.sh
 
@@ -24,12 +25,14 @@ mkdir -p "$REPORTS_DIR/Renewals"
 mkdir -p "$REPORTS_DIR/QBR"
 mkdir -p "$REPORTS_DIR/Health Reports"
 mkdir -p "$REPORTS_DIR/Executive Summaries"
+mkdir -p "$REPORTS_DIR/Standups"
 echo "  ✓ $REPORTS_DIR/Intercom/"
 echo "  ✓ $REPORTS_DIR/Onboarding/"
 echo "  ✓ $REPORTS_DIR/Renewals/"
 echo "  ✓ $REPORTS_DIR/QBR/"
 echo "  ✓ $REPORTS_DIR/Health Reports/"
 echo "  ✓ $REPORTS_DIR/Executive Summaries/"
+echo "  ✓ $REPORTS_DIR/Standups/"
 
 # Create symlink to repo (skip if already exists or Desktop is unavailable)
 LINK="$DESKTOP/cs-repo"
@@ -50,5 +53,6 @@ echo "  $REPORTS_DIR/Renewals/            (Renewal invoice reports)"
 echo "  $REPORTS_DIR/QBR/                 (QBR prep briefs)"
 echo "  $REPORTS_DIR/Health Reports/      (Portfolio health scorecards)"
 echo "  $REPORTS_DIR/Executive Summaries/ (Executive summary reports)"
+echo "  $REPORTS_DIR/Standups/            (Daily/Midweek/EOW/Week-start .md files)"
 echo ""
 echo "To open Claude Code in this repo quickly: open $LINK in your terminal or Finder."

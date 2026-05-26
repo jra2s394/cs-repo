@@ -112,6 +112,8 @@ node reports/renewals-nextquarter.js data/outputs/renewals-nextquarter-metrics-Y
 
 Output: `out/Renewals_NextQuarter_YYYY-QN.docx`
 
+Auto-copies to `~/Desktop/CS Reports/Renewals/` via `lib/copy-to-desktop.js` when that folder exists (run `bash scripts/setup-desktop.sh` once to create it).
+
 ---
 
 ## Google Drive upload (optional)
