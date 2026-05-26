@@ -66,33 +66,6 @@ These hooks run automatically. Know what they block:
 
 ---
 
-## Intercom admin IDs
-
-Use these when filtering conversations to a specific teammate.
-
-| Name | ID |
-|---|---|
-| [Your Name] | `YOUR_INTERCOM_ID` |
-| [Teammate 1] | `TEAMMATE_1_ID` |
-| [Teammate 2] | `TEAMMATE_2_ID` |
-| [Teammate 3] | `TEAMMATE_3_ID` |
-
----
-
-## Asana Team GID
-
-Commands like `/health-score`, `/my-tasks`, and `/at-risk` filter Asana queries to your team's projects (so sibling-team projects don't pollute results). Set this once.
-
-To find it: open any of your customer projects in Asana, copy the team segment from the URL (the long number between `/teams/` and the next `/`).
-
-```
-Asana Team GID: ASANA_TEAM_GID
-```
-
-If unset, commands fall back to workspace-wide queries — usually slower and noisier. `/check-setup` flags an unset value as 🟡 (optional but recommended).
-
----
-
 ## Connected services (MCP)
 
 - Gmail
@@ -227,40 +200,7 @@ When creating a new Shortcut ticket, always draft it in conversation first.
 
 ---
 
-## Key People
-
-**Leadership / managers:**
-- [Manager Name] — my manager
-- [Peer 1] — peer
-- [Peer 2] — peer
-- [Ops/HR contact] — Ops/HR
-
-**My team (CS):**
-- [CSM 1] — CSM
-- [CSM 2] — CSM
-- [CS Engineer 1] — CS engineer
-- [CS Engineer 2] — CS engineering (integrations)
-- [CS Engineer 3] — CS engineering (integrations)
-- [Reporting contact] — reporting/dashboards
-
-**Sales / AEs:**
-- [AE Name] — AE
-
-**Product / engineering:**
-- [Product lead] — product/engineering lead
-- [Eng contact] — engineering
-
----
-
-## Recurring Customers / Projects
-
-Add your recurring customer accounts here with primary contacts.
-Format: Company Name (Contact 1, Contact 2), ...
-
-Example:
-Acme Concrete ([CONTACT_F], Bob Jones), Regional Ready Mix (Tom Brown), ...
-
----
+Personal placeholder sections (Intercom admin IDs, Asana Team GID, Key People, Recurring Customers) live in [docs/templates/CLAUDE_MD_PERSONAL_TEMPLATE.md](docs/templates/CLAUDE_MD_PERSONAL_TEMPLATE.md). Copy the relevant blocks into your personal `~/.claude/CLAUDE.md` and fill them in — SETUP.md has the step-by-step. The project CLAUDE.md (this file) stays focused on rules and identity.
 
 MCP query gotchas (date filters, latency, per-server quirks) live in [docs/MCP_PRECISION_NOTES.md](docs/MCP_PRECISION_NOTES.md). Claude reads it on demand when a query misbehaves.
 
