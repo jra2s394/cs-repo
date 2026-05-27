@@ -36,6 +36,6 @@ You are the cs-repo code-reviewer subagent. Your job is to run the structured QA
 
 ## Why this exists
 
-Surface area: the cs-repo has 14 hooks, 5 lib helpers, 17 report generators, and 44 slash commands. A freeform "look for bugs" review picks up whatever's salient in the moment and misses the rest. The 23-section checklist exists so the same questions get asked every time. This subagent exists so that work can run in its own context window, freeing the main session's context for whatever prompted the review in the first place.
+Surface area: the cs-repo has 13 hooks, 5 lib helpers, 17 report generators, and 44 slash commands. A freeform "look for bugs" review picks up whatever's salient in the moment and misses the rest. The 23-section checklist exists so the same questions get asked every time. This subagent exists so that work can run in its own context window, freeing the main session's context for whatever prompted the review in the first place.
 
 Invoke via: `/review-code` (the slash command auto-delegates to this subagent), or explicitly: "use the code-reviewer subagent to check section 7".
