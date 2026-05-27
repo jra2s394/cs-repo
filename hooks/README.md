@@ -8,7 +8,7 @@ Each hook is a shell command (typically a Python script) that receives a JSON pa
 
 Hooks can take three actions: **allow** (exit code 0, let the tool call proceed), **block** (exit code 2, cancel the tool call and show an error message from stderr to the user), or **ask** (output a JSON object with `permissionDecision: "ask"`, pause and surface a permission prompt so the user can approve or deny).
 
-Hooks are registered in `~/.claude/settings.json` under the `hooks` key, scoped to one of the 29 event types Claude Code supports (see [Available events](#available-events) below for the full catalog), and optionally filtered by a `matcher` (a regex or tool name pattern). This repo currently wires 8 events: `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `UserPromptSubmit`, `Notification`, `Stop`, `PreCompact`, and `ConfigChange`.
+Hooks are registered in `~/.claude/settings.json` under the `hooks` key, scoped to one of the 29 event types Claude Code supports (see [Available events](#available-events) below for the full catalog), and optionally filtered by a `matcher` (a regex or tool name pattern). This repo currently wires 10 events: `PreToolUse`, `PostToolUse`, `PostToolUseFailure`, `UserPromptSubmit`, `Notification`, `Stop`, `PreCompact`, `ConfigChange`, `SubagentStart`, and `SubagentStop`.
 
 Hooks run synchronously by default and block execution until they exit, so keep them fast. The `async: true` field in settings.json makes a hook fire-and-forget, useful for Stop hooks that write to disk or call external services.
 
