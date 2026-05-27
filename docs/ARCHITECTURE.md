@@ -92,7 +92,7 @@ Every command in `.claude/commands/` matches one of three shapes. Knowing which 
 | Chart generation | `lib/report_charts.py` | Matplotlib → PNG charts embedded into `.docx`. Python (not Node) because matplotlib is the path of least resistance for these shapes. |
 | Data helpers | `lib/data-loader.js`, `lib/csv-export.js` | Finance sheet parsing (xlsx/csv), CSV export. |
 | Desktop mirror | `lib/copy-to-desktop.js` | After a report writes to `out/`, this copies it to `~/Desktop/CS Reports/<category>/` if the user ran `scripts/setup-desktop.sh`. |
-| Hooks | `hooks/*.py` | Intercept tool calls (block/warn/log). Registered in `.claude/settings.json` under one of 6 event types. |
+| Hooks | `hooks/*.py` | Intercept tool calls (block/warn/log). Registered in `.claude/settings.json` under one of 10 wired event types (29 supported — see `hooks/README.md`). |
 | Per-user config | `~/.claude/CLAUDE.md` | Personal — name, email, Intercom ID, Asana Team GID, IANA time zone. Never committed. |
 | Repo config | `CLAUDE.md` | Shared — house style, accuracy rules, command index, hook list. Read every session. |
 
