@@ -1,7 +1,7 @@
 ---
 description: Morning Gmail triage — categorize overnight email into Respond / FYI / Escalation / Customer Signal, surface action items, and draft replies on request (drafts only, never sends)
 disable-model-invocation: true
-allowed-tools: Read mcp__claude_ai_Gmail__search_threads mcp__claude_ai_Gmail__get_thread mcp__claude_ai_Gmail__create_draft
+allowed-tools: Read mcp__claude_ai_Gmail__search_threads mcp__claude_ai_Gmail__get_thread mcp__claude_ai_Gmail__create_draft mcp__claude_ai_Google_Calendar__list_events
 ---
 
 Read `CLAUDE.md` from this repo before starting.
@@ -22,9 +22,17 @@ Translate the requested window into a Gmail query. Always exclude promotions and
 
 ---
 
-## Step 2 — Pull and categorize
+## Step 2 — Pull inbox AND cross-reference outbox + calendar
 
-Run `search_threads` with the computed window. For each thread, classify into exactly one bucket:
+**This is a HARD REQUIREMENT — do not skip.** Threads in `newer_than:1d` include incoming messages that may already have been answered. Categorizing them as 🔴 Respond Today without checking the outbox and calendar produces false positives ("you need to reply to X" when X is already replied to, or "accept this proposed time" when the calendar already shows it accepted).
+
+Before categorizing, run all three queries:
+
+1. `search_threads` with the computed window (the main inbox pull).
+2. `search_threads` with `in:sent newer_than:1d` (or matching window) — this is the authoritative source for "did I already reply." A reply via the Gmail web UI lands here even if Gmail's thread view in the main pull doesn't surface it cleanly.
+3. `list_events` covering today + the next 2 days — this catches calendar-action items (proposed new times, declines, invites awaiting RSVP) that show up in inbox as `Accepted:` / `New Time Proposed:` notifications. If the calendar shows the meeting at the proposed time, the user already accepted — do NOT flag it as a pending reply.
+
+For each thread, classify into exactly one bucket:
 
 ### 🔴 Respond today
 Threads where I am the most recent expected reply. Heuristics:
@@ -32,6 +40,11 @@ Threads where I am the most recent expected reply. Heuristics:
 - Internal teammate explicitly asked me ("[your name], can you...")
 - Action item explicitly assigned to me in a Read.ai follow-up email
 - Reply needed to unblock a meeting on today's calendar
+
+**Disqualifiers (drop from 🔴 before presenting):**
+- A reply from me appears in the `in:sent` results after the customer's most recent message — it's resolved, not pending.
+- A "New Time Proposed:" calendar notification is followed by an "Accepted:" notification from the same sender, OR the meeting now appears on my calendar at the proposed slot — I already accepted, no action needed.
+- The customer's request is satisfied by a later event (e.g., "let me know next steps" followed by the kickoff meeting actually being held — check the calendar for the held event).
 
 ### 🟡 Customer signal (no reply required, but pay attention)
 - Customer mentioned a competitor by name
@@ -113,6 +126,7 @@ If approved:
 - The 🟢 FYI bucket is summarized in aggregate, not listed individually — listing 30 FYI items defeats the point of triage
 - All times in your local time zone (per `~/.claude/CLAUDE.md`)
 - If Gmail MCP is unavailable, say so and stop
+- **Cross-reference rule (non-negotiable):** every 🔴 Respond Today item must survive a check against `in:sent newer_than:1d` AND today's calendar. If either shows the item is already handled, drop it. Stating "the kickoff is tomorrow" when the user already held it, or "accept the proposed time" when the calendar shows it accepted, is the exact failure mode this rule prevents.
 
 ---
 
