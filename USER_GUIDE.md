@@ -517,12 +517,12 @@ Read-only — no MCP calls, no file edits.
 Runs a structured quality check on the repo. Use this any time you've made changes to hooks, reports, or library files and want to verify nothing is broken.
 
 Type `/review-code`. Claude will:
-1. Run all 869 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
+1. Run all 878 automated tests first (`make test`) — if any fail, it stops and tells you exactly what's wrong
 2. Run both linters (`make lint` — ruff for Python, biome for JS) to confirm no undefined names or unused imports
 3. Work through a fixed 23-section checklist covering every hook, library file, report layout rule, chart helper, and read-only/draft-first command contract
 4. Report a pass/fail table at the end
 
-This gives you the same check every time, not a different result each session. If everything passes, you'll see "712 passed, 0 failed" (Python) and a full green table.
+This gives you the same check every time, not a different result each session. If everything passes, you'll see "721 passed, 0 failed" (Python) and a full green table.
 
 > Use `/review-code` instead of asking Claude to "review the code" or "check for bugs." The structured checklist is more thorough and consistent than a freeform review.
 
@@ -552,7 +552,7 @@ Before opening a PR for any code change, run the test suite AND the linters:
 
 ```
 source .venv/bin/activate   # one-time per shell — macOS's default python3 is 3.9, which is too old
-make test                    # 869 automated tests (712 Python + 157 JavaScript)
+make test                    # 878 automated tests (721 Python + 157 JavaScript)
 make lint                    # ruff (Python) + biome (JS) — catches undefined names, unused imports
 ```
 
@@ -560,7 +560,7 @@ make lint                    # ruff (Python) + biome (JS) — catches undefined 
 
 The tests cover every hook, every lib helper (csv-export, report-theme, data-loader, copy-to-desktop, report_charts), every report's CLI contract, the publish pipeline, AND every command file's frontmatter (so adding a new slash command without a `description:` fails CI). The linters catch the runtime-bug class that tests can miss — e.g., a missing `require()` in a code path tests don't exercise.
 
-If all pass you'll see `712 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
+If all pass you'll see `721 passed, 0 failed` (Python), each JS suite prints its own count, and both linters print "All checks passed!".
 
 GitHub Actions runs all of `make test` + `make lint` automatically on every pull request. A PR can't sneak a broken change onto `main` without CI catching it first.
 

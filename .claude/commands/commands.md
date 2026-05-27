@@ -31,7 +31,7 @@ Use these buckets (matching the structure in `CLAUDE.md`):
 | **Intercom reports** | `/intercom-daily`, `/intercom-weekly`, `/intercom-monthly`, `/intercom-quarterly`, `/intercom-yeartodate` |
 | **Onboarding reports** | `/onboarding-weekly`, `/onboarding-monthly`, `/onboarding-quarterly`, `/onboarding-yearly` |
 | **Renewal reports** | `/renewals-thismonth`, `/renewals-nextmonth`, `/renewals-nextquarter` |
-| **Customer intelligence** | `/customer`, `/customer-search`, `/inbox-triage`, `/meeting-prep`, `/meeting-notes`, `/follow-up`, `/go-live`, `/at-risk`, `/health-score`, `/expansion`, `/qbr`, `/escalate`, `/story-CSEng`, `/prs`, `/tasks`, `/kb-draft` |
+| **Customer intelligence** | `/customer`, `/customer-search`, `/inbox-triage`, `/meeting-prep`, `/meeting-notes`, `/follow-up`, `/go-live`, `/at-risk`, `/health-score`, `/expansion`, `/qbr`, `/escalate`, `/story-CSEng`, `/prs`, `/my-tasks`, `/kb-draft` |
 | **Onboarding lifecycle** | `/start-onboarding`, `/onboarding-status-report`, `/end-onboarding`, `/handoff` |
 | **Renewal & executive** | `/renewal-health`, `/executive-summary`, `/weekly-team` |
 | **Tooling** | `/setup`, `/review-code`, `/commands` |

@@ -89,7 +89,7 @@ Wait for the answer.
 Send this message:
 
 ```
-Optional: your Asana Team GID. Commands like /health-score, /tasks, and /at-risk use it to filter to your team's projects (so sibling teams' projects don't pollute the results).
+Optional: your Asana Team GID. Commands like /health-score, /my-tasks, and /at-risk use it to filter to your team's projects (so sibling teams' projects don't pollute the results).
 
 To find it:
   1. Log in to Asana
@@ -211,7 +211,7 @@ Your most-used commands:
   /start-onboarding       Kick off a new customer onboarding
   /end-onboarding         Close out a completed onboarding
   /handoff                Generate a handoff brief when account ownership changes
-  /tasks                  View and manage your Asana tasks
+  /my-tasks               View and manage your Asana tasks
   /escalate               Escalate an Intercom conversation to a Shortcut ticket
   /kb-draft               Draft a KB article from a topic or conversation
   /intercom-weekly        Weekly Intercom support report
@@ -227,7 +227,7 @@ Your most-used commands:
   /prs              Show all Shortcut stories pending eng review — your queue
   /story-CSEng      Create a Shortcut story to support a CSM or track customer eng work
   /customer         Full customer snapshot before a call
-  /tasks            View and manage your Asana tasks
+  /my-tasks         View and manage your Asana tasks
   /escalate         Escalate an Intercom conversation to a Shortcut ticket
 ```
 
@@ -252,7 +252,7 @@ Your most-used commands:
   /meeting-prep           Briefings for all customer meetings in the next 24h
   /qbr                    QBR prep — data pulled, wins sourced, agenda drafted
   /go-live                Go-live readiness check before a customer launch
-  /tasks                  View and manage your Asana tasks
+  /my-tasks               View and manage your Asana tasks
   /onboarding-weekly      Onboarding health — this week
   /onboarding-monthly     Onboarding health — this month
   /renewals-thismonth     Renewal invoice report — what Finance bills now
