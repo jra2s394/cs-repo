@@ -106,7 +106,7 @@ The `/commands` slash command auto-discovers every file in `.claude/commands/`, 
 ## Step 5 — Test before opening a PR
 
 ```bash
-make test           # 712 Python + 157 JS = 869 tests
+make test           # 721 Python + 157 JS = 878 tests
 make lint           # ruff + biome
 pre-commit run --all-files   # 9 hooks, same as commit-time
 ```

@@ -117,7 +117,7 @@ After the notes, present a menu — DO NOT execute any of these automatically:
 
 For #1 — saving to disk is the only action `/meeting-notes` will take itself, and only after explicit "yes save". The file goes to `slabstack-cs/meeting-notes/` (create the directory if it doesn't exist).
 
-For #2, #3, #4 — defer to the existing commands (`/follow-up`, `/tasks`, `/story-CSEng`, `/escalate`). Never call those workflows from inside `/meeting-notes` — let the user invoke them so they remain in control.
+For #2, #3, #4 — defer to the existing commands (`/follow-up`, `/my-tasks`, `/story-CSEng`, `/escalate`). Never call those workflows from inside `/meeting-notes` — let the user invoke them so they remain in control.
 
 ---
 
